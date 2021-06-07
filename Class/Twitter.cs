@@ -70,7 +70,7 @@ namespace twclient
         {
             OAuthSession session = OAuth.Authorize(consumer_key, consumer_secret);
 
-            System.Diagnostics.Process.Start("cmd", "/c start " + session.AuthorizeUri.AbsoluteUri);
+            parentForm.OpenUrl(session.AuthorizeUri.AbsoluteUri);
 
             DialogPinIn dlgPin = new DialogPinIn(parentForm);
             dlgPin.ShowDialog();

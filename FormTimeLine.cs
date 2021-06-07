@@ -1168,7 +1168,7 @@ namespace twclient
             {
                 var status = twitter.GetTimeLineFromId(tweetId);
                 string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
-                System.Diagnostics.Process.Start(url);
+                OpenUrl(url);
             }
         }
 
@@ -1227,13 +1227,13 @@ namespace twclient
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(contentUrl);
+                    OpenUrl(contentUrl);
                 }
             }
             else if (contentTagName == "img")
             {
                 contentUrl = clickedElement.GetAttribute("src");
-                System.Diagnostics.Process.Start(contentUrl);
+                OpenUrl(contentUrl);
             }
 
             e.ReturnValue = false;
@@ -1252,7 +1252,7 @@ namespace twclient
                 }
                 else if (contentTagName == "img")
                 {
-                    System.Diagnostics.Process.Start(contentUrl);
+                    OpenUrl(contentUrl);
                 }
             }
             else if (obj == toolStripMenuWebViewAddHash)
@@ -1657,6 +1657,11 @@ namespace twclient
             cacheLvi.Clear();
 
             panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
+        }
+
+        public void OpenUrl(string url)
+        {
+            System.Diagnostics.Process.Start("cmd", "/c start " + url);
         }
     }
 }
