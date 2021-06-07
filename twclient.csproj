@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>twclient</AssemblyName>
+    <StartupObject>WinFormsApp1.Program</StartupObject>
+    <RootNamespace>twclient</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CoreTweet" Version="1.0.0.483" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DialogKeyIn - コピー - コピー.Designer.cs">
+      <DependentUpon>DialogKeyIn - コピー.Designer.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DialogPinIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DialogKeyIn - コピー.Designer.cs">
+      <DependentUpon>DialogKeyIn.Designer.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DialogPinInput - コピー - コピー.Designer.cs">
+      <DependentUpon>DialogPinInput - コピー.Designer.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DialogPinInput - コピー.Designer.cs">
+      <DependentUpon>DialogPinInput.Designer.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="DialogKeyIn - コピー.resx">
+      <DependentUpon>DialogKeyIn.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="DialogPinInput - コピー.resx">
+      <DependentUpon>DialogPinInput.resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resource\css.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

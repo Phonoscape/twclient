@@ -1,0 +1,453 @@
+﻿
+namespace twclient
+{
+    partial class FormTimeLine
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTimeLine));
+            this.contextMenuUser = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuAddUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuDelUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuSearch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuAddSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuChangeSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuDelSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuSetHash = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuForListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemRetweet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemUnRetweet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemLike = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemUnLike = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuForWebView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuWebViewOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuWebViewSearch = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuWebViewAddHash = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuWebViewCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.panelTimeLine1 = new twclient.UserPanel.PanelTimeLine();
+            this.controlListBox1 = new twclient.Class.ControlListBox();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.panelControlMainEdit1 = new twclient.UserPanel.PanelControlMainEdit();
+            this.panelControlMainTree1 = new twclient.UserPanel.PanelControlMainTree();
+            this.contextMenuUser.SuspendLayout();
+            this.contextMenuSearch.SuspendLayout();
+            this.contextMenuForListView.SuspendLayout();
+            this.contextMenuForWebView.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // contextMenuUser
+            // 
+            this.contextMenuUser.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuUser.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuAddUser,
+            this.toolStripMenuDelUser});
+            this.contextMenuUser.Name = "contextMenuUser";
+            this.contextMenuUser.Size = new System.Drawing.Size(175, 68);
+            // 
+            // toolStripMenuAddUser
+            // 
+            this.toolStripMenuAddUser.Name = "toolStripMenuAddUser";
+            this.toolStripMenuAddUser.Size = new System.Drawing.Size(174, 32);
+            this.toolStripMenuAddUser.Text = "ユーザー追加";
+            // 
+            // toolStripMenuDelUser
+            // 
+            this.toolStripMenuDelUser.Name = "toolStripMenuDelUser";
+            this.toolStripMenuDelUser.Size = new System.Drawing.Size(174, 32);
+            this.toolStripMenuDelUser.Text = "削除";
+            // 
+            // contextMenuSearch
+            // 
+            this.contextMenuSearch.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuSearch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuAddSearch,
+            this.toolStripMenuChangeSearch,
+            this.toolStripMenuDelSearch,
+            this.toolStripSeparator4,
+            this.toolStripMenuSetHash});
+            this.contextMenuSearch.Name = "contextMenuSearch";
+            this.contextMenuSearch.Size = new System.Drawing.Size(240, 138);
+            // 
+            // toolStripMenuAddSearch
+            // 
+            this.toolStripMenuAddSearch.Name = "toolStripMenuAddSearch";
+            this.toolStripMenuAddSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuAddSearch.Text = "追加";
+            // 
+            // toolStripMenuChangeSearch
+            // 
+            this.toolStripMenuChangeSearch.Name = "toolStripMenuChangeSearch";
+            this.toolStripMenuChangeSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuChangeSearch.Text = "変更";
+            // 
+            // toolStripMenuDelSearch
+            // 
+            this.toolStripMenuDelSearch.Name = "toolStripMenuDelSearch";
+            this.toolStripMenuDelSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuDelSearch.Text = "削除";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(236, 6);
+            // 
+            // toolStripMenuSetHash
+            // 
+            this.toolStripMenuSetHash.Name = "toolStripMenuSetHash";
+            this.toolStripMenuSetHash.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuSetHash.Text = "ハッシュタグとして設定";
+            // 
+            // contextMenuForListView
+            // 
+            this.contextMenuForListView.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuForListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemRetweet,
+            this.toolStripMenuItemUnRetweet,
+            this.toolStripMenuItemLike,
+            this.toolStripMenuItemUnLike,
+            this.toolStripSeparator1,
+            this.toolStripMenuItemUser,
+            this.toolStripSeparator3,
+            this.toolStripMenuItemOpen});
+            this.contextMenuForListView.Name = "contextMenuForListView";
+            this.contextMenuForListView.Size = new System.Drawing.Size(209, 208);
+            // 
+            // toolStripMenuItemRetweet
+            // 
+            this.toolStripMenuItemRetweet.Name = "toolStripMenuItemRetweet";
+            this.toolStripMenuItemRetweet.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemRetweet.Text = "Retweet";
+            // 
+            // toolStripMenuItemUnRetweet
+            // 
+            this.toolStripMenuItemUnRetweet.Name = "toolStripMenuItemUnRetweet";
+            this.toolStripMenuItemUnRetweet.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUnRetweet.Text = "Retweet取り消し";
+            // 
+            // toolStripMenuItemLike
+            // 
+            this.toolStripMenuItemLike.Name = "toolStripMenuItemLike";
+            this.toolStripMenuItemLike.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemLike.Text = "Like";
+            // 
+            // toolStripMenuItemUnLike
+            // 
+            this.toolStripMenuItemUnLike.Name = "toolStripMenuItemUnLike";
+            this.toolStripMenuItemUnLike.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUnLike.Text = "Like取り消し";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
+            // 
+            // toolStripMenuItemUser
+            // 
+            this.toolStripMenuItemUser.Name = "toolStripMenuItemUser";
+            this.toolStripMenuItemUser.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUser.Text = "ユーザー検索";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(205, 6);
+            // 
+            // toolStripMenuItemOpen
+            // 
+            this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemOpen.Text = "ブラウザで開く";
+            // 
+            // contextMenuForWebView
+            // 
+            this.contextMenuForWebView.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuForWebView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuWebViewOpen,
+            this.toolStripMenuWebViewSearch,
+            this.toolStripMenuWebViewAddHash,
+            this.toolStripSeparator2,
+            this.toolStripMenuWebViewCopy});
+            this.contextMenuForWebView.Name = "contextMenuForWebView";
+            this.contextMenuForWebView.Size = new System.Drawing.Size(240, 138);
+            // 
+            // toolStripMenuWebViewOpen
+            // 
+            this.toolStripMenuWebViewOpen.Name = "toolStripMenuWebViewOpen";
+            this.toolStripMenuWebViewOpen.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewOpen.Text = "開く";
+            // 
+            // toolStripMenuWebViewSearch
+            // 
+            this.toolStripMenuWebViewSearch.Name = "toolStripMenuWebViewSearch";
+            this.toolStripMenuWebViewSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewSearch.Text = "検索に追加";
+            // 
+            // toolStripMenuWebViewAddHash
+            // 
+            this.toolStripMenuWebViewAddHash.Name = "toolStripMenuWebViewAddHash";
+            this.toolStripMenuWebViewAddHash.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewAddHash.Text = "ハッシュタグとして固定";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(236, 6);
+            // 
+            // toolStripMenuWebViewCopy
+            // 
+            this.toolStripMenuWebViewCopy.Name = "toolStripMenuWebViewCopy";
+            this.toolStripMenuWebViewCopy.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewCopy.Text = "コピー";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.AutoSize = false;
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 810);
+            this.statusStrip1.Margin = new System.Windows.Forms.Padding(3);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.statusStrip1.Size = new System.Drawing.Size(1326, 32);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(181, 25);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.splitContainer1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1326, 810);
+            this.panel1.TabIndex = 5;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer1.Size = new System.Drawing.Size(1326, 810);
+            this.splitContainer1.SplitterDistance = 439;
+            this.splitContainer1.SplitterWidth = 6;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.panelTimeLine1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.AutoScroll = true;
+            this.splitContainer2.Panel2.Controls.Add(this.controlListBox1);
+            this.splitContainer2.Size = new System.Drawing.Size(1326, 439);
+            this.splitContainer2.SplitterDistance = 930;
+            this.splitContainer2.SplitterWidth = 6;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // panelTimeLine1
+            // 
+            this.panelTimeLine1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelTimeLine1.Location = new System.Drawing.Point(0, 0);
+            this.panelTimeLine1.Margin = new System.Windows.Forms.Padding(2);
+            this.panelTimeLine1.Name = "panelTimeLine1";
+            this.panelTimeLine1.Size = new System.Drawing.Size(930, 439);
+            this.panelTimeLine1.TabIndex = 2;
+            // 
+            // controlListBox1
+            // 
+            this.controlListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.controlListBox1.Location = new System.Drawing.Point(0, 0);
+            this.controlListBox1.Name = "controlListBox1";
+            this.controlListBox1.Size = new System.Drawing.Size(390, 439);
+            this.controlListBox1.TabIndex = 0;
+            this.controlListBox1.Text = "customListBox1";
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(4);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.panelControlMainEdit1);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.panelControlMainTree1);
+            this.splitContainer3.Size = new System.Drawing.Size(1326, 365);
+            this.splitContainer3.SplitterDistance = 930;
+            this.splitContainer3.SplitterWidth = 6;
+            this.splitContainer3.TabIndex = 0;
+            // 
+            // panelControlMainEdit1
+            // 
+            this.panelControlMainEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelControlMainEdit1.Location = new System.Drawing.Point(0, 0);
+            this.panelControlMainEdit1.Margin = new System.Windows.Forms.Padding(6);
+            this.panelControlMainEdit1.Name = "panelControlMainEdit1";
+            this.panelControlMainEdit1.Size = new System.Drawing.Size(930, 365);
+            this.panelControlMainEdit1.TabIndex = 0;
+            // 
+            // panelControlMainTree1
+            // 
+            this.panelControlMainTree1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelControlMainTree1.Location = new System.Drawing.Point(0, 0);
+            this.panelControlMainTree1.Margin = new System.Windows.Forms.Padding(6);
+            this.panelControlMainTree1.Name = "panelControlMainTree1";
+            this.panelControlMainTree1.Size = new System.Drawing.Size(390, 365);
+            this.panelControlMainTree1.TabIndex = 0;
+            // 
+            // FormTimeLine
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(1326, 842);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.statusStrip1);
+            this.DoubleBuffered = true;
+            this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(356, 232);
+            this.Name = "FormTimeLine";
+            this.Text = "FormMain";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTimeLine_FormClosing);
+            this.Load += new System.EventHandler(this.FormTimeLine_Load);
+            this.Shown += new System.EventHandler(this.FormTimeLine_Shown);
+            this.ResizeBegin += new System.EventHandler(this.FormTimeLine_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.FormTimeLine_ResizeEnd);
+            this.contextMenuUser.ResumeLayout(false);
+            this.contextMenuSearch.ResumeLayout(false);
+            this.contextMenuForListView.ResumeLayout(false);
+            this.contextMenuForWebView.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+        private System.Windows.Forms.ContextMenuStrip contextMenuUser;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuAddUser;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuDelUser;
+        private System.Windows.Forms.ContextMenuStrip contextMenuSearch;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuAddSearch;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuChangeSearch;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuDelSearch;
+        private System.Windows.Forms.ContextMenuStrip contextMenuForListView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRetweet;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLike;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUser;
+        private System.Windows.Forms.ContextMenuStrip contextMenuForWebView;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuWebViewOpen;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuWebViewSearch;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuWebViewAddHash;
+        public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        public System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        public UserPanel.PanelTimeLine panelTimeLine1;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        public UserPanel.PanelControlMainEdit panelControlMainEdit1;
+        public UserPanel.PanelControlMainTree panelControlMainTree1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuWebViewCopy;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUnRetweet;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUnLike;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuSetHash;
+        private Class.ControlListBox controlListBox1;
+    }
+}

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="Class\BufferedListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Class\ControlListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="DialogKeyIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormTimeLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelControlMain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelControlMainEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelControlMainTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelTimeLine.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelTimeLineContents.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserPanel\PanelTimeLineList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
