@@ -94,21 +94,23 @@ namespace twclient.UserPanel
             // textBoxUserName
             // 
             this.textBoxUserName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxUserName.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxUserName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxUserName.Location = new System.Drawing.Point(0, 0);
             this.textBoxUserName.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxUserName.Name = "textBoxUserName";
-            this.textBoxUserName.Size = new System.Drawing.Size(454, 18);
+            this.textBoxUserName.Size = new System.Drawing.Size(454, 24);
             this.textBoxUserName.TabIndex = 0;
             // 
             // textBoxUserId
             // 
             this.textBoxUserId.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxUserId.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxUserId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxUserId.Location = new System.Drawing.Point(0, 24);
             this.textBoxUserId.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxUserId.Name = "textBoxUserId";
-            this.textBoxUserId.Size = new System.Drawing.Size(454, 18);
+            this.textBoxUserId.Size = new System.Drawing.Size(454, 24);
             this.textBoxUserId.TabIndex = 1;
             // 
             // textBoxDateTime
@@ -118,7 +120,7 @@ namespace twclient.UserPanel
             this.textBoxDateTime.Location = new System.Drawing.Point(0, 48);
             this.textBoxDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxDateTime.Name = "textBoxDateTime";
-            this.textBoxDateTime.Size = new System.Drawing.Size(454, 18);
+            this.textBoxDateTime.Size = new System.Drawing.Size(454, 24);
             this.textBoxDateTime.TabIndex = 2;
             // 
             // textBoxRetweet
@@ -128,11 +130,12 @@ namespace twclient.UserPanel
             this.textBoxRetweet.Location = new System.Drawing.Point(0, 72);
             this.textBoxRetweet.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxRetweet.Name = "textBoxRetweet";
-            this.textBoxRetweet.Size = new System.Drawing.Size(454, 18);
+            this.textBoxRetweet.Size = new System.Drawing.Size(454, 24);
             this.textBoxRetweet.TabIndex = 3;
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);

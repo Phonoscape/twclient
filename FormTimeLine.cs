@@ -735,7 +735,7 @@ namespace twclient
 
             lvi.Text = line.Id.ToString();
             lvi.SubItems.Add(line.User.Name, color, bkColor, font);
-            lvi.SubItems.Add(line.User.ScreenName, color, bkColor, font);
+            lvi.SubItems.Add("@" + line.User.ScreenName, color, bkColor, font);
 
             var txt = line.FullText.ToString();
             var decode = WebUtility.HtmlDecode(txt);
@@ -889,7 +889,7 @@ namespace twclient
             controlListBox1.Items.Clear();
 
             //makeContents(tl);
-            await Task.Run(() => makeContents(tl));
+            await Task.Run(() => MakeContents(tl));
             CoreTweet.Status nestTl;
 
             if (tl.RetweetedStatus != null)
@@ -908,7 +908,7 @@ namespace twclient
                 //makeContents(qt);
                 if (qt != null)
                 {
-                    await Task.Run(() => makeContents(qt));
+                    await Task.Run(() => MakeContents(qt));
                     qs = qt.QuotedStatusId;
                 }
                 else 
@@ -924,7 +924,7 @@ namespace twclient
                 //makeContents(qt);
                 if (qt != null)
                 {
-                    await Task.Run(() => makeContents(qt));
+                    await Task.Run(() => MakeContents(qt));
                     ir = qt.InReplyToStatusId;
                 }
                 else
@@ -935,13 +935,13 @@ namespace twclient
 
         }
 
-        private void makeContents(CoreTweet.Status tl)
+        private void MakeContents(CoreTweet.Status tl)
         {
             if (this.InvokeRequired)
             {
                 try
                 {
-                    Invoke(new Action<CoreTweet.Status>(makeContents), tl);
+                    Invoke(new Action<CoreTweet.Status>(MakeContents), tl);
                 }
                 catch (System.ObjectDisposedException)
                 {
@@ -963,6 +963,10 @@ namespace twclient
 
             panelTimeLineContents1 contents = new panelTimeLineContents1();
 
+            contents.textBoxUserId.Click += Contents_User_Click;
+            contents.textBoxUserName.Click += Contents_User_Click;
+            contents.pictureBox1.Click += Contents_User_Click;
+
             /*
             int top = 0;
             foreach(var item in customListBox1.Items)
@@ -978,11 +982,21 @@ namespace twclient
             Bitmap bitmap = new Bitmap(stream);
             stream.Close();
 
+            var userId = tl.User.ScreenName.ToString();
+
             contents.textBoxUserName.Text = tl.User.Name.ToString();
-            contents.textBoxUserId.Text = tl.User.ScreenName.ToString();
+            contents.textBoxUserName.Tag = userId;
+            contents.textBoxUserId.Text = "@" + userId;
+            contents.textBoxUserId.Tag = userId;
             contents.textBoxDateTime.Text = tl.CreatedAt.LocalDateTime.ToString();
 
-            if (retweet) contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(" + rtl.User.ScreenName.ToString() + ")";
+            if (retweet)
+            {
+                contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(" + rtl.User.ScreenName.ToString() + ")";
+                contents.textBoxRetweet.Tag = rtl.User.ScreenName.ToString();
+                contents.textBoxRetweet.Click += Contents_User_Click;
+                contents.textBoxRetweet.Cursor = Cursors.Hand;
+            }
 
             //var h = (int)(contents.textBoxUserName.Font.Height * DpiScale);
             //var h = (int)(contents.textBoxUserName.Height * DpiScale);
@@ -1006,6 +1020,7 @@ namespace twclient
             contents.Height = h * 4;
             contents.pictureBox1.Image = bitmap;
             contents.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            contents.pictureBox1.Tag = userId;
 
             var cssStr = readCss();
 
@@ -1048,6 +1063,13 @@ namespace twclient
             //            listBoxTweetContents.Controls.SetChildIndex(contents, listBoxTweetContents.Items.Count - 1);
 
             //            listBoxTweetContents.Update();
+        }
+
+        private void Contents_User_Click(object sender, EventArgs e)
+        {
+            var user = ((Control)sender).Tag.ToString();
+            var tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, "@" + user);
+            tl.SetUserId(twitter.SearchUserId(user));
         }
 
         private string readCss()
