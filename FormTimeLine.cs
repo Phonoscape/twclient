@@ -906,8 +906,15 @@ namespace twclient
             {
                 var qt = twitter.GetTimeLineFromAPI(qs);
                 //makeContents(qt);
-                await Task.Run(() => makeContents(qt));
-                qs = qt.QuotedStatusId;
+                if (qt != null)
+                {
+                    await Task.Run(() => makeContents(qt));
+                    qs = qt.QuotedStatusId;
+                }
+                else 
+                {
+                    qs = null;
+                }
             }
 
             var ir = nestTl.InReplyToStatusId;
@@ -915,8 +922,15 @@ namespace twclient
             {
                 var qt = twitter.GetTimeLineFromAPI(ir);
                 //makeContents(qt);
-                await Task.Run(() => makeContents(qt));
-                ir = qt.InReplyToStatusId;
+                if (qt != null)
+                {
+                    await Task.Run(() => makeContents(qt));
+                    ir = qt.InReplyToStatusId;
+                }
+                else
+                {
+                    ir = null;
+                }
             }
 
         }
