@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -815,7 +817,7 @@ namespace twclient
                 e.Graphics.FillRectangle(br, new Rectangle(locate, size));
             }
 
-            e.DrawText(TextFormatFlags.Bottom | TextFormatFlags.NoPadding);
+            e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
         }
 
         private void PanelTimeLine1_panelTimeLineList1_listView1_Click(object sender, EventArgs e)
@@ -946,12 +948,6 @@ namespace twclient
             }
 
             panelTimeLineContents1 contents = new panelTimeLineContents1();
-            //contents.Dock = DockStyle.Fill;
-            contents.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            contents.Left = 0;
-            contents.Top = 0;
-            //contents.Width = controlListBox1.ClientSize.Width;
-            contents.Width = controlListBox1.GetWidthWithoutScrollbar();
 
             /*
             int top = 0;
@@ -1003,6 +999,7 @@ namespace twclient
             var body = twitter.MakeHtmlBody(tl, eventHandlerName);
             var html = "<html><body>" + cssStr + body + "</body></html>";
 
+            contents.webBrowser1.Height = 0;
             contents.webBrowser1.DocumentText = html;
             contents.webBrowser1.DocumentCompleted += PanelTimeLineContents1_webBrowser_DocumentCompleted;
             contents.webBrowser1.Document.Click += PanelTimeLineContents1_webBrowser_Document_Click;
@@ -1017,11 +1014,16 @@ namespace twclient
                     ((ToolStripMenuItem)obj).Click += ContextMenuForWebView_Click;
             }
 
-
 //            listBoxTweetContents.Controls.Add(contents);
             controlListBox1.Add(contents);
             contents.Parent = (Control)controlListBox1;
 
+            //contents.Dock = DockStyle.Fill;
+            contents.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            contents.Left = 0;
+            contents.Top = 0;
+            //contents.Width = controlListBox1.ClientSize.Width;
+            contents.Width = controlListBox1.GetWidthWithoutScrollbar();
 
             //Panel dp = new Panel();
             //dp.Dock = DockStyle.Fill;
@@ -1661,7 +1663,15 @@ namespace twclient
 
         public void OpenUrl(string url)
         {
-            System.Diagnostics.Process.Start("cmd", "/c start " + url);
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", "/c start " + url) { CreateNoWindow = true });
+            }
         }
     }
 }
