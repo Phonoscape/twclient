@@ -243,7 +243,7 @@ namespace twclient
             return tl;
         }
 
-        public bool GetTimeLine()
+        public bool GetTimeLine(long tweetId = 0)
         {
             CoreTweet.Core.ListedResponse<Status> statuses;
             SearchResult result;
@@ -271,14 +271,28 @@ namespace twclient
                     case TimeLine.TimeLineType.TIMELINE_HOME:
                         maxId = tl.GetMaxId();
                         ct = tl.GetGetCount();
-                        statuses = tokens.Statuses.HomeTimeline(since_id => maxId, count => ct, tweet_mode => TweetMode.Extended);
+                        if (tweetId == 0)
+                        {
+                            statuses = tokens.Statuses.HomeTimeline(since_id => maxId, count => ct, tweet_mode => TweetMode.Extended);
+                        }
+                        else 
+                        {
+                            statuses = tokens.Statuses.HomeTimeline(since_id => tweetId -1, maxId => tweetId, count => ct, tweet_mode => TweetMode.Extended);
+                        }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
                     case TimeLine.TimeLineType.TIMELINE_USER:
                         maxId = tl.GetMaxId();
                         userId = tl.GetUserId();
                         ct = tl.GetGetCount();
-                        statuses = tokens.Statuses.UserTimeline(since_id => maxId, count => ct, user_id => userId, tweet_mode => TweetMode.Extended);
+                        if (tweetId == 0)
+                        {
+                            statuses = tokens.Statuses.UserTimeline(since_id => maxId, count => ct, user_id => userId, tweet_mode => TweetMode.Extended);
+                        }
+                        else
+                        {
+                            statuses = tokens.Statuses.UserTimeline(since_id => tweetId - 1, maxId => tweetId, count => ct, user_id => userId, tweet_mode => TweetMode.Extended);
+                        }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
                     /*                    case TimeLine.TimeLineType.TIMELINE_NOTIFICATION:
@@ -307,14 +321,28 @@ namespace twclient
                     case TimeLine.TimeLineType.TIMELINE_MENTION:
                         maxId = tl.GetMaxId();
                         ct = tl.GetGetCount();
-                        statuses = tokens.Statuses.MentionsTimeline(count => ct, since_id => maxId, tweet_mode => TweetMode.Extended);
+                        if (tweetId == 0)
+                        {
+                            statuses = tokens.Statuses.MentionsTimeline(count => ct, since_id => maxId, tweet_mode => TweetMode.Extended);
+                        }
+                        else
+                        {
+                            statuses = tokens.Statuses.MentionsTimeline(count => ct, since_id => tweetId - 1, maxId => tweetId, tweet_mode => TweetMode.Extended);
+                        }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
                     case TimeLine.TimeLineType.TIMELINE_LISTS:
                         maxId = tl.GetMaxId();
                         ct = tl.GetGetCount();
                         listId = tl.GetListId();
-                        statuses = tokens.Lists.Statuses(list_id => listId, count => ct, since_id => maxId, tweet_mode => TweetMode.Extended);
+                        if (tweetId == 0)
+                        {
+                            statuses = tokens.Lists.Statuses(list_id => listId, count => ct, since_id => maxId, tweet_mode => TweetMode.Extended);
+                        }
+                        else
+                        {
+                            statuses = tokens.Lists.Statuses(list_id => listId, count => ct, since_id => tweetId - 1, maxId => tweetId, tweet_mode => TweetMode.Extended);
+                        }
                         tl.AddTimeLine(statuses.ToList());
                         break;
                     default:
@@ -689,6 +717,26 @@ namespace twclient
                 return false;
             }
 
+            return false;
+        }
+
+        public bool CheckSelfTweet(long tweetId)
+        {
+            try
+            {
+                var userId = GetTokenUser();
+                var st = tokens.Statuses.UserTimeline(user_id => userId, since_id => (tweetId - 1), max_id => tweetId );
+
+                if (st.Count > 0)
+                {
+                    return true;
+                }
+            }
+            catch (CoreTweet.TwitterException e)
+            {
+                parentForm.SetStatusMenu(e.Message);
+                return false;
+            }
 
             return false;
         }
@@ -701,6 +749,14 @@ namespace twclient
         public void UnLike(long tweetId)
         {
             tokens.Favorites.DestroyAsync(id => tweetId);
+        }
+
+        public void DeleteTweet(long tweetId)
+        {
+            tokens.Statuses.Destroy(id => tweetId);
+            var tl = SelectTimeLine();
+            var st = tl.GetTweetFromId(tweetId);
+            tl.GetTimeLine().Remove(st);
         }
 
         public CoreTweet.Status GetTimeLineFromAPI(long? quotedStatusId)

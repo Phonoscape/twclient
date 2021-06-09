@@ -163,7 +163,15 @@ namespace twclient
 
             foreach (var st in status)
             {
-                if (!timeline.Contains(st)) timeline.Add(st);
+                if (!timeline.Contains(st))
+                {
+                    timeline.Add(st);
+                }
+                else
+                {
+                    timeline.Remove(st);
+                    timeline.Add(st);
+                }
             }
 
             foreach (var line in status)
