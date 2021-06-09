@@ -1193,6 +1193,7 @@ namespace twclient
                 {
                     twitter.Retweet(tweetId);
                     twitter.GetTimeLine(tweetId);
+                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
                 }
             }
             else if (obj == toolStripMenuItemUnRetweet)
@@ -1201,6 +1202,7 @@ namespace twclient
                 {
                     twitter.UnRetweet(tweetId);
                     twitter.GetTimeLine(tweetId);
+                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
                 }
             }
             else if (obj == toolStripMenuItemLike)
@@ -1209,6 +1211,7 @@ namespace twclient
                 {
                     twitter.Like(tweetId);
                     twitter.GetTimeLine(tweetId);
+                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
                 }
             }
             else if (obj == toolStripMenuItemUnLike)
@@ -1217,6 +1220,7 @@ namespace twclient
                 {
                     twitter.UnLike(tweetId);
                     twitter.GetTimeLine(tweetId);
+                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
                 }
             }
             else if (obj == toolStripMenuItemUser)
