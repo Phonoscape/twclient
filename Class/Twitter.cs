@@ -277,7 +277,7 @@ namespace twclient
                         }
                         else 
                         {
-                            statuses = tokens.Statuses.HomeTimeline(since_id => tweetId -1, maxId => tweetId, count => ct, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Statuses.HomeTimeline(since_id => (tweetId -1), max_id => tweetId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
@@ -291,7 +291,7 @@ namespace twclient
                         }
                         else
                         {
-                            statuses = tokens.Statuses.UserTimeline(since_id => tweetId - 1, maxId => tweetId, count => ct, user_id => userId, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Statuses.UserTimeline(since_id => (tweetId - 1), max_id => tweetId, user_id => userId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
@@ -327,7 +327,7 @@ namespace twclient
                         }
                         else
                         {
-                            statuses = tokens.Statuses.MentionsTimeline(count => ct, since_id => tweetId - 1, maxId => tweetId, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Statuses.MentionsTimeline(since_id => (tweetId - 1), max_id => tweetId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
@@ -341,7 +341,7 @@ namespace twclient
                         }
                         else
                         {
-                            statuses = tokens.Lists.Statuses(list_id => listId, count => ct, since_id => tweetId - 1, maxId => tweetId, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Lists.Statuses(list_id => listId, since_id => (tweetId - 1), max_id => tweetId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList());
                         break;
