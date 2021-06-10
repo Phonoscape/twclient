@@ -100,7 +100,7 @@ namespace twclient
         private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
             ContentsResize();
-            ListView1_Click();
+            //ListView1_Click();
         }
 
         // ComboBoxHash
