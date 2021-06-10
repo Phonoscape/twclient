@@ -99,6 +99,7 @@ namespace twclient
 
         private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
+            ContentsResize();
             ListView1_Click();
         }
 
@@ -1471,12 +1472,16 @@ namespace twclient
 
         private void ControlListBox1_Resize(object sender, EventArgs e)
         {
-            foreach(var item in controlListBox1.Items)
+            ContentsResize();
+        }
+
+        private void ContentsResize()
+        {
+            foreach (var item in controlListBox1.Items)
             {
                 item.Width = controlListBox1.GetWidthWithoutScrollbar();
             }
         }
-
 
 
         private void PanelControlMainEdit1_ButtonSend_Click(object sender, EventArgs e)
