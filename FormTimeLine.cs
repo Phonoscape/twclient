@@ -60,6 +60,7 @@ namespace twclient
 
             panelControlMainEdit1.comboBoxHash.SelectedIndexChanged += PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged;
             panelControlMainEdit1.comboBoxHash.Leave += PanelControlMainEdit1_ComboBoxHash_Leave;
+            panelControlMainEdit1.comboBoxHash.KeyPress += PanelControlMainEdit1_ComboBoxHash_KeyPress;
 
             panelControlMainEdit1.textBoxTweet.KeyDown += PanelControlMainEdit1_TextBoxTweet_KeyDown;
             panelControlMainEdit1.textBoxTweet.KeyUp += PanelControlMainEdit1_TextBoxTweet_KeyUp;
@@ -105,13 +106,24 @@ namespace twclient
 
         // ComboBoxHash
 
+        private bool changeComboBoxHash = false;
+
         private void PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged(object sender, EventArgs e)
         {
             System.Console.WriteLine("PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged");
 
+            if (changeComboBoxHash)
+            {
+                changeComboBoxHash = false;
+                return;
+            }
+
+            changeComboBoxHash = true;
+
             var items = panelControlMainEdit1.comboBoxHash.Items;
             var text = panelControlMainEdit1.comboBoxHash.SelectedItem.ToString();
 
+            SetComboBox(text);
             twitter.SetHashTag(text);
         }
 
@@ -119,8 +131,22 @@ namespace twclient
         {
             System.Console.WriteLine("PanelControlMainEdit1_ComboBoxHash_Leave");
 
-            twitter.SetHashTag(panelControlMainEdit1.comboBoxHash.Text);
+            //twitter.SetHashTag(panelControlMainEdit1.comboBoxHash.Text);
+            SetComboBox(panelControlMainEdit1.comboBoxHash.Text);
         }
+
+        private void PanelControlMainEdit1_ComboBoxHash_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var keycode = e.KeyChar;
+
+            if (keycode == '\r')
+            {
+                SetComboBox(panelControlMainEdit1.comboBoxHash.Text);
+                e.Handled = true;
+            }
+        }
+
+
 
         private void SetComboBox(string txt)
         {
@@ -836,7 +862,7 @@ namespace twclient
             ListView1_Click();
         }
 
-        private async void ListView1_Click()
+        private void ListView1_Click()
         {
             ListView lv = panelTimeLine1.panelTimeLineList1.listView1;
             long tweetId;
@@ -887,7 +913,7 @@ namespace twclient
                 toolStripMenuItemLike.Enabled = true;
             }
 
-            if(twitter.CheckSelfTweet(tweetId))
+            if (twitter.CheckSelfTweet(tweetId))
             {
                 toolStripMenuItemDel.Enabled = true;
             }
@@ -900,52 +926,38 @@ namespace twclient
             }
 
             controlListBox1.Items.Clear();
+            TweetDraw(tl);
+        }
+
+        private async void TweetDraw(CoreTweet.Status tl,bool retFlag = false, int level = 0)
+        {
+            if (level > 100) return;
 
             //makeContents(tl);
-            await Task.Run(() => MakeContents(tl));
-            CoreTweet.Status nestTl;
+            if (!retFlag) await Task.Run(() => MakeContents(tl));
 
-            if (tl.RetweetedStatus != null)
+            var ret = tl.RetweetedStatus;
+            var inRep = tl.InReplyToStatusId;
+            var qt = tl.QuotedStatus;
+
+            if (ret != null)
             {
-                nestTl = tl.RetweetedStatus;
-            }
-            else
-            {
-                nestTl = tl;
+                TweetDraw(ret, true, level + 1);
             }
 
-            var qs = nestTl.QuotedStatusId;
-            while(qs != null)
+            if ( inRep != null)
             {
-                var qt = twitter.GetTimeLineFromAPI(qs);
-                //makeContents(qt);
-                if (qt != null)
+                var inRepSt = twitter.GetTimeLineFromAPI((long)inRep);
+                if (inRepSt != null)
                 {
-                    await Task.Run(() => MakeContents(qt));
-                    qs = qt.QuotedStatusId;
-                }
-                else 
-                {
-                    qs = null;
+                    TweetDraw(inRepSt, false, level + 1);
                 }
             }
 
-            var ir = nestTl.InReplyToStatusId;
-            while (ir != null)
+            if (qt != null)
             {
-                var qt = twitter.GetTimeLineFromAPI(ir);
-                //makeContents(qt);
-                if (qt != null)
-                {
-                    await Task.Run(() => MakeContents(qt));
-                    ir = qt.InReplyToStatusId;
-                }
-                else
-                {
-                    ir = null;
-                }
+                TweetDraw(qt, false, level + 1);
             }
-
         }
 
         private void MakeContents(CoreTweet.Status tl)
