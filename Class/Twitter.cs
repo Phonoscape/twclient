@@ -570,7 +570,15 @@ namespace twclient
                             {
                                 if (i.Url == url + tmp)
                                 {
-                                    img.Add("<a href=\"" + i.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                    if (i.VideoInfo != null)
+                                    {
+                                        img.Add("<a href=\"" + i.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                    }
+                                    else
+                                    {
+                                        //img.Add("<a href=\"" + i.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                        img.Add("<a href=\"" + i.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                    }
                                     cont = true;
                                 }
                             }
