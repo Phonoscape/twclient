@@ -370,6 +370,15 @@ namespace twclient
                 }
                 return res;
             }
+            catch (System.Net.WebException e)
+            {
+                res = false;
+                parentForm.SetStatusMenu(e.Message);
+            }
+            catch
+            {
+                res = false;
+            }
 
             return res;
         }

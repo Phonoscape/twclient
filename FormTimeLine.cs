@@ -986,7 +986,7 @@ namespace twclient
                 retweet = true;
             }
 
-            panelTimeLineContents1 contents = new panelTimeLineContents1();
+            panelTimeLineContents1 contents = new panelTimeLineContents1(tl.Id);
 
             contents.textBoxUserId.Click += Contents_User_Click;
             contents.textBoxUserName.Click += Contents_User_Click;

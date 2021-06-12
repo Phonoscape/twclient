@@ -12,9 +12,13 @@ namespace twclient.UserPanel
 {
     public partial class panelTimeLineContents1 : UserControl
     {
-        public panelTimeLineContents1()
+        public long tweetId { get; set; }
+
+        public panelTimeLineContents1(long id)
         {
             InitializeComponent();
+
+            tweetId = id;
         }
     }
 }
