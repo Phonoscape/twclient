@@ -1093,7 +1093,16 @@ namespace twclient
         private Bitmap MakeBitmapFromUrl(string url)
         {
             WebClient webClient = new WebClient();
-            Stream stream = webClient.OpenRead(url);
+            Stream stream = null;
+            try
+            {
+                stream = webClient.OpenRead(url);
+            }
+            catch(System.Net.WebException e)
+            {
+                SetStatusMenu(e.Message);
+                return null;
+            }
 
             Bitmap bitmap = new Bitmap(stream);
             stream.Close();

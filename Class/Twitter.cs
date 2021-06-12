@@ -699,7 +699,11 @@ namespace twclient
 
                 return (bool)st.IsRetweeted;
             }
-            catch (CoreTweet.TwitterException e)
+            catch(CoreTweet.TwitterException e)
+            {
+                parentForm.SetStatusMenu(e.Message);
+            }
+            catch(System.Net.WebException e)
             {
                 parentForm.SetStatusMenu(e.Message);
             }
@@ -728,7 +732,12 @@ namespace twclient
                     return true;
                 }
             }
-            catch (CoreTweet.TwitterException e)
+            catch(CoreTweet.TwitterException e)
+            {
+                parentForm.SetStatusMenu(e.Message);
+                return false;
+            }
+            catch(System.Net.WebException e)
             {
                 parentForm.SetStatusMenu(e.Message);
                 return false;
@@ -750,6 +759,11 @@ namespace twclient
                 }
             }
             catch (CoreTweet.TwitterException e)
+            {
+                parentForm.SetStatusMenu(e.Message);
+                return false;
+            }
+            catch (System.Net.WebException e)
             {
                 parentForm.SetStatusMenu(e.Message);
                 return false;
@@ -789,6 +803,12 @@ namespace twclient
                 parentForm.SetStatusMenu(e.Message);
                 return null;
             }
+            catch (System.Net.WebException e)
+            {
+                parentForm.SetStatusMenu(e.Message);
+                return null;
+            }
+
             if (status.Count == 0) return null;
 
             return status[0];
