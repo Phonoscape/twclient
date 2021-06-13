@@ -1041,6 +1041,7 @@ namespace twclient
             //    contents.tableLayoutPanel1.RowStyles[i].Height = h;
             //}
 
+            contents.Width = controlListBox1.GetWidthWithoutScrollbar();
             contents.Height = h * 4;
             contents.pictureBox1.Image = bitmap;
             contents.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -1078,7 +1079,6 @@ namespace twclient
             contents.Left = 0;
             contents.Top = 0;
             //contents.Width = controlListBox1.ClientSize.Width;
-            contents.Width = controlListBox1.GetWidthWithoutScrollbar();
 
             //Panel dp = new Panel();
             //dp.Dock = DockStyle.Fill;
