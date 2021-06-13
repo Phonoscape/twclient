@@ -890,6 +890,7 @@ namespace twclient
 
             toolStripMenuItemRetweet.Enabled = false;
             toolStripMenuItemUnRetweet.Enabled = false;
+            toolStripMenuItemReteetAt.Enabled = false;
             toolStripMenuItemReteetWith.Enabled = false;
             toolStripMenuItemLike.Enabled = false;
             toolStripMenuItemUnLike.Enabled = false;
