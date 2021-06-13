@@ -888,31 +888,13 @@ namespace twclient
 
             var tl = twitter.GetTimeLineFromId(tweetId);
 
-            toolStripMenuItemRetweet.Enabled = false;
-            toolStripMenuItemUnRetweet.Enabled = false;
+            toolStripMenuItemRetweet.Enabled = (bool)!tl.IsRetweeted;
+            toolStripMenuItemUnRetweet.Enabled = (bool)tl.IsRetweeted;
             toolStripMenuItemReteetAt.Enabled = false;
             toolStripMenuItemReteetWith.Enabled = false;
-            toolStripMenuItemLike.Enabled = false;
-            toolStripMenuItemUnLike.Enabled = false;
+            toolStripMenuItemLike.Enabled = (bool)!tl.IsFavorited;
+            toolStripMenuItemUnLike.Enabled = (bool)tl.IsFavorited;
             toolStripMenuItemDel.Enabled = false;
-
-            if (twitter.CheckRetweet(tweetId))
-            {
-                toolStripMenuItemUnRetweet.Enabled = true;
-            }
-            else
-            {
-                toolStripMenuItemRetweet.Enabled = true;
-            }
-
-            if (twitter.CheckLike(tweetId))
-            {
-                toolStripMenuItemUnLike.Enabled = true;
-            }
-            else
-            {
-                toolStripMenuItemLike.Enabled = true;
-            }
 
             if (twitter.CheckSelfTweet(tweetId))
             {
@@ -951,7 +933,7 @@ namespace twclient
                 var inRepSt = twitter.GetTimeLineFromAPI((long)inRep);
                 if (inRepSt != null)
                 {
-                    TweetDraw(inRepSt, false, level + 1);
+                    //TweetDraw(inRepSt, false, level + 1);
                 }
             }
 
