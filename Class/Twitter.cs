@@ -14,6 +14,13 @@ namespace twclient
 {
     class Twitter
     {
+        public enum TweetType : int
+        {
+            Normal = 0,
+            Reply,
+            RetweetWith
+        };
+
         private string[] splitWord = {"\n", " ", "　", "@", "＠", "#", "＃", "http://", "https://", "(", ")",
                                     "｛", "｝", "（", "）", "【", "】", "「", "」", "『", "』", "〈", "〉",
                                     "《", "》", ":", "：","、","。","・","．","!","！","?","？", ",", "，" };
@@ -642,7 +649,23 @@ namespace twclient
 
         // Send
 
-        internal void Send(String tweetText)
+        public void Send(String tweetText)
+        {
+            if (tweetText.Length > 0)
+            {
+                tokens.Statuses.UpdateAsync(tweetText);
+            }
+        }
+
+        public void Reply(String tweetText,long id)
+        {
+            if (tweetText.Length > 0)
+            {
+                tokens.Statuses.UpdateAsync(status => tweetText, in_reply_to_status_id => id);
+            }
+        }
+
+        public void RetweetWith(String tweetText)
         {
             if (tweetText.Length > 0)
             {
