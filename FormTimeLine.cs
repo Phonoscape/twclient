@@ -1342,30 +1342,47 @@ namespace twclient
                     beforeContentUrl = "";
                 }
 
-//                contentToolTip?.Dispose();
-//                contentToolTip = null;
+                contentToolTip?.Dispose();
+                contentToolTip = null;
             }
             else if (contentTagName == "img")
             {
                 contentUrl = clickedElement.GetAttribute("src");
                 SetStatusMenu(contentUrl);
-/*
+
+                panelTimeLineContents1 workDoc = null;
+
                 if (contentUrl != beforeContentUrl)
                 {
-                    contentToolTip?.Dispose();
-                    contentToolTip = new ToolTip();
-                    Bitmap bmp = MakeBitmapFromUrl(contentUrl);
-                    PictureBox pb = new PictureBox();
-                    pb.Image = bmp;
+                    foreach(var doc in controlListBox1.Items)
+                    {
+                        if (((HtmlDocument)sender) == ((panelTimeLineContents1)doc).webBrowser1.Document)
+                        {
+                            workDoc = (panelTimeLineContents1)doc;
+                            break;
+                        }
+                    }
 
-                    //contentToolTip.ShowAlways = true;
-                    //contentToolTip.SetToolTip(this, contentUrl);
-                    var x = ((HtmlDocument)sender).Window.Position.X;
-                    var y = ((HtmlDocument)sender).Window.Position.Y;
+                    if (workDoc != null)
+                    {
+                        contentToolTip?.Dispose();
+                        contentToolTip = new ToolTip();
+                        contentToolTip.OwnerDraw = true;
+                        contentToolTip.Popup += PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Popup;
+                        contentToolTip.Draw += PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Draw;
+                        Bitmap bmp = MakeBitmapFromUrl(contentUrl);
+                        contentToolTip.Tag = bmp;
 
-                    contentToolTip.Show(contentUrl, this, new Point(x,y));
+                        //contentToolTip.ShowAlways = true;
+                        //contentToolTip.SetToolTip(this, contentUrl);
+                        //var pos = new Point((int)(Cursor.Position.X / DpiScale), (int)(Cursor.Position.Y / DpiScale));
+                        var pos = Cursor.Position;
+                        System.Console.WriteLine("x:{0} y:{1}", pos.X, pos.Y);
+
+                        contentToolTip.Show(contentUrl, this, pos);
+                    }
                 }
-*/
+
                 beforeContentUrl = contentUrl;
             }
             else 
@@ -1373,9 +1390,25 @@ namespace twclient
                 SetStatusMenu("");
                 beforeContentUrl = "";
 
-//                contentToolTip?.Dispose();
-//                contentToolTip = null;
+                contentToolTip?.Dispose();
+                contentToolTip = null;
             }
+        }
+
+        private void PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Popup(object sender, PopupEventArgs e)
+        {
+            var obj = (ToolTip)sender;
+            e.ToolTipSize = ((Bitmap)obj.Tag).Size;
+        }
+
+        private void PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Draw(object sender, DrawToolTipEventArgs e)
+        {
+            var obj = (ToolTip)sender;
+            Bitmap bmp = (Bitmap)obj.Tag;
+
+            e.DrawBackground();
+            e.Graphics.DrawImage(bmp,new Point(0,0));
+            e.DrawBorder();
         }
 
         private void PanelTimeLineContents1_webBrowser_Document_MouseDown(object sender, HtmlElementEventArgs e)
@@ -1500,7 +1533,7 @@ namespace twclient
                     ((Panel)i).Height = controlListBox1.Height;
                 }
             }
-            controlListBox1.RePlace();
+            controlListBox1.Replace();
             controlListBox1.Refresh();
 
 
