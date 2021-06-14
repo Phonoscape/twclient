@@ -73,6 +73,9 @@ namespace twclient
 
             toolStripStatusLabel1.Height = 64;
 
+            panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
+            panelControlMainEdit1.textBoxMsg2.Tag = 0;
+
             //contextMenuUser.Click += ContextMenuUser_Click;
             foreach (ToolStripMenuItem obj in contextMenuUser.Items)
             {
@@ -233,6 +236,11 @@ namespace twclient
                 //Send_Click(panelControlMainEdit1.textBoxTweet.Text);
                 //panelControlMainEdit1.textBoxTweet.Clear();
             }
+        }
+
+        private void PanelControlMainEdit1_TextBoxMsg2_Click(object sender, EventArgs e)
+        {
+            ListView1_Click(long.Parse(panelControlMainEdit1.textBoxMsg2.Tag.ToString()));
         }
 
 
@@ -867,10 +875,9 @@ namespace twclient
             ListView1_Click();
         }
 
-        private void ListView1_Click()
+        private void ListView1_Click(long tweetId = 0)
         {
             ListView lv = panelTimeLine1.panelTimeLineList1.listView1;
-            long tweetId;
             bool sameTweet = false;
 
             try
@@ -880,9 +887,16 @@ namespace twclient
 
                 //if (index == 0) return;
 
-                tweetId = twitter.SelectTimeLine().GetTimeLine()[index].Id;
-                if (tweetId == selectedTweetId) sameTweet = true;
-                selectedTweetId = tweetId;
+                if (tweetId == 0)
+                {
+                    tweetId = twitter.SelectTimeLine().GetTimeLine()[index].Id;
+                    if (tweetId == selectedTweetId) sameTweet = true;
+                    selectedTweetId = tweetId;
+                }
+                else
+                {
+                    selectedTweetId = 0;
+                }
 
                 if (tweetId == 0) return;
             }
@@ -1274,6 +1288,9 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Reply;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
+
+                panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
+                panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
             }
             else if (obj == toolStripMenuItemReteetWith)
             {
@@ -1292,6 +1309,9 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.RetweetWith;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
+
+                panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
+                panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
             }
         }
 
@@ -1538,13 +1558,23 @@ namespace twclient
 
             panelControlMainEdit1.textBoxMsg1.Clear();
             panelControlMainEdit1.textBoxMsg2.Clear();
+
+            panelControlMainEdit1.textBoxMsg2.Click -= PanelControlMainEdit1_TextBoxMsg2_Click;
+            panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.IBeam;
+
         }
 
         private void Send_Click(string txt)
         {
             var type = (Twitter.TweetType)panelControlMainEdit1.textBoxMsg1.Tag;
-            var sub = long.Parse(panelControlMainEdit1.textBoxMsg2.Tag.ToString());
+            var msg2Tag = panelControlMainEdit1.textBoxMsg2.Tag;
+            var sub = (long)0;
             var len = txt.Length;
+
+            if (msg2Tag != null)
+            {
+                sub = long.Parse(msg2Tag.ToString());
+            }
 
             if (panelControlMainEdit1.checkBoxHash.Checked)
             {
@@ -1557,7 +1587,7 @@ namespace twclient
                 {
                     twitter.Send(txt);
                 }
-                else if (type == Twitter.TweetType.Reply)
+                else if (type == Twitter.TweetType.Reply && sub != 0)
                 {
                     twitter.Reply(txt, sub);
                 }
@@ -1567,6 +1597,14 @@ namespace twclient
                     twitter.Send(txt);
                 }
             }
+
+            panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
+
+            panelControlMainEdit1.textBoxMsg1.Clear();
+            panelControlMainEdit1.textBoxMsg2.Clear();
+
+            panelControlMainEdit1.textBoxMsg2.Click -= PanelControlMainEdit1_TextBoxMsg2_Click;
+            panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.IBeam;
         }
 
         private void PanelControlMainEdit1_ButtonClear_Click(object sender, EventArgs e)
@@ -1577,6 +1615,9 @@ namespace twclient
 
             panelControlMainEdit1.textBoxMsg1.Clear();
             panelControlMainEdit1.textBoxMsg2.Clear();
+
+            panelControlMainEdit1.textBoxMsg2.Click -= PanelControlMainEdit1_TextBoxMsg2_Click;
+            panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.IBeam;
         }
 
         private void FormTimeLine_ResizeEnd(object sender, EventArgs e)
