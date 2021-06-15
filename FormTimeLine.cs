@@ -76,6 +76,8 @@ namespace twclient
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
             panelControlMainEdit1.textBoxMsg2.Tag = 0;
 
+            this.MouseMove += FormTimeLine_MouseMove;
+
             //contextMenuUser.Click += ContextMenuUser_Click;
             foreach (ToolStripMenuItem obj in contextMenuUser.Items)
             {
@@ -95,7 +97,6 @@ namespace twclient
                     ((ToolStripMenuItem)obj).Click += ContextMenuForListView_Click;
             }
         }
-
 
         // UI EventHandler
 
@@ -372,6 +373,11 @@ namespace twclient
             SaveUser();
             SaveSearch();
         }
+
+        private void FormTimeLine_MouseMove(object sender, MouseEventArgs e)
+        {
+        }
+
 
         // UserControl event
 
@@ -1372,12 +1378,16 @@ namespace twclient
                         contentToolTip.Draw += PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Draw;
                         Bitmap bmp = MakeBitmapFromUrl(contentUrl);
                         contentToolTip.Tag = bmp;
+                        Debug.WriteLine("BMP Size x:{0} y:{1}", bmp.Size.Width, bmp.Size.Height);
 
                         //contentToolTip.ShowAlways = true;
                         //contentToolTip.SetToolTip(this, contentUrl);
+
                         //var pos = new Point((int)(Cursor.Position.X / DpiScale), (int)(Cursor.Position.Y / DpiScale));
-                        var pos = Cursor.Position;
-                        System.Console.WriteLine("x:{0} y:{1}", pos.X, pos.Y);
+                        //var pos = Cursor.Position;
+                        var pos = this.PointToClient(Control.MousePosition);
+
+                        Debug.WriteLine("Pos x:{0} y:{1}", pos.X, pos.Y);
 
                         contentToolTip.Show(contentUrl, this, pos);
                     }
@@ -1525,8 +1535,8 @@ namespace twclient
                     //((panelTimeLineContents1)i).Height = h;
                     i.Height = hTable + hWeb;
 
-                    Console.WriteLine("DocumentCompleted: hSplit {0}", hTable);
-                    Console.WriteLine("DocumentCompleted: hWeb {0}", hWeb);
+                    Debug.WriteLine("DocumentCompleted: hSplit {0}", hTable);
+                    Debug.WriteLine("DocumentCompleted: hWeb {0}", hWeb);
                 }
                 else
                 {
@@ -1546,7 +1556,7 @@ namespace twclient
             {
                 var h = ((panelTimeLineContents1)controlListBox1.Items[e.Index]).Height;
                 e.ItemHeight = h;
-                Console.WriteLine("MeasureItem: {0}", h);
+                Debug.WriteLine("MeasureItem: {0}", h);
             }
             else
             {
