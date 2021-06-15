@@ -89,7 +89,7 @@ namespace twclient.Class
             ItemH.RemoveAt(id);
         }
 
-        public void RePlace()
+        public void Replace()
         {
             foreach(var item in Items)
             {

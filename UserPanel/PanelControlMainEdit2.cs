@@ -10,15 +10,11 @@ using System.Windows.Forms;
 
 namespace twclient.UserPanel
 {
-    public partial class panelTimeLineContents1 : UserControl
+    public partial class PanelControlMainEdit2 : UserControl
     {
-        public long tweetId { get; set; }
-
-        public panelTimeLineContents1(long id)
+        public PanelControlMainEdit2()
         {
             InitializeComponent();
-
-            tweetId = id;
         }
     }
 }
