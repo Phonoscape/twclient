@@ -43,8 +43,8 @@ namespace twclient
             this.contextMenuForListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemRetweet = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnRetweet = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemReply = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemReteetWith = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemReply = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemLike = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnLike = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDel = new System.Windows.Forms.ToolStripMenuItem();
@@ -171,14 +171,20 @@ namespace twclient
             // toolStripMenuItemRetweet
             // 
             this.toolStripMenuItemRetweet.Name = "toolStripMenuItemRetweet";
-            this.toolStripMenuItemRetweet.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemRetweet.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemRetweet.Text = "Retweet";
             // 
             // toolStripMenuItemUnRetweet
             // 
             this.toolStripMenuItemUnRetweet.Name = "toolStripMenuItemUnRetweet";
-            this.toolStripMenuItemUnRetweet.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemUnRetweet.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemUnRetweet.Text = "Retweet取り消し";
+            // 
+            // toolStripMenuItemReteetWith
+            // 
+            this.toolStripMenuItemReteetWith.Name = "toolStripMenuItemReteetWith";
+            this.toolStripMenuItemReteetWith.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemReteetWith.Text = "引用Retweet";
             // 
             // toolStripMenuItemReply
             // 
@@ -186,50 +192,44 @@ namespace twclient
             this.toolStripMenuItemReply.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemReply.Text = "返信";
             // 
-            // toolStripMenuItemReteetWith
-            // 
-            this.toolStripMenuItemReteetWith.Name = "toolStripMenuItemReteetWith";
-            this.toolStripMenuItemReteetWith.Size = new System.Drawing.Size(240, 32);
-            this.toolStripMenuItemReteetWith.Text = "引用Retweet";
-            // 
             // toolStripMenuItemLike
             // 
             this.toolStripMenuItemLike.Name = "toolStripMenuItemLike";
-            this.toolStripMenuItemLike.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemLike.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemLike.Text = "Like";
             // 
             // toolStripMenuItemUnLike
             // 
             this.toolStripMenuItemUnLike.Name = "toolStripMenuItemUnLike";
-            this.toolStripMenuItemUnLike.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemUnLike.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemUnLike.Text = "Like取り消し";
             // 
             // toolStripMenuItemDel
             // 
             this.toolStripMenuItemDel.Name = "toolStripMenuItemDel";
-            this.toolStripMenuItemDel.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemDel.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemDel.Text = "削除";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(237, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
             // 
             // toolStripMenuItemUser
             // 
             this.toolStripMenuItemUser.Name = "toolStripMenuItemUser";
-            this.toolStripMenuItemUser.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemUser.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemUser.Text = "ユーザー検索";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(237, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(205, 6);
             // 
             // toolStripMenuItemOpen
             // 
             this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
-            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(208, 32);
             this.toolStripMenuItemOpen.Text = "ブラウザで開く";
             // 
             // contextMenuForWebView
@@ -355,6 +355,7 @@ namespace twclient
             // controlListBox1
             // 
             this.controlListBox1.AutoScroll = true;
+            this.controlListBox1.BackColor = System.Drawing.SystemColors.Window;
             this.controlListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.controlListBox1.ItemH = ((System.Collections.Generic.List<int>)(resources.GetObject("controlListBox1.ItemH")));
             this.controlListBox1.Location = new System.Drawing.Point(0, 0);
