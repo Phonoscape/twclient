@@ -81,6 +81,11 @@ namespace twclient
             panelControlMainEdit1.pictureBox3.AllowDrop = true;
             panelControlMainEdit1.pictureBox4.AllowDrop = true;
 
+            panelControlMainEdit1.pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
+
             panelControlMainEdit1.pictureBox1.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
             panelControlMainEdit1.pictureBox2.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
             panelControlMainEdit1.pictureBox3.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
@@ -90,6 +95,11 @@ namespace twclient
             panelControlMainEdit1.pictureBox2.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
             panelControlMainEdit1.pictureBox3.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
             panelControlMainEdit1.pictureBox4.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+
+            panelControlMainEdit1.pictureBox1.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox2.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox3.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox4.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
 
             tweetImage = new Bitmap[MAXIMAGE];
 
@@ -210,7 +220,11 @@ namespace twclient
                     if (ctrl)
                     {
                         var txt = panelControlMainEdit1.textBoxTweet.Text;
+
+                        panelControlMainEdit1.Enabled = false;
                         Send_Click(txt);
+                        panelControlMainEdit1.Enabled = true;
+
                         afterSend = true;
                         e.SuppressKeyPress = true;
                         panelControlMainEdit1.textBoxTweet.Clear();
@@ -1657,7 +1671,10 @@ namespace twclient
 
         private void PanelControlMainEdit1_ButtonSend_Click(object sender, EventArgs e)
         {
+            panelControlMainEdit1.Enabled = false;
             Send_Click(panelControlMainEdit1.textBoxTweet.Text);
+            panelControlMainEdit1.Enabled = true;
+
             panelControlMainEdit1.textBoxTweet.Clear();
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
@@ -1751,11 +1768,37 @@ namespace twclient
 
         // PictureBox
 
+        PictureBox srcPb = null;
+
+        private void PanelControlMainEdit1_PictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void PanelControlMainEdit1_PictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            var pb = (PictureBox)sender;
+
+            if (e.Button == MouseButtons.Left)
+            {
+                if (pb.Image == null )
+                {
+                    return;
+                }
+
+                srcPb = pb;
+                pb.DoDragDrop(pb.Image, DragDropEffects.Move);
+            }
+        }
+
         private void PanelControlMainEdit1_PictureBox_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropEffects.Copy;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.Bitmap))
+            {
+                e.Effect = DragDropEffects.Move;
             }
             else
             {
@@ -1765,33 +1808,81 @@ namespace twclient
 
         private void PanelControlMainEdit1_PictureBox_DragDrop(object sender, DragEventArgs e)
         {
-            string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            int pbId = 0;
-
-            try
+            if (e.Effect == DragDropEffects.Copy)
             {
-                Bitmap bmp = new Bitmap(fileNames[0]);
-                var pb = (PictureBox)sender;
-                pb.SizeMode = PictureBoxSizeMode.Zoom;
-                pb.Image = bmp;
-                pb.Tag = fileNames[0];
+                string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                int pbId = 0;
 
-                if (sender == panelControlMainEdit1.pictureBox1) pbId = 1;
-                else if (sender == panelControlMainEdit1.pictureBox2) pbId = 2;
-                else if (sender == panelControlMainEdit1.pictureBox3) pbId = 3;
-                else if (sender == panelControlMainEdit1.pictureBox4) pbId = 4;
-                else pbId = -0;
-
-                if (pbId > 0)
+                try
                 {
-                    tweetImage[pbId - 1] = new Bitmap(bmp);
-                    tweetImage[pbId - 1].Tag = fileNames[0];
+                    Bitmap bmp = new Bitmap(fileNames[0]);
+                    var pb = (PictureBox)sender;
+                    pb.Image = bmp;
+                    pb.Tag = fileNames[0];
+
+                    if (sender == panelControlMainEdit1.pictureBox1) pbId = 1;
+                    else if (sender == panelControlMainEdit1.pictureBox2) pbId = 2;
+                    else if (sender == panelControlMainEdit1.pictureBox3) pbId = 3;
+                    else if (sender == panelControlMainEdit1.pictureBox4) pbId = 4;
+                    else pbId = -0;
+
+                    if (pbId > 0)
+                    {
+                        tweetImage[pbId - 1] = new Bitmap(bmp);
+                        tweetImage[pbId - 1].Tag = fileNames[0];
+                    }
+                }
+                catch
+                {
+
                 }
             }
-            catch
+            else if (e.Effect == DragDropEffects.Move)
             {
+                var dstPb = (PictureBox)sender;
 
+                Bitmap tmpBm = null;
+                string tmpBm_Tag;
+
+                if (srcPb != dstPb)
+                {
+                    if (dstPb.Image != null)
+                    {
+                        tmpBm = new Bitmap(dstPb.Image);
+                        tmpBm_Tag = (string)dstPb.Tag;
+                    }
+                    else 
+                    {
+                        tmpBm = null;
+                        tmpBm_Tag = "";
+                    }
+                    
+                    dstPb.Image = new Bitmap(srcPb.Image);
+                    dstPb.Tag = srcPb.Tag;
+                    srcPb.Image = tmpBm;
+                    srcPb.Tag = tmpBm_Tag;
+
+                    int srcNo = 0;
+                    if (srcPb == panelControlMainEdit1.pictureBox1) srcNo = 1;
+                    else if (srcPb == panelControlMainEdit1.pictureBox2) srcNo = 2;
+                    else if (srcPb == panelControlMainEdit1.pictureBox3) srcNo = 3;
+                    else if (srcPb == panelControlMainEdit1.pictureBox4) srcNo = 4;
+
+                    int dstNo = 0;
+                    if (dstPb == panelControlMainEdit1.pictureBox1) dstNo = 1;
+                    else if (dstPb == panelControlMainEdit1.pictureBox2) dstNo = 2;
+                    else if (dstPb == panelControlMainEdit1.pictureBox3) dstNo = 3;
+                    else if (dstPb == panelControlMainEdit1.pictureBox4) dstNo = 4;
+
+                    tmpBm = tweetImage[dstNo - 1];
+                    tweetImage[dstNo - 1] = tweetImage[srcNo - 1];
+                    tweetImage[srcNo - 1] = tmpBm;
+                }
             }
+        }
+
+        private void PanelControlMainEdit1_PictureBox1_DragLeave(object sender, EventArgs e)
+        {
         }
 
 
