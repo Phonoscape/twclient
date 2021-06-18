@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,6 +22,9 @@ namespace twclient
         private Hashtable cacheLvi;
         private long selectedTweetId = 0;
         private DateTime addDateTime;
+
+        const int MAXIMAGE = 4;
+        private Bitmap[] tweetImage;
 
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
@@ -43,7 +43,7 @@ namespace twclient
             panelTimeLine1.panelTimeLineList1.listView1.DrawSubItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem;
             panelTimeLine1.panelTimeLineList1.listView1.DrawColumnHeader += PanelTimeLine1_panelTimeLineList1_ListView1_DrawColumnHeader;
             panelTimeLine1.panelTimeLineList1.listView1.SearchForVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_SearchForVirtualItem;
-            
+
             panelTimeLine1.panelTimeLineList1.listView1.ContextMenuStrip = contextMenuForListView;
             panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = 0;
             panelTimeLine1.panelTimeLineList1.listView1.VirtualMode = true;
@@ -76,7 +76,32 @@ namespace twclient
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
             panelControlMainEdit1.textBoxMsg2.Tag = 0;
 
-            this.MouseMove += FormTimeLine_MouseMove;
+            panelControlMainEdit1.pictureBox1.AllowDrop = true;
+            panelControlMainEdit1.pictureBox2.AllowDrop = true;
+            panelControlMainEdit1.pictureBox3.AllowDrop = true;
+            panelControlMainEdit1.pictureBox4.AllowDrop = true;
+
+            panelControlMainEdit1.pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            panelControlMainEdit1.pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
+
+            panelControlMainEdit1.pictureBox1.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
+            panelControlMainEdit1.pictureBox2.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
+            panelControlMainEdit1.pictureBox3.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
+            panelControlMainEdit1.pictureBox4.DragEnter += PanelControlMainEdit1_PictureBox_DragEnter;
+
+            panelControlMainEdit1.pictureBox1.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+            panelControlMainEdit1.pictureBox2.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+            panelControlMainEdit1.pictureBox3.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+            panelControlMainEdit1.pictureBox4.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+
+            panelControlMainEdit1.pictureBox1.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox2.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox3.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+            panelControlMainEdit1.pictureBox4.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
+
+            tweetImage = new Bitmap[MAXIMAGE];
 
             //contextMenuUser.Click += ContextMenuUser_Click;
             foreach (ToolStripMenuItem obj in contextMenuUser.Items)
@@ -165,7 +190,7 @@ namespace twclient
                 }
             }
 
-            panelControlMainEdit1.comboBoxHash.Items.Insert(0,txt);
+            panelControlMainEdit1.comboBoxHash.Items.Insert(0, txt);
 
             twitter.SetHashTag(txt);
             panelControlMainEdit1.comboBoxHash.Text = txt;
@@ -195,7 +220,11 @@ namespace twclient
                     if (ctrl)
                     {
                         var txt = panelControlMainEdit1.textBoxTweet.Text;
+
+                        panelControlMainEdit1.Enabled = false;
                         Send_Click(txt);
+                        panelControlMainEdit1.Enabled = true;
+
                         afterSend = true;
                         e.SuppressKeyPress = true;
                         panelControlMainEdit1.textBoxTweet.Clear();
@@ -206,7 +235,58 @@ namespace twclient
                         panelControlMainEdit1.textBoxMsg2.Clear();
                     }
                     break;
+                case Keys.V:
+                    if (ctrl)
+                    {
+                        ImageFromClipboard();
+                    }
+                    break;
 
+            }
+        }
+
+        private void ImageFromClipboard()
+        {
+            var img = Clipboard.GetImage();
+
+            if (img != null)
+            {
+                SetPictureBox(img);
+            }
+        }
+
+        private void SetPictureBox(Image img)
+        {
+            PictureBox pb = null;
+            int no = 0;
+
+            if (tweetImage[0] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox1;
+                no = 1;
+            }
+            else if (tweetImage[1] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox2;
+                no = 2;
+            }
+            else if (tweetImage[2] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox3;
+                no = 3;
+            }
+            else if (tweetImage[3] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox4;
+                no = 4;
+            }
+
+            if (pb != null && img != null)
+            {
+                pb.SizeMode = PictureBoxSizeMode.Zoom;
+                img.Tag = null;
+                pb.Image = img;
+                tweetImage[no - 1] = (Bitmap)img;
             }
         }
 
@@ -231,8 +311,8 @@ namespace twclient
         private void PanelControlMainEdit1_TextBoxTweet_KeyPress(object sender, KeyPressEventArgs e)
         {
             int len = panelControlMainEdit1.textBoxTweet.TextLength;
-           
-            if ((e.KeyChar & (char)Keys.KeyCode) == (char)Keys.LineFeed && Control.ModifierKeys == Keys.Control )
+
+            if ((e.KeyChar & (char)Keys.KeyCode) == (char)Keys.LineFeed && Control.ModifierKeys == Keys.Control)
             {
                 //Send_Click(panelControlMainEdit1.textBoxTweet.Text);
                 //panelControlMainEdit1.textBoxTweet.Clear();
@@ -313,7 +393,7 @@ namespace twclient
             Hashtable keys = new Hashtable();
             foreach (var lst in lists)
             {
-                keys.Add(lst.Name,lst);
+                keys.Add(lst.Name, lst);
             }
             ArrayList sort = new ArrayList(keys.Keys);
             sort.Sort();
@@ -372,10 +452,6 @@ namespace twclient
 
             SaveUser();
             SaveSearch();
-        }
-
-        private void FormTimeLine_MouseMove(object sender, MouseEventArgs e)
-        {
         }
 
 
@@ -723,13 +799,13 @@ namespace twclient
             var words = search.Split(' ');
             string hash = "";
 
-            foreach(var word in words)
+            foreach (var word in words)
             {
                 if (word == "OR")
                 {
                     continue;
                 }
-                else if (word.Substring(0,1) != "#")
+                else if (word.Substring(0, 1) != "#")
                 {
                     hash += " #" + word;
                 }
@@ -819,8 +895,8 @@ namespace twclient
                 lvi.Selected = true;
             }
             else
-            { 
-                lvi.Selected = false; 
+            {
+                lvi.Selected = false;
             }
 
             e.Item = lvi;
@@ -937,7 +1013,7 @@ namespace twclient
             TweetDraw(tl);
         }
 
-        private async void TweetDraw(CoreTweet.Status tl,bool retFlag = false, int level = 0)
+        private async void TweetDraw(CoreTweet.Status tl, bool retFlag = false, int level = 0)
         {
             if (level > 100) return;
 
@@ -953,7 +1029,7 @@ namespace twclient
                 TweetDraw(ret, true, level + 1);
             }
 
-            if ( inRep != null)
+            if (inRep != null)
             {
                 var inRepSt = twitter.GetTimeLineFromAPI((long)inRep);
                 if (inRepSt != null)
@@ -1023,7 +1099,7 @@ namespace twclient
 
             if (retweet)
             {
-                contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(" + rtl.User.ScreenName.ToString() + ")";
+                contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(@" + rtl.User.ScreenName.ToString() + ")";
                 contents.textBoxRetweet.Tag = rtl.User.ScreenName.ToString();
                 contents.textBoxRetweet.Click += Contents_User_Click;
                 contents.textBoxRetweet.Cursor = Cursors.Hand;
@@ -1077,7 +1153,7 @@ namespace twclient
                     ((ToolStripMenuItem)obj).Click += ContextMenuForWebView_Click;
             }
 
-//            listBoxTweetContents.Controls.Add(contents);
+            //            listBoxTweetContents.Controls.Add(contents);
             controlListBox1.Add(contents);
             contents.Parent = (Control)controlListBox1;
 
@@ -1106,7 +1182,7 @@ namespace twclient
             {
                 stream = webClient.OpenRead(url);
             }
-            catch(System.Net.WebException e)
+            catch (System.Net.WebException e)
             {
                 SetStatusMenu(e.Message);
                 return null;
@@ -1132,13 +1208,14 @@ namespace twclient
 
             string cssStr;
 
-            try {
+            try
+            {
                 StreamReader sr = new StreamReader(cssFileName, Encoding.UTF8);
 
                 cssStr = sr.ReadToEnd();
 
             }
-            catch(System.IO.FileNotFoundException)
+            catch (System.IO.FileNotFoundException)
             {
                 return "";
             }
@@ -1178,7 +1255,7 @@ namespace twclient
                     toolStripMenuWebViewCopy.Enabled = true;
                     e.ReturnValue = true;
                 }
-                else if (contentUrl.Substring(0,4) == "http")
+                else if (contentUrl.Substring(0, 4) == "http")
                 {
                     toolStripMenuWebViewOpen.Enabled = true;
                     toolStripMenuWebViewSearch.Enabled = false;
@@ -1195,7 +1272,7 @@ namespace twclient
                 toolStripMenuWebViewCopy.Enabled = true;
                 e.ReturnValue = true;
             }
-            else 
+            else
             {
                 toolStripMenuWebViewOpen.Enabled = false;
                 toolStripMenuWebViewSearch.Enabled = false;
@@ -1342,8 +1419,8 @@ namespace twclient
                     SetStatusMenu(contentUrl);
                     beforeContentUrl = contentUrl;
                 }
-                else 
-                { 
+                else
+                {
                     SetStatusMenu("");
                     beforeContentUrl = "";
                 }
@@ -1360,7 +1437,7 @@ namespace twclient
 
                 if (contentUrl != beforeContentUrl)
                 {
-                    foreach(var doc in controlListBox1.Items)
+                    foreach (var doc in controlListBox1.Items)
                     {
                         if (((HtmlDocument)sender) == ((panelTimeLineContents1)doc).webBrowser1.Document)
                         {
@@ -1389,13 +1466,13 @@ namespace twclient
 
                         Debug.WriteLine("Pos x:{0} y:{1}", pos.X, pos.Y);
 
-                        contentToolTip.Show(contentUrl, this, pos);
+                        contentToolTip.Show(contentUrl, this, pos, 3000);
                     }
                 }
 
                 beforeContentUrl = contentUrl;
             }
-            else 
+            else
             {
                 SetStatusMenu("");
                 beforeContentUrl = "";
@@ -1417,7 +1494,7 @@ namespace twclient
             Bitmap bmp = (Bitmap)obj.Tag;
 
             e.DrawBackground();
-            e.Graphics.DrawImage(bmp,new Point(0,0));
+            e.Graphics.DrawImage(bmp, new Point(0, 0));
             e.DrawBorder();
         }
 
@@ -1499,7 +1576,7 @@ namespace twclient
                     tl.SetSearchStr(contentTxt);
                 }
                 else if (contentTxt.Substring(0, 1) == "@")
-                { 
+                {
                     var tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, contentTxt);
                     tl.SetUserId(long.Parse(contentAlt));
                 }
@@ -1520,7 +1597,7 @@ namespace twclient
                 else if (contentTagName == "img")
                 {
                     Clipboard.SetText(contentUrl);
-                }   
+                }
             }
         }
 
@@ -1594,7 +1671,10 @@ namespace twclient
 
         private void PanelControlMainEdit1_ButtonSend_Click(object sender, EventArgs e)
         {
+            panelControlMainEdit1.Enabled = false;
             Send_Click(panelControlMainEdit1.textBoxTweet.Text);
+            panelControlMainEdit1.Enabled = true;
+
             panelControlMainEdit1.textBoxTweet.Clear();
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
@@ -1624,22 +1704,20 @@ namespace twclient
                 txt += " " + panelControlMainEdit1.comboBoxHash.Text;
             }
 
-            if (len > 0)
+            if (type == Twitter.TweetType.Normal)
             {
-                if (type == Twitter.TweetType.Normal)
-                {
-                    twitter.Send(txt);
-                }
-                else if (type == Twitter.TweetType.Reply && sub != 0)
-                {
-                    twitter.Reply(txt, sub);
-                }
-                else if (type == Twitter.TweetType.RetweetWith)
-                {
-                    txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
-                    twitter.Send(txt);
-                }
+                twitter.Send(txt, tweetImage);
             }
+            else if (type == Twitter.TweetType.Reply && sub != 0)
+            {
+                twitter.Reply(txt, sub);
+            }
+            else if (type == Twitter.TweetType.RetweetWith)
+            {
+                txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
+                twitter.Send(txt, tweetImage);
+            }
+
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
@@ -1648,6 +1726,12 @@ namespace twclient
 
             panelControlMainEdit1.textBoxMsg2.Click -= PanelControlMainEdit1_TextBoxMsg2_Click;
             panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.IBeam;
+
+            panelControlMainEdit1.pictureBox1.Image = null;
+            panelControlMainEdit1.pictureBox2.Image = null;
+            panelControlMainEdit1.pictureBox3.Image = null;
+            panelControlMainEdit1.pictureBox4.Image = null;
+            ImageClear();
         }
 
         private void PanelControlMainEdit1_ButtonClear_Click(object sender, EventArgs e)
@@ -1661,7 +1745,144 @@ namespace twclient
 
             panelControlMainEdit1.textBoxMsg2.Click -= PanelControlMainEdit1_TextBoxMsg2_Click;
             panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.IBeam;
+
+            panelControlMainEdit1.pictureBox1.Image = null;
+            panelControlMainEdit1.pictureBox2.Image = null;
+            panelControlMainEdit1.pictureBox3.Image = null;
+            panelControlMainEdit1.pictureBox4.Image = null;
+            ImageClear();
         }
+
+        private void ImageClear()
+        {
+            for (int i = 0; i < MAXIMAGE; i++)
+            {
+                if (tweetImage[i] != null )
+                {
+                    tweetImage[i] = null;
+                }
+            }
+        }
+
+        // PictureBox
+
+        PictureBox srcPb = null;
+
+        private void PanelControlMainEdit1_PictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void PanelControlMainEdit1_PictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            var pb = (PictureBox)sender;
+
+            if (e.Button == MouseButtons.Left)
+            {
+                if (pb.Image == null )
+                {
+                    return;
+                }
+
+                srcPb = pb;
+                pb.DoDragDrop(pb.Image, DragDropEffects.Move);
+            }
+        }
+
+        private void PanelControlMainEdit1_PictureBox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.Bitmap))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void PanelControlMainEdit1_PictureBox_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Effect == DragDropEffects.Copy)
+            {
+                string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                int pbId = 0;
+
+                try
+                {
+                    Bitmap bmp = new Bitmap(fileNames[0]);
+                    var pb = (PictureBox)sender;
+                    pb.Image = bmp;
+                    pb.Tag = fileNames[0];
+
+                    if (sender == panelControlMainEdit1.pictureBox1) pbId = 1;
+                    else if (sender == panelControlMainEdit1.pictureBox2) pbId = 2;
+                    else if (sender == panelControlMainEdit1.pictureBox3) pbId = 3;
+                    else if (sender == panelControlMainEdit1.pictureBox4) pbId = 4;
+                    else pbId = -0;
+
+                    if (pbId > 0)
+                    {
+                        tweetImage[pbId - 1] = new Bitmap(bmp);
+                        tweetImage[pbId - 1].Tag = fileNames[0];
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            else if (e.Effect == DragDropEffects.Move)
+            {
+                var dstPb = (PictureBox)sender;
+
+                Bitmap tmpBm = null;
+                string tmpBm_Tag;
+
+                if (srcPb != dstPb)
+                {
+                    if (dstPb.Image != null)
+                    {
+                        tmpBm = new Bitmap(dstPb.Image);
+                        tmpBm_Tag = (string)dstPb.Tag;
+                    }
+                    else 
+                    {
+                        tmpBm = null;
+                        tmpBm_Tag = "";
+                    }
+                    
+                    dstPb.Image = new Bitmap(srcPb.Image);
+                    dstPb.Tag = srcPb.Tag;
+                    srcPb.Image = tmpBm;
+                    srcPb.Tag = tmpBm_Tag;
+
+                    int srcNo = 0;
+                    if (srcPb == panelControlMainEdit1.pictureBox1) srcNo = 1;
+                    else if (srcPb == panelControlMainEdit1.pictureBox2) srcNo = 2;
+                    else if (srcPb == panelControlMainEdit1.pictureBox3) srcNo = 3;
+                    else if (srcPb == panelControlMainEdit1.pictureBox4) srcNo = 4;
+
+                    int dstNo = 0;
+                    if (dstPb == panelControlMainEdit1.pictureBox1) dstNo = 1;
+                    else if (dstPb == panelControlMainEdit1.pictureBox2) dstNo = 2;
+                    else if (dstPb == panelControlMainEdit1.pictureBox3) dstNo = 3;
+                    else if (dstPb == panelControlMainEdit1.pictureBox4) dstNo = 4;
+
+                    tmpBm = tweetImage[dstNo - 1];
+                    tweetImage[dstNo - 1] = tweetImage[srcNo - 1];
+                    tweetImage[srcNo - 1] = tmpBm;
+                }
+            }
+        }
+
+        private void PanelControlMainEdit1_PictureBox1_DragLeave(object sender, EventArgs e)
+        {
+        }
+
 
         private void FormTimeLine_ResizeEnd(object sender, EventArgs e)
         {
@@ -1679,7 +1900,13 @@ namespace twclient
         {
             if (this.InvokeRequired)
             {
-                Invoke(new Action<string>(SetStatusMenu), msg);
+                try
+                {
+                    Invoke(new Action<string>(SetStatusMenu), msg);
+                }
+                catch
+                {
+                }
                 return;
             }
 
@@ -1708,7 +1935,7 @@ namespace twclient
 
                     var childTl = twitter.AddTimeLine(ty, tabName);
                     childTl.SetSubIndex(j + 1);
-               
+
                     var childNode = panelControlMainTree1.treeView1.Nodes[i].Nodes.Add(tabName);
                     childNode.Tag = ty;
                     if (!init) panelControlMainTree1.treeView1.SelectedNode = childNode;
@@ -1845,7 +2072,7 @@ namespace twclient
                 {
                     Invoke(new Action(SetListViewNew));
                 }
-                catch(System.ObjectDisposedException)
+                catch (System.ObjectDisposedException)
                 {
 
                 }
@@ -1853,7 +2080,7 @@ namespace twclient
             }
 
             if (twitter.SelectTimeLine().GetNewTimeLine().Count == 0) return;
-            
+
             var oldTop = panelTimeLine1.panelTimeLineList1.listView1.TopItem;
             var oldTopIndex = 0;
 
@@ -1870,7 +2097,7 @@ namespace twclient
 
             if (oldTopIndex != 0)
             {
-                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(twitter.SelectTimeLine().GetTimeLine().Count -1);
+                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(twitter.SelectTimeLine().GetTimeLine().Count - 1);
                 panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(oldTopIndex + twitter.SelectTimeLine().GetNewTimeLine().Count);
             }
             else

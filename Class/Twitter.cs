@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -649,12 +651,106 @@ namespace twclient
 
         // Send
 
-        public void Send(String tweetText)
+        public void Send(String tweetText, Bitmap[] imgs = null)
         {
-            if (tweetText.Length > 0)
+            int count = 0;
+            foreach (var img in imgs)
             {
-                tokens.Statuses.UpdateAsync(tweetText);
+                if (img != null) count++;
             }
+
+            if (tweetText.Length > 0 || count != 0)
+            {
+                if (count == 0)
+                {
+                    tokens.Statuses.UpdateAsync(status => tweetText);
+                }
+                else
+                {
+                    var mediaIds = UploadMedia(imgs);
+
+                    if (mediaIds.Count == count)
+                    {
+                        if (mediaIds.Count != 0)
+                        {
+                            tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
+                        }
+                        else
+                        {
+                            tokens.Statuses.UpdateAsync(status => tweetText);
+                        }
+                    }
+                }
+            }
+        }
+
+        private List<long> UploadMedia(Bitmap[] imgs = null)
+        {
+            //MediaUploadResult res = null;
+            bool first = true;
+            int index = 0;
+            List<long> mediaIds = new List<long>();
+
+            for (int i = 0; i < imgs.Length; i++)
+            {
+                Bitmap tmpBitmap;
+                var img = imgs[i];
+
+                if (img != null)
+                {
+                    MemoryStream sm = new MemoryStream();
+
+                    if (img.Tag == null)
+                    {
+                        var bmp = ImageSizeConvert(img);
+                        bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    else
+                    {
+                        var fileName = img.Tag.ToString();
+                        if (fileName.Length > 0)
+                        {
+                            tmpBitmap = (Bitmap)Image.FromFile(fileName);
+                            var bmp = ImageSizeConvert(img);
+                            bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                    }
+
+                    string st = Convert.ToBase64String(sm.GetBuffer());
+                    var res = tokens.Media.Upload(media_data => st);
+                    sm.Dispose();
+
+                    mediaIds.Add(res.MediaId);
+                }
+            }
+
+            return mediaIds;
+        }
+
+        private Bitmap ImageSizeConvert(Bitmap src)
+        {
+            var w = src.Width;
+            var h = src.Height;
+
+            double per = w / 1280.0;
+
+            if (per > 1.0)
+            {
+                w = (int)(w / per);
+                h = (int)(h / per);
+            }
+            else
+            {
+                return src;
+
+            }
+
+            var dst = new Bitmap(w, h);
+            var g = Graphics.FromImage(dst);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.DrawImage(src, 0, 0, w, h);
+
+            return dst;
         }
 
         public void Reply(String tweetText,long id)
