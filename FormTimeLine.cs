@@ -1704,22 +1704,20 @@ namespace twclient
                 txt += " " + panelControlMainEdit1.comboBoxHash.Text;
             }
 
-            if (len > 0)
+            if (type == Twitter.TweetType.Normal)
             {
-                if (type == Twitter.TweetType.Normal)
-                {
-                    twitter.Send(txt, tweetImage);
-                }
-                else if (type == Twitter.TweetType.Reply && sub != 0)
-                {
-                    twitter.Reply(txt, sub);
-                }
-                else if (type == Twitter.TweetType.RetweetWith)
-                {
-                    txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
-                    twitter.Send(txt, tweetImage);
-                }
+                twitter.Send(txt, tweetImage);
             }
+            else if (type == Twitter.TweetType.Reply && sub != 0)
+            {
+                twitter.Reply(txt, sub);
+            }
+            else if (type == Twitter.TweetType.RetweetWith)
+            {
+                txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
+                twitter.Send(txt, tweetImage);
+            }
+
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
