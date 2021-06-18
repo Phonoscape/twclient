@@ -23,8 +23,8 @@ namespace twclient
         private long selectedTweetId = 0;
         private DateTime addDateTime;
 
-        private List<Image> tweetImage = null;
         const int MAXIMAGE = 4;
+        private Bitmap[] tweetImage;
 
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
@@ -76,9 +76,6 @@ namespace twclient
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
             panelControlMainEdit1.textBoxMsg2.Tag = 0;
 
-            tweetImage = new List<Image>();
-            tweetImage.Clear();
-
             panelControlMainEdit1.pictureBox1.AllowDrop = true;
             panelControlMainEdit1.pictureBox2.AllowDrop = true;
             panelControlMainEdit1.pictureBox3.AllowDrop = true;
@@ -93,6 +90,8 @@ namespace twclient
             panelControlMainEdit1.pictureBox2.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
             panelControlMainEdit1.pictureBox3.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
             panelControlMainEdit1.pictureBox4.DragDrop += PanelControlMainEdit1_PictureBox_DragDrop;
+
+            tweetImage = new Bitmap[MAXIMAGE];
 
             //contextMenuUser.Click += ContextMenuUser_Click;
             foreach (ToolStripMenuItem obj in contextMenuUser.Items)
@@ -244,33 +243,36 @@ namespace twclient
 
         private void SetPictureBox(Image img)
         {
-            var count = tweetImage.Count();
+            PictureBox pb = null;
+            int no = 0;
 
-            if (count < MAXIMAGE)
+            if (tweetImage[0] == null)
             {
-                PictureBox pb = null;
-                switch (count)
-                {
-                    case 0:
-                        pb = panelControlMainEdit1.pictureBox1;
-                        break;
-                    case 1:
-                        pb = panelControlMainEdit1.pictureBox2;
-                        break;
-                    case 2:
-                        pb = panelControlMainEdit1.pictureBox3;
-                        break;
-                    case 3:
-                        pb = panelControlMainEdit1.pictureBox4;
-                        break;
-                }
+                pb = panelControlMainEdit1.pictureBox1;
+                no = 1;
+            }
+            else if (tweetImage[1] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox2;
+                no = 2;
+            }
+            else if (tweetImage[2] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox3;
+                no = 3;
+            }
+            else if (tweetImage[3] == null)
+            {
+                pb = panelControlMainEdit1.pictureBox4;
+                no = 4;
+            }
 
-                if (pb != null && img != null)
-                {
-                    pb.SizeMode = PictureBoxSizeMode.Zoom;
-                    pb.Image = img;
-                    tweetImage.Add(img);
-                }
+            if (pb != null && img != null)
+            {
+                pb.SizeMode = PictureBoxSizeMode.Zoom;
+                img.Tag = null;
+                pb.Image = img;
+                tweetImage[no - 1] = (Bitmap)img;
             }
         }
 
@@ -1689,7 +1691,7 @@ namespace twclient
             {
                 if (type == Twitter.TweetType.Normal)
                 {
-                    twitter.Send(txt);
+                    twitter.Send(txt, tweetImage);
                 }
                 else if (type == Twitter.TweetType.Reply && sub != 0)
                 {
@@ -1698,7 +1700,7 @@ namespace twclient
                 else if (type == Twitter.TweetType.RetweetWith)
                 {
                     txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
-                    twitter.Send(txt);
+                    twitter.Send(txt, tweetImage);
                 }
             }
 
@@ -1714,7 +1716,7 @@ namespace twclient
             panelControlMainEdit1.pictureBox2.Image = null;
             panelControlMainEdit1.pictureBox3.Image = null;
             panelControlMainEdit1.pictureBox4.Image = null;
-            tweetImage.Clear();
+            ImageClear();
         }
 
         private void PanelControlMainEdit1_ButtonClear_Click(object sender, EventArgs e)
@@ -1733,7 +1735,18 @@ namespace twclient
             panelControlMainEdit1.pictureBox2.Image = null;
             panelControlMainEdit1.pictureBox3.Image = null;
             panelControlMainEdit1.pictureBox4.Image = null;
-            tweetImage.Clear();
+            ImageClear();
+        }
+
+        private void ImageClear()
+        {
+            for (int i = 0; i < MAXIMAGE; i++)
+            {
+                if (tweetImage[i] != null )
+                {
+                    tweetImage[i] = null;
+                }
+            }
         }
 
         // PictureBox
@@ -1753,6 +1766,7 @@ namespace twclient
         private void PanelControlMainEdit1_PictureBox_DragDrop(object sender, DragEventArgs e)
         {
             string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            int pbId = 0;
 
             try
             {
@@ -1762,6 +1776,17 @@ namespace twclient
                 pb.Image = bmp;
                 pb.Tag = fileNames[0];
 
+                if (sender == panelControlMainEdit1.pictureBox1) pbId = 1;
+                else if (sender == panelControlMainEdit1.pictureBox2) pbId = 2;
+                else if (sender == panelControlMainEdit1.pictureBox3) pbId = 3;
+                else if (sender == panelControlMainEdit1.pictureBox4) pbId = 4;
+                else pbId = -0;
+
+                if (pbId > 0)
+                {
+                    tweetImage[pbId - 1] = new Bitmap(bmp);
+                    tweetImage[pbId - 1].Tag = fileNames[0];
+                }
             }
             catch
             {
@@ -1786,7 +1811,13 @@ namespace twclient
         {
             if (this.InvokeRequired)
             {
-                Invoke(new Action<string>(SetStatusMenu), msg);
+                try
+                {
+                    Invoke(new Action<string>(SetStatusMenu), msg);
+                }
+                catch
+                {
+                }
                 return;
             }
 
