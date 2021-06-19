@@ -36,6 +36,12 @@ namespace twclient
             panelControlMainTree1.treeView1.AfterSelect += PanelControlMainTree1_TreeView1_AfterSelect;
             panelControlMainTree1.treeView1.Click += PanelControlMainTree1_TreeView1_Click;
 
+            panelControlMainTree1.treeView1.AllowDrop = true;
+            panelControlMainTree1.treeView1.ItemDrag += PanelControlMainTree1_TreeView1_ItemDrag;
+            panelControlMainTree1.treeView1.DragEnter += PanelControlMainTree1_TreeView1_DragEnter;
+            panelControlMainTree1.treeView1.DragDrop += PanelControlMainTree1_TreeView1_DragDrop;
+            panelControlMainTree1.treeView1.MouseMove += PanelControlMainTree1_TreeView1_MouseMove;
+
             panelTimeLine1.panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
             panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_listView1_KeyUp;
             panelTimeLine1.panelTimeLineList1.listView1.RetrieveVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem;
@@ -558,6 +564,45 @@ namespace twclient
             var tl = twitter.StartTimeLine((TimeLine.TimeLineType)index, subIndex);
             SetComboBox(tl.GetHashTag());
             panelControlMainEdit1.checkBoxHash.Checked = tl.GetHashAddTag();
+        }
+
+        private void PanelControlMainTree1_TreeView1_MouseMove(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void PanelControlMainTree1_TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var node = (TreeNode)e.Item;
+
+            if (node.Parent != null)
+            {
+                if (node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_USER] ||
+                    node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_SEARCH])
+                {
+                    DoDragDrop(node, DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            var tv = (TreeView)sender;
+
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                TreeNode srcNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                TreeNode dstNode = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+
+                if (srcNode.Parent == dstNode.Parent)
+                {
+
+                }
+            }
         }
 
         private void ContextMenuUser_Click(object sender, EventArgs e)
