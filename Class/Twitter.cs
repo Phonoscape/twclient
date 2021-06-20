@@ -753,6 +753,32 @@ namespace twclient
             return dst;
         }
 
+        internal void MoveTimeLineSubIndex(TimeLine.TimeLineType ty, int srcIndex, int dstIndex)
+        {
+            if (srcIndex > dstIndex)
+            {
+                ChangeSubIndex(ty, srcIndex, -1);
+
+                for (int i = srcIndex - 1; i >= dstIndex; i--)
+                {
+                    ChangeSubIndex(ty, i, i + 1);
+                }
+
+                ChangeSubIndex(ty, -1, dstIndex);
+            }
+            else if (srcIndex < dstIndex)
+            {
+                ChangeSubIndex(ty, srcIndex, -1);
+
+                for (int i = srcIndex + 1; i <= dstIndex; i++)
+                {
+                    ChangeSubIndex(ty, i, i - 1);
+                }
+
+                ChangeSubIndex(ty, -1, dstIndex);
+            }
+        }
+
         public void Reply(String tweetText,long id)
         {
             if (tweetText.Length > 0)

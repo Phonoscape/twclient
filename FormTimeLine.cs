@@ -26,6 +26,8 @@ namespace twclient
         const int MAXIMAGE = 4;
         private Bitmap[] tweetImage;
 
+        private bool treeNodeDrag = false;
+
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
         public FormTimeLine()
@@ -43,7 +45,7 @@ namespace twclient
             panelControlMainTree1.treeView1.MouseMove += PanelControlMainTree1_TreeView1_MouseMove;
 
             panelTimeLine1.panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
-            panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_listView1_KeyUp;
+            panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp;
             panelTimeLine1.panelTimeLineList1.listView1.RetrieveVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem;
             panelTimeLine1.panelTimeLineList1.listView1.DrawItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawItem;
             panelTimeLine1.panelTimeLineList1.listView1.DrawSubItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem;
@@ -410,6 +412,8 @@ namespace twclient
                 tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, ((CoreTweet.List)keys[lst]).Name + "(" + ((CoreTweet.List)keys[lst]).FullName + ")", true);
                 tl.SetListId(((CoreTweet.List)keys[lst]).Id);
             }
+
+            panelControlMainTree1.treeView1.ExpandAll();
         }
 
         public int PixcelCalc(int v)
@@ -419,7 +423,7 @@ namespace twclient
 
         private void FormTimeLine_Shown(object sender, EventArgs e)
         {
-            TreeNode node = panelControlMainTree1.treeView1.TopNode;
+            TreeNode node = panelControlMainTree1.treeView1.Nodes[0];
             panelControlMainTree1.treeView1.SelectedNode = node;
             //panelControlMainTree1.treeView1.Focus();
             //PanelControlMainTree1_TreeView1_AfterSelect(panelControlMainTree1.treeView1, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 1, 0, 0));
@@ -581,6 +585,7 @@ namespace twclient
                     node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_SEARCH])
                 {
                     DoDragDrop(node, DragDropEffects.Move);
+                    treeNodeDrag = true;
                 }
             }
         }
@@ -599,11 +604,42 @@ namespace twclient
                 TreeNode srcNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
                 TreeNode dstNode = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
 
+                var ty = (TimeLine.TimeLineType)dstNode.Tag;
+                var index = dstNode.Index;
+
                 if (srcNode.Parent == dstNode.Parent)
                 {
-
+                    ChangeSort(srcNode, dstNode);
                 }
+                treeNodeDrag = false;
+
+                panelControlMainTree1.treeView1.SelectedNode = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[index];
             }
+        }
+
+        private void ChangeSort(TreeNode srcNode, TreeNode dstNode)
+        {
+            int srcIndex = srcNode.Index;
+            int dstIndex = dstNode.Index;
+
+            TreeNode parentNode = srcNode.Parent;
+            TreeNode moveNode = (TreeNode)srcNode.Clone();
+
+            if (srcIndex < dstIndex)
+            {
+                parentNode.Nodes.Insert(dstIndex + 1, moveNode);
+                parentNode.Nodes.Remove(srcNode);
+            }
+            else if(srcIndex > dstIndex)
+            {
+                parentNode.Nodes.Insert(dstIndex, moveNode);
+                parentNode.Nodes.Remove(srcNode);
+            }
+
+            var srcSubIndex = srcIndex + 1;
+            var dstSubIndex = dstIndex + 1;
+
+            twitter.MoveTimeLineSubIndex((TimeLine.TimeLineType)parentNode.Tag, srcSubIndex, dstSubIndex);
         }
 
         private void ContextMenuUser_Click(object sender, EventArgs e)
@@ -648,9 +684,9 @@ namespace twclient
         {
             MakeTextBox(false);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_AddUser_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_AddUser_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -658,9 +694,9 @@ namespace twclient
         {
             MakeTextBox(false);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_AddSearch_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_AddSearch_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -668,9 +704,9 @@ namespace twclient
         {
             MakeTextBox(true);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_ChangeSearch_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_ChangeSearch_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -688,7 +724,7 @@ namespace twclient
             tb.Focus();
         }
 
-        private void PanelControlMainTree1_treeView1_AddUser_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_AddUser_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
@@ -703,14 +739,14 @@ namespace twclient
             }
 
         }
-        private void PanelControlMainTree1_treeView1_AddSearch_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_AddSearch_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_AddSearch_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_AddSearch_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -719,14 +755,14 @@ namespace twclient
 
         }
 
-        private void PanelControlMainTree1_treeView1_ChangeSearch_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_ChangeSearch_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_ChangeSearch_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_ChangeSearch_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -735,7 +771,7 @@ namespace twclient
 
         }
 
-        private void PanelControlMainTree1_treeView1_Tb_Leave(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_Tb_Leave(object sender, EventArgs e)
         {
             tb.Dispose();
         }
@@ -768,7 +804,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_AddSearch_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_AddSearch_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -790,7 +826,7 @@ namespace twclient
 
             tb.Dispose();
         }
-        private void PanelControlMainTree1_treeView1_ChangeSearch_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_ChangeSearch_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -806,7 +842,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_Tb_LostFocus(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_Tb_LostFocus(object sender, EventArgs e)
         {
             tb.Dispose();
         }
@@ -998,7 +1034,7 @@ namespace twclient
             ListView1_Click();
         }
 
-        private void PanelTimeLine1_panelTimeLineList1_listView1_KeyUp(object sender, KeyEventArgs e)
+        private void PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp(object sender, KeyEventArgs e)
         {
             ListView1_Click();
         }
@@ -2149,7 +2185,10 @@ namespace twclient
             }
             else
             {
-                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(0);
+                if (panelTimeLine1.panelTimeLineList1.listView1.Items.Count != 0)
+                {
+                    panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(0);
+                }
             }
 
             var sel = panelTimeLine1.panelTimeLineList1.listView1.SelectedIndices;

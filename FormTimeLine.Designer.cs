@@ -305,6 +305,7 @@ namespace twclient
             // 
             // splitContainer1
             // 
+            this.splitContainer1.Cursor = System.Windows.Forms.Cursors.Default;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
@@ -314,12 +315,14 @@ namespace twclient
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Panel1.Cursor = System.Windows.Forms.Cursors.Default;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer1.Panel2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.splitContainer1.Size = new System.Drawing.Size(1326, 810);
-            this.splitContainer1.SplitterDistance = 439;
+            this.splitContainer1.SplitterDistance = 576;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -338,34 +341,38 @@ namespace twclient
             // 
             this.splitContainer2.Panel2.AutoScroll = true;
             this.splitContainer2.Panel2.Controls.Add(this.controlListBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(1326, 439);
+            this.splitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.splitContainer2.Size = new System.Drawing.Size(1326, 576);
             this.splitContainer2.SplitterDistance = 930;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 0;
             // 
             // panelTimeLine1
             // 
+            this.panelTimeLine1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelTimeLine1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTimeLine1.Location = new System.Drawing.Point(0, 0);
             this.panelTimeLine1.Margin = new System.Windows.Forms.Padding(2);
             this.panelTimeLine1.Name = "panelTimeLine1";
-            this.panelTimeLine1.Size = new System.Drawing.Size(930, 439);
+            this.panelTimeLine1.Size = new System.Drawing.Size(930, 576);
             this.panelTimeLine1.TabIndex = 2;
             // 
             // controlListBox1
             // 
             this.controlListBox1.AutoScroll = true;
             this.controlListBox1.BackColor = System.Drawing.SystemColors.Window;
+            this.controlListBox1.Cursor = System.Windows.Forms.Cursors.Default;
             this.controlListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.controlListBox1.ItemH = ((System.Collections.Generic.List<int>)(resources.GetObject("controlListBox1.ItemH")));
             this.controlListBox1.Location = new System.Drawing.Point(0, 0);
             this.controlListBox1.Name = "controlListBox1";
-            this.controlListBox1.Size = new System.Drawing.Size(390, 439);
+            this.controlListBox1.Size = new System.Drawing.Size(390, 576);
             this.controlListBox1.TabIndex = 0;
             this.controlListBox1.Text = "customListBox1";
             // 
             // splitContainer3
             // 
+            this.splitContainer3.Cursor = System.Windows.Forms.Cursors.VSplit;
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Margin = new System.Windows.Forms.Padding(4);
@@ -378,27 +385,29 @@ namespace twclient
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.panelControlMainTree1);
-            this.splitContainer3.Size = new System.Drawing.Size(1326, 365);
+            this.splitContainer3.Size = new System.Drawing.Size(1326, 228);
             this.splitContainer3.SplitterDistance = 930;
             this.splitContainer3.SplitterWidth = 6;
             this.splitContainer3.TabIndex = 0;
             // 
             // panelControlMainEdit1
             // 
+            this.panelControlMainEdit1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelControlMainEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControlMainEdit1.Location = new System.Drawing.Point(0, 0);
             this.panelControlMainEdit1.Margin = new System.Windows.Forms.Padding(6);
             this.panelControlMainEdit1.Name = "panelControlMainEdit1";
-            this.panelControlMainEdit1.Size = new System.Drawing.Size(930, 365);
+            this.panelControlMainEdit1.Size = new System.Drawing.Size(930, 228);
             this.panelControlMainEdit1.TabIndex = 0;
             // 
             // panelControlMainTree1
             // 
+            this.panelControlMainTree1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelControlMainTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControlMainTree1.Location = new System.Drawing.Point(0, 0);
             this.panelControlMainTree1.Margin = new System.Windows.Forms.Padding(6);
             this.panelControlMainTree1.Name = "panelControlMainTree1";
-            this.panelControlMainTree1.Size = new System.Drawing.Size(390, 365);
+            this.panelControlMainTree1.Size = new System.Drawing.Size(390, 228);
             this.panelControlMainTree1.TabIndex = 0;
             // 
             // FormTimeLine
