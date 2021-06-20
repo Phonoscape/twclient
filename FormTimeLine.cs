@@ -234,6 +234,7 @@ namespace twclient
                         afterSend = true;
                         e.SuppressKeyPress = true;
                         panelControlMainEdit1.textBoxTweet.Clear();
+                        panelControlMainEdit1.textBoxTweet.Focus();
 
                         panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
@@ -1721,6 +1722,7 @@ namespace twclient
             panelControlMainEdit1.Enabled = true;
 
             panelControlMainEdit1.textBoxTweet.Clear();
+            panelControlMainEdit1.textBoxTweet.Focus();
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
