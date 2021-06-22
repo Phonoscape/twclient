@@ -42,7 +42,7 @@ namespace twclient
             panelControlMainTree1.treeView1.ItemDrag += PanelControlMainTree1_TreeView1_ItemDrag;
             panelControlMainTree1.treeView1.DragEnter += PanelControlMainTree1_TreeView1_DragEnter;
             panelControlMainTree1.treeView1.DragDrop += PanelControlMainTree1_TreeView1_DragDrop;
-            panelControlMainTree1.treeView1.MouseMove += PanelControlMainTree1_TreeView1_MouseMove;
+            panelControlMainTree1.treeView1.DragOver += PanelControlMainTree1_TreeView1_DragOver;
 
             panelTimeLine1.panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
             panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp;
@@ -571,10 +571,6 @@ namespace twclient
             panelControlMainEdit1.checkBoxHash.Checked = tl.GetHashAddTag();
         }
 
-        private void PanelControlMainTree1_TreeView1_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-
         private void PanelControlMainTree1_TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = (TreeNode)e.Item;
@@ -584,6 +580,7 @@ namespace twclient
                 if (node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_USER] ||
                     node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_SEARCH])
                 {
+                    panelControlMainTree1.treeView1.SelectedNode = node;
                     DoDragDrop(node, DragDropEffects.Move);
                     treeNodeDrag = true;
                 }
@@ -593,6 +590,87 @@ namespace twclient
         private void PanelControlMainTree1_TreeView1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragOver(object sender, DragEventArgs e)
+        {
+            var tv = (TreeView)sender;
+
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+
+                if (node == null)
+                {
+                    return;
+                }
+
+                TreeNode topNode = null;
+                TreeNode wn = node;
+                while(wn.IsVisible)
+                {
+                    topNode = (TreeNode)wn.Clone();
+                    wn = wn.PrevNode;
+                    if (wn == null)
+                    {
+                        topNode = null;
+                        break;
+                    }
+                }
+
+                TreeNode bottomNode = node;
+                wn = node;
+                while (wn.IsVisible)
+                {
+                    bottomNode = (TreeNode)wn.Clone();
+                    wn = wn.NextNode;
+                    if (wn == null)
+                    {
+                        bottomNode = null;
+                        break;
+                    }
+                }
+
+                //Debug.WriteLine(node.Text);
+                //Debug.WriteLine(topNode.Text);
+                //Debug.WriteLine(bottomNode.Text);
+
+                if (topNode != null)
+                {
+                    if (node.Text == topNode.Text)
+                    {
+                        var ty = node.Parent?.Tag;
+
+                        if (ty != null)
+                        {
+                            var subIndex = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.IndexOfKey(topNode.Name);
+
+                            if (subIndex > 0)
+                            {
+                                panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[subIndex - 1].EnsureVisible();
+                            }
+                        }
+                    }
+                }
+                
+                if (bottomNode != null)
+                {
+                    if (node.Text == bottomNode.Text)
+                    {
+                        var ty = node.Parent?.Tag;
+
+                        if (ty != null)
+                        {
+                            var subIndex = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.IndexOfKey(bottomNode.Name);
+
+                            if (subIndex > -1 && subIndex < panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.Count - 1)
+                            {
+                                panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[subIndex + 1].EnsureVisible();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void PanelControlMainTree1_TreeView1_DragDrop(object sender, DragEventArgs e)
@@ -2021,6 +2099,7 @@ namespace twclient
 
                     var childNode = panelControlMainTree1.treeView1.Nodes[i].Nodes.Add(tabName);
                     childNode.Tag = ty;
+                    childNode.Name = tabName;
                     if (!init) panelControlMainTree1.treeView1.SelectedNode = childNode;
 
                     return childTl;
