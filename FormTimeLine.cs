@@ -382,15 +382,15 @@ namespace twclient
             panelTimeLine1.panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
 
             TimeLine tl;
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, "HOME", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, "USER", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, Resource.Resource1.String_FormTimeLine_TimelineName_HOME, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, Resource.Resource1.String_FormTimeLine_TimelineName_USER, true);
             tl.SetUserId(twitter.GetTokenUser());
             //            tl = addTimeLine(TimeLine.TimeLineType.TIMELINE_NOTIFICATION, "NOTIFICATION");
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_SEARCH, "SEARCH", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LIKE, "LIKE", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_SEARCH, Resource.Resource1.String_FormTimeLine_TimelineName_SEARCH, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LIKE, Resource.Resource1.String_FormTimeLine_TimelineName_LIKE, true);
             //            tl = addTimeLine(TimeLine.TimeLineType.TIMELINE_MESSAGE, "MESSAGE");
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_MENTION, "MENTION", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, "LISTS", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_MENTION, Resource.Resource1.String_FormTimeLine_TimelineName_MENTION, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, Resource.Resource1.String_FormTimeLine_TimelineName_LISTS, true);
 
             // User検索読み込み
             LoadUser();
@@ -961,7 +961,7 @@ namespace twclient
 
             foreach (var word in words)
             {
-                if (word == "OR")
+                if (word == Resource.Resource1.String_FormTimeLine_SearchWord_OR)
                 {
                     continue;
                 }
@@ -1030,15 +1030,15 @@ namespace twclient
 
             if (timediff.TotalSeconds < 0)
             {
-                timeMsg = "0 秒";
+                timeMsg = "0" + Resource.Resource1.String_FormTimeLine_Seconds;
             }
             else if (timediff.TotalSeconds < 60)
             {
-                timeMsg = ((int)timediff.TotalSeconds).ToString() + " 秒";
+                timeMsg = ((int)timediff.TotalSeconds).ToString() + Resource.Resource1.String_FormTimeLine_Seconds;
             }
             else if (timediff.TotalSeconds < 60 * 60)
             {
-                timeMsg = ((int)timediff.TotalMinutes).ToString() + " 分";
+                timeMsg = ((int)timediff.TotalMinutes).ToString() + Resource.Resource1.String_FormTimeLine_Minitus;
             }
             else
             {
@@ -1259,7 +1259,7 @@ namespace twclient
 
             if (retweet)
             {
-                contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(@" + rtl.User.ScreenName.ToString() + ")";
+                contents.textBoxRetweet.Text = String.Format(Resource.Resource1.String_FormTimeLine_RetweetBy, rtl.User.Name.ToString(), rtl.User.ScreenName.ToString());
                 contents.textBoxRetweet.Tag = rtl.User.ScreenName.ToString();
                 contents.textBoxRetweet.Click += Contents_User_Click;
                 contents.textBoxRetweet.Cursor = Cursors.Hand;
@@ -1456,7 +1456,7 @@ namespace twclient
 
             if (obj == toolStripMenuItemRetweet)
             {
-                if (MessageBox.Show(this, "Retweetしますか？", "Retweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_RetweetMessage, Resource.Resource1.String_FormTimeLine_RetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.Retweet(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1465,7 +1465,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemUnRetweet)
             {
-                if (MessageBox.Show(this, "Retweetを取り消ししますか？", "Cancel Retweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelRetweetMessage, Resource.Resource1.String_FormTimeLine_CancelRetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.UnRetweet(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1474,7 +1474,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemLike)
             {
-                if (MessageBox.Show(this, "Favoriteしますか？", "Favorite", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_FavoriteMessage, Resource.Resource1.String_FormTimeLine_FavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.Like(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1483,7 +1483,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemUnLike)
             {
-                if (MessageBox.Show(this, "Favoriteを取り消ししますか？", "Cancel Favorite", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelFavoriteMessage, Resource.Resource1.String_FormTimeLine_CancelFavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.UnLike(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1508,7 +1508,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemDel)
             {
-                if (MessageBox.Show(this, "Tweetを削除しますか？", "Delete Tweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_DeleteTweetMessage, Resource.Resource1.String_FormTimeLine_DeleteTweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.DeleteTweet(tweetId);
                     PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
@@ -1527,7 +1527,7 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Red;
                 panelControlMainEdit1.textBoxMsg2.Font = font2;
 
-                panelControlMainEdit1.textBoxMsg1.Text = "返信(@" + status.User.ScreenName + ")";
+                panelControlMainEdit1.textBoxMsg1.Text = String.Format(Resource.Resource1.String_FormTimeLine_Reply, status.User.ScreenName);
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Reply;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
@@ -1548,7 +1548,7 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Blue;
                 panelControlMainEdit1.textBoxMsg2.Font = font2;
 
-                panelControlMainEdit1.textBoxMsg1.Text = "引用Tweet";
+                panelControlMainEdit1.textBoxMsg1.Text = Resource.Resource1.String_FormTimeLine_Quote;
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.RetweetWith;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
