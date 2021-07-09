@@ -417,7 +417,7 @@ namespace twclient
             timeLineIndex = index;
             timeLineSubIndex = subIndex;
 
-            parentForm.panelTimeLine1.panelTimeLineList1.listView1.Items.Clear();
+            parentForm.panelTimeLineList1.listView1.Items.Clear();
 
             TimeLine tl = SelectTimeLine();
             //TimeLine tl = selectedTimeLine;
