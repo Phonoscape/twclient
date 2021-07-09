@@ -44,19 +44,19 @@ namespace twclient
             panelControlMainTree1.treeView1.DragDrop += PanelControlMainTree1_TreeView1_DragDrop;
             panelControlMainTree1.treeView1.DragOver += PanelControlMainTree1_TreeView1_DragOver;
 
-            panelTimeLine1.panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
-            panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp;
-            panelTimeLine1.panelTimeLineList1.listView1.RetrieveVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem;
-            panelTimeLine1.panelTimeLineList1.listView1.DrawItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawItem;
-            panelTimeLine1.panelTimeLineList1.listView1.DrawSubItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem;
-            panelTimeLine1.panelTimeLineList1.listView1.DrawColumnHeader += PanelTimeLine1_panelTimeLineList1_ListView1_DrawColumnHeader;
-            panelTimeLine1.panelTimeLineList1.listView1.SearchForVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_SearchForVirtualItem;
+            panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
+            panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp;
+            panelTimeLineList1.listView1.RetrieveVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem;
+            panelTimeLineList1.listView1.DrawItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawItem;
+            panelTimeLineList1.listView1.DrawSubItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem;
+            panelTimeLineList1.listView1.DrawColumnHeader += PanelTimeLine1_panelTimeLineList1_ListView1_DrawColumnHeader;
+            panelTimeLineList1.listView1.SearchForVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_SearchForVirtualItem;
 
-            panelTimeLine1.panelTimeLineList1.listView1.ContextMenuStrip = contextMenuForListView;
-            panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = 0;
-            panelTimeLine1.panelTimeLineList1.listView1.VirtualMode = true;
-            panelTimeLine1.panelTimeLineList1.listView1.Sorting = SortOrder.Descending;
-            panelTimeLine1.panelTimeLineList1.listView1.OwnerDraw = true;
+            panelTimeLineList1.listView1.ContextMenuStrip = contextMenuForListView;
+            panelTimeLineList1.listView1.VirtualListSize = 0;
+            panelTimeLineList1.listView1.VirtualMode = true;
+            panelTimeLineList1.listView1.Sorting = SortOrder.Descending;
+            panelTimeLineList1.listView1.OwnerDraw = true;
 
             //panelTimeLineContents1.richTextBox1.LinkClicked += panelTimeLineContents1_RichTextBox1_LinkClicked;
             //webBrowser1.DocumentCompleted += panelTimeLineContents1_webBrowser_DocumentCompleted;
@@ -370,16 +370,16 @@ namespace twclient
             this.splitContainer2.SplitterDistance = sprit_w1;
             this.splitContainer3.SplitterDistance = sprit_w2;
 
-            for (int i = 0; i < this.panelTimeLine1.panelTimeLineList1.listView1.Columns.Count; i++)
+            for (int i = 0; i < this.panelTimeLineList1.listView1.Columns.Count; i++)
             {
                 int item_w = settings.GetValueInt(Settings.PARAM_MAINFORM_TWEETLINE_ITEM_W + string.Format("{0:D2}", i));
                 item_w = item_w != -1 ? item_w : 40;
 
-                this.panelTimeLine1.panelTimeLineList1.listView1.Columns[i].Width = item_w;
+                this.panelTimeLineList1.listView1.Columns[i].Width = item_w;
             }
 
-            panelTimeLine1.panelTimeLineList1.listView1.SmallImageList = new ImageList();
-            panelTimeLine1.panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
+            panelTimeLineList1.listView1.SmallImageList = new ImageList();
+            panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
 
             TimeLine tl;
             tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, Resource.Resource1.String_FormTimeLine_TimelineName_HOME, true);
@@ -453,10 +453,10 @@ namespace twclient
             settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_UP_LEFTRIGHT, this.splitContainer2.SplitterDistance);
             settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_DOWN_LEFTRIGHT, this.splitContainer3.SplitterDistance);
 
-            for (int i = 0; i < this.panelTimeLine1.panelTimeLineList1.listView1.Columns.Count; i++)
+            for (int i = 0; i < this.panelTimeLineList1.listView1.Columns.Count; i++)
             {
                 settings.SetValueInt(Settings.PARAM_MAINFORM_TWEETLINE_ITEM_W + string.Format("{0:D2}", i),
-                    this.panelTimeLine1.panelTimeLineList1.listView1.Columns[i].Width);
+                    this.panelTimeLineList1.listView1.Columns[i].Width);
             }
 
             settings.Flash();
@@ -983,7 +983,7 @@ namespace twclient
 
         private void PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            var lv = panelTimeLine1.panelTimeLineList1.listView1;
+            var lv = panelTimeLineList1.listView1;
             var select = lv.SelectedIndices;
 
             if (cacheLvi.ContainsKey(e.ItemIndex))
@@ -1086,7 +1086,7 @@ namespace twclient
 
         private void PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            var lv = panelTimeLine1.panelTimeLineList1.listView1;
+            var lv = panelTimeLineList1.listView1;
             var locate = e.Bounds.Location;
             var size = e.Bounds.Size;
 
@@ -1111,7 +1111,7 @@ namespace twclient
 
         private void PanelTimeLine1_panelTimeLineList1_ListView1_Refresh()
         {
-            panelTimeLine1.panelTimeLineList1.listView1.Items.Clear();
+            panelTimeLineList1.listView1.Items.Clear();
             SetListView();
         }
 
@@ -1127,7 +1127,7 @@ namespace twclient
 
         private void ListView1_Click(long tweetId = 0)
         {
-            ListView lv = panelTimeLine1.panelTimeLineList1.listView1;
+            ListView lv = panelTimeLineList1.listView1;
             bool sameTweet = false;
 
             try
@@ -1454,8 +1454,8 @@ namespace twclient
         {
             ToolStripMenuItem obj = (ToolStripMenuItem)sender;
 
-            //var lv = panelTimeLine1.panelTimeLineList1.listView1.SelectedItems[0].SubItems[0].Text.ToString();
-            var lv = panelTimeLine1.panelTimeLineList1.listView1;
+            //var lv = panelTimeLineList1.listView1.SelectedItems[0].SubItems[0].Text.ToString();
+            var lv = panelTimeLineList1.listView1;
             var index = lv.SelectedIndices[0];
 
             //if (index == 0) return;
@@ -2222,14 +2222,14 @@ namespace twclient
                 return;
             }
 
-            panelTimeLine1.panelTimeLineList1.listView1.BeginUpdate();
+            panelTimeLineList1.listView1.BeginUpdate();
 
             //SetListViewItem(status);
             cacheLvi.Clear();
-            panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
+            panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
             selectedTweetId = 0;
 
-            panelTimeLine1.panelTimeLineList1.listView1.EndUpdate();
+            panelTimeLineList1.listView1.EndUpdate();
 
             addDateTime = DateTime.Now.ToLocalTime();
         }
@@ -2251,43 +2251,43 @@ namespace twclient
 
             if (twitter.SelectTimeLine().GetNewTimeLine().Count == 0) return;
 
-            var oldTop = panelTimeLine1.panelTimeLineList1.listView1.TopItem;
+            var oldTop = panelTimeLineList1.listView1.TopItem;
             var oldTopIndex = 0;
 
             if (oldTop != null)
             {
-                oldTopIndex = panelTimeLine1.panelTimeLineList1.listView1.TopItem.Index;
+                oldTopIndex = panelTimeLineList1.listView1.TopItem.Index;
             }
 
-            panelTimeLine1.panelTimeLineList1.listView1.BeginUpdate();
+            panelTimeLineList1.listView1.BeginUpdate();
 
             //SetListViewItem(status);
             cacheLvi.Clear();
-            panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
+            panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
 
             if (oldTopIndex != 0)
             {
-                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(twitter.SelectTimeLine().GetTimeLine().Count - 1);
-                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(oldTopIndex + twitter.SelectTimeLine().GetNewTimeLine().Count);
+                panelTimeLineList1.listView1.EnsureVisible(twitter.SelectTimeLine().GetTimeLine().Count - 1);
+                panelTimeLineList1.listView1.EnsureVisible(oldTopIndex + twitter.SelectTimeLine().GetNewTimeLine().Count);
             }
             else
             {
-                if (panelTimeLine1.panelTimeLineList1.listView1.Items.Count != 0)
+                if (panelTimeLineList1.listView1.Items.Count != 0)
                 {
-                    panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(0);
+                    panelTimeLineList1.listView1.EnsureVisible(0);
                 }
             }
 
-            var sel = panelTimeLine1.panelTimeLineList1.listView1.SelectedIndices;
+            var sel = panelTimeLineList1.listView1.SelectedIndices;
             if (sel.Count != 0)
             {
                 var index = sel[0];
                 index += twitter.SelectTimeLine().GetNewTimeLine().Count();
-                panelTimeLine1.panelTimeLineList1.listView1.SelectedIndices.Clear();
-                panelTimeLine1.panelTimeLineList1.listView1.SelectedIndices.Add(index);
+                panelTimeLineList1.listView1.SelectedIndices.Clear();
+                panelTimeLineList1.listView1.SelectedIndices.Add(index);
             }
 
-            panelTimeLine1.panelTimeLineList1.listView1.EndUpdate();
+            panelTimeLineList1.listView1.EndUpdate();
 
             addDateTime = DateTime.Now.ToLocalTime();
         }
@@ -2325,14 +2325,14 @@ namespace twclient
 
                 items.SubItems.Add(line.CreatedAt.ToLocalTime().ToString());
 
-                var item = panelTimeLine1.panelTimeLineList1.listView1.Items.Add(items);
+                var item = panelTimeLineList1.listView1.Items.Add(items);
                 item.ForeColor = color;
             }
             */
 
             cacheLvi.Clear();
 
-            panelTimeLine1.panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
+            panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
         }
 
         public void OpenUrl(string url)
