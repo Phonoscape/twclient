@@ -1099,8 +1099,16 @@ namespace twclient
                 e.Graphics.FillRectangle(br, new Rectangle(locate, size));
             }
 
-            e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
+            if (e.ColumnIndex == 4)
+            {
+                e.DrawText(TextFormatFlags.Right | TextFormatFlags.Bottom);
+            }
+            else
+            {
+                e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
+            }
         }
+
         private void PanelTimeLine1_panelTimeLineList1_ListView1_Refresh()
         {
             panelTimeLine1.panelTimeLineList1.listView1.Items.Clear();
