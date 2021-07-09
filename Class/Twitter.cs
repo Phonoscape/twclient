@@ -267,7 +267,7 @@ namespace twclient
             //TimeLine tl = selectedTimeLine;
             if (tl == null)
             {
-                parentForm.SetStatusMenu("内部エラー（Timeline取得）");
+                parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_InternalError1);
                 return false;
             }
 
@@ -368,10 +368,10 @@ namespace twclient
                 switch (e.Status)
                 {
                     case (System.Net.HttpStatusCode)System.Net.WebExceptionStatus.NameResolutionFailure:
-                        parentForm.SetStatusMenu("名前解決ができません。");
+                        parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_NameResolutionFailure);
                         break;
                     case (System.Net.HttpStatusCode)System.Net.WebExceptionStatus.Timeout:
-                        parentForm.SetStatusMenu("応答が一定時間ありませんでした。");
+                        parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Timeout);
                         break;
                     default:
                         parentForm.SetStatusMenu(e.Message);
@@ -434,7 +434,7 @@ namespace twclient
         {
             updateTimer.Stop();
 
-            parentForm.SetStatusMenu("更新中");
+            parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Updating);
 
             TimeLine tl = SelectTimeLine();
             //TimeLine tl = selectedTimeLine;
@@ -444,16 +444,16 @@ namespace twclient
                 if (tl.GetNewTimeLineCount() > 0)
                 {
                     parentForm.SetListViewNew();
-                    parentForm.SetStatusMenu("待機中");
+                    parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Waiting);
                 }
                 else 
                 {
-                    parentForm.SetStatusMenu("更新なし");
+                    parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_NoUpdate);
                 }
             }
             else
             {
-                parentForm.SetStatusMenu("待機中");
+                parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Waiting);
             }
 
             updateTimer.Interval = tl.GetUpdateTime() * 1000;
@@ -751,6 +751,32 @@ namespace twclient
             g.DrawImage(src, 0, 0, w, h);
 
             return dst;
+        }
+
+        internal void MoveTimeLineSubIndex(TimeLine.TimeLineType ty, int srcIndex, int dstIndex)
+        {
+            if (srcIndex > dstIndex)
+            {
+                ChangeSubIndex(ty, srcIndex, -1);
+
+                for (int i = srcIndex - 1; i >= dstIndex; i--)
+                {
+                    ChangeSubIndex(ty, i, i + 1);
+                }
+
+                ChangeSubIndex(ty, -1, dstIndex);
+            }
+            else if (srcIndex < dstIndex)
+            {
+                ChangeSubIndex(ty, srcIndex, -1);
+
+                for (int i = srcIndex + 1; i <= dstIndex; i++)
+                {
+                    ChangeSubIndex(ty, i, i - 1);
+                }
+
+                ChangeSubIndex(ty, -1, dstIndex);
+            }
         }
 
         public void Reply(String tweetText,long id)

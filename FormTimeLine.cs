@@ -26,6 +26,8 @@ namespace twclient
         const int MAXIMAGE = 4;
         private Bitmap[] tweetImage;
 
+        private bool treeNodeDrag = false;
+
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
         public FormTimeLine()
@@ -36,8 +38,14 @@ namespace twclient
             panelControlMainTree1.treeView1.AfterSelect += PanelControlMainTree1_TreeView1_AfterSelect;
             panelControlMainTree1.treeView1.Click += PanelControlMainTree1_TreeView1_Click;
 
+            panelControlMainTree1.treeView1.AllowDrop = true;
+            panelControlMainTree1.treeView1.ItemDrag += PanelControlMainTree1_TreeView1_ItemDrag;
+            panelControlMainTree1.treeView1.DragEnter += PanelControlMainTree1_TreeView1_DragEnter;
+            panelControlMainTree1.treeView1.DragDrop += PanelControlMainTree1_TreeView1_DragDrop;
+            panelControlMainTree1.treeView1.DragOver += PanelControlMainTree1_TreeView1_DragOver;
+
             panelTimeLine1.panelTimeLineList1.listView1.Click += PanelTimeLine1_panelTimeLineList1_ListView1_Click;
-            panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_listView1_KeyUp;
+            panelTimeLine1.panelTimeLineList1.listView1.KeyUp += PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp;
             panelTimeLine1.panelTimeLineList1.listView1.RetrieveVirtualItem += PanelTimeLine1_panelTimeLineList1_ListView1_RetrieveVirtualItem;
             panelTimeLine1.panelTimeLineList1.listView1.DrawItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawItem;
             panelTimeLine1.panelTimeLineList1.listView1.DrawSubItem += PanelTimeLine1_panelTimeLineList1_ListView1_DrawSubItem;
@@ -228,6 +236,7 @@ namespace twclient
                         afterSend = true;
                         e.SuppressKeyPress = true;
                         panelControlMainEdit1.textBoxTweet.Clear();
+                        panelControlMainEdit1.textBoxTweet.Focus();
 
                         panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
@@ -373,15 +382,15 @@ namespace twclient
             panelTimeLine1.panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
 
             TimeLine tl;
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, "HOME", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, "USER", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, Resource.Resource1.String_FormTimeLine_TimelineName_HOME, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, Resource.Resource1.String_FormTimeLine_TimelineName_USER, true);
             tl.SetUserId(twitter.GetTokenUser());
             //            tl = addTimeLine(TimeLine.TimeLineType.TIMELINE_NOTIFICATION, "NOTIFICATION");
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_SEARCH, "SEARCH", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LIKE, "LIKE", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_SEARCH, Resource.Resource1.String_FormTimeLine_TimelineName_SEARCH, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LIKE, Resource.Resource1.String_FormTimeLine_TimelineName_LIKE, true);
             //            tl = addTimeLine(TimeLine.TimeLineType.TIMELINE_MESSAGE, "MESSAGE");
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_MENTION, "MENTION", true);
-            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, "LISTS", true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_MENTION, Resource.Resource1.String_FormTimeLine_TimelineName_MENTION, true);
+            tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, Resource.Resource1.String_FormTimeLine_TimelineName_LISTS, true);
 
             // User検索読み込み
             LoadUser();
@@ -403,6 +412,8 @@ namespace twclient
                 tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_LISTS, ((CoreTweet.List)keys[lst]).Name + "(" + ((CoreTweet.List)keys[lst]).FullName + ")", true);
                 tl.SetListId(((CoreTweet.List)keys[lst]).Id);
             }
+
+            panelControlMainTree1.treeView1.ExpandAll();
         }
 
         public int PixcelCalc(int v)
@@ -412,7 +423,7 @@ namespace twclient
 
         private void FormTimeLine_Shown(object sender, EventArgs e)
         {
-            TreeNode node = panelControlMainTree1.treeView1.TopNode;
+            TreeNode node = panelControlMainTree1.treeView1.Nodes[0];
             panelControlMainTree1.treeView1.SelectedNode = node;
             //panelControlMainTree1.treeView1.Focus();
             //PanelControlMainTree1_TreeView1_AfterSelect(panelControlMainTree1.treeView1, new TreeNodeMouseClickEventArgs(node, MouseButtons.Left, 1, 0, 0));
@@ -560,6 +571,155 @@ namespace twclient
             panelControlMainEdit1.checkBoxHash.Checked = tl.GetHashAddTag();
         }
 
+        private void PanelControlMainTree1_TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var node = (TreeNode)e.Item;
+
+            if (node.Parent != null)
+            {
+                if (node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_USER] ||
+                    node.Parent == panelControlMainTree1.treeView1.Nodes[(int)TimeLine.TimeLineType.TIMELINE_SEARCH])
+                {
+                    panelControlMainTree1.treeView1.SelectedNode = node;
+                    DoDragDrop(node, DragDropEffects.Move);
+                    treeNodeDrag = true;
+                }
+            }
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragOver(object sender, DragEventArgs e)
+        {
+            var tv = (TreeView)sender;
+
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+
+                if (node == null)
+                {
+                    return;
+                }
+
+                TreeNode topNode = null;
+                TreeNode wn = node;
+                while(wn.IsVisible)
+                {
+                    topNode = (TreeNode)wn.Clone();
+                    wn = wn.PrevNode;
+                    if (wn == null)
+                    {
+                        topNode = null;
+                        break;
+                    }
+                }
+
+                TreeNode bottomNode = node;
+                wn = node;
+                while (wn.IsVisible)
+                {
+                    bottomNode = (TreeNode)wn.Clone();
+                    wn = wn.NextNode;
+                    if (wn == null)
+                    {
+                        bottomNode = null;
+                        break;
+                    }
+                }
+
+                //Debug.WriteLine(node.Text);
+                //Debug.WriteLine(topNode.Text);
+                //Debug.WriteLine(bottomNode.Text);
+
+                if (topNode != null)
+                {
+                    if (node.Text == topNode.Text)
+                    {
+                        var ty = node.Parent?.Tag;
+
+                        if (ty != null)
+                        {
+                            var subIndex = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.IndexOfKey(topNode.Name);
+
+                            if (subIndex > 0)
+                            {
+                                panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[subIndex - 1].EnsureVisible();
+                            }
+                        }
+                    }
+                }
+                
+                if (bottomNode != null)
+                {
+                    if (node.Text == bottomNode.Text)
+                    {
+                        var ty = node.Parent?.Tag;
+
+                        if (ty != null)
+                        {
+                            var subIndex = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.IndexOfKey(bottomNode.Name);
+
+                            if (subIndex > -1 && subIndex < panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes.Count - 1)
+                            {
+                                panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[subIndex + 1].EnsureVisible();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PanelControlMainTree1_TreeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            var tv = (TreeView)sender;
+
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                TreeNode srcNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                TreeNode dstNode = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+
+                var ty = (TimeLine.TimeLineType)dstNode.Tag;
+                var index = dstNode.Index;
+
+                if (srcNode.Parent == dstNode.Parent)
+                {
+                    ChangeSort(srcNode, dstNode);
+                }
+                treeNodeDrag = false;
+
+                panelControlMainTree1.treeView1.SelectedNode = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[index];
+            }
+        }
+
+        private void ChangeSort(TreeNode srcNode, TreeNode dstNode)
+        {
+            int srcIndex = srcNode.Index;
+            int dstIndex = dstNode.Index;
+
+            TreeNode parentNode = srcNode.Parent;
+            TreeNode moveNode = (TreeNode)srcNode.Clone();
+
+            if (srcIndex < dstIndex)
+            {
+                parentNode.Nodes.Insert(dstIndex + 1, moveNode);
+                parentNode.Nodes.Remove(srcNode);
+            }
+            else if(srcIndex > dstIndex)
+            {
+                parentNode.Nodes.Insert(dstIndex, moveNode);
+                parentNode.Nodes.Remove(srcNode);
+            }
+
+            var srcSubIndex = srcIndex + 1;
+            var dstSubIndex = dstIndex + 1;
+
+            twitter.MoveTimeLineSubIndex((TimeLine.TimeLineType)parentNode.Tag, srcSubIndex, dstSubIndex);
+        }
+
         private void ContextMenuUser_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem obj = (ToolStripMenuItem)sender;
@@ -602,9 +762,9 @@ namespace twclient
         {
             MakeTextBox(false);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_AddUser_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_AddUser_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -612,9 +772,9 @@ namespace twclient
         {
             MakeTextBox(false);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_AddSearch_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_AddSearch_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -622,9 +782,9 @@ namespace twclient
         {
             MakeTextBox(true);
 
-            tb.KeyDown += PanelControlMainTree1_treeView1_ChangeSearch_Tb_KeyDown;
+            tb.KeyDown += PanelControlMainTree1_TreeView1_ChangeSearch_Tb_KeyDown;
             //            tb.LostFocus += panelControlMainTree1_treeView1_Tb_LostFocus;
-            tb.Leave += PanelControlMainTree1_treeView1_Tb_Leave;
+            tb.Leave += PanelControlMainTree1_TreeView1_Tb_Leave;
 
         }
 
@@ -642,7 +802,7 @@ namespace twclient
             tb.Focus();
         }
 
-        private void PanelControlMainTree1_treeView1_AddUser_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_AddUser_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
@@ -657,14 +817,14 @@ namespace twclient
             }
 
         }
-        private void PanelControlMainTree1_treeView1_AddSearch_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_AddSearch_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_AddSearch_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_AddSearch_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -673,14 +833,14 @@ namespace twclient
 
         }
 
-        private void PanelControlMainTree1_treeView1_ChangeSearch_Tb_KeyDown(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_ChangeSearch_Tb_KeyDown(object sender, EventArgs e)
         {
             KeyEventArgs args = (KeyEventArgs)e;
 
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_ChangeSearch_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_ChangeSearch_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -689,7 +849,7 @@ namespace twclient
 
         }
 
-        private void PanelControlMainTree1_treeView1_Tb_Leave(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_Tb_Leave(object sender, EventArgs e)
         {
             tb.Dispose();
         }
@@ -722,7 +882,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_AddSearch_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_AddSearch_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -744,7 +904,7 @@ namespace twclient
 
             tb.Dispose();
         }
-        private void PanelControlMainTree1_treeView1_ChangeSearch_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_ChangeSearch_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -760,7 +920,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_Tb_LostFocus(object sender, EventArgs e)
+        private void PanelControlMainTree1_TreeView1_Tb_LostFocus(object sender, EventArgs e)
         {
             tb.Dispose();
         }
@@ -801,7 +961,7 @@ namespace twclient
 
             foreach (var word in words)
             {
-                if (word == "OR")
+                if (word == Resource.Resource1.String_FormTimeLine_SearchWord_OR)
                 {
                     continue;
                 }
@@ -870,15 +1030,15 @@ namespace twclient
 
             if (timediff.TotalSeconds < 0)
             {
-                timeMsg = "0 秒";
+                timeMsg = "0" + Resource.Resource1.String_FormTimeLine_Seconds;
             }
             else if (timediff.TotalSeconds < 60)
             {
-                timeMsg = ((int)timediff.TotalSeconds).ToString() + " 秒";
+                timeMsg = ((int)timediff.TotalSeconds).ToString() + Resource.Resource1.String_FormTimeLine_Seconds;
             }
             else if (timediff.TotalSeconds < 60 * 60)
             {
-                timeMsg = ((int)timediff.TotalMinutes).ToString() + " 分";
+                timeMsg = ((int)timediff.TotalMinutes).ToString() + Resource.Resource1.String_FormTimeLine_Minitus;
             }
             else
             {
@@ -939,8 +1099,16 @@ namespace twclient
                 e.Graphics.FillRectangle(br, new Rectangle(locate, size));
             }
 
-            e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
+            if (e.ColumnIndex == 4)
+            {
+                e.DrawText(TextFormatFlags.Right | TextFormatFlags.Bottom);
+            }
+            else
+            {
+                e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
+            }
         }
+
         private void PanelTimeLine1_panelTimeLineList1_ListView1_Refresh()
         {
             panelTimeLine1.panelTimeLineList1.listView1.Items.Clear();
@@ -952,7 +1120,7 @@ namespace twclient
             ListView1_Click();
         }
 
-        private void PanelTimeLine1_panelTimeLineList1_listView1_KeyUp(object sender, KeyEventArgs e)
+        private void PanelTimeLine1_panelTimeLineList1_ListView1_KeyUp(object sender, KeyEventArgs e)
         {
             ListView1_Click();
         }
@@ -1099,7 +1267,7 @@ namespace twclient
 
             if (retweet)
             {
-                contents.textBoxRetweet.Text = "RT by " + rtl.User.Name.ToString() + "(@" + rtl.User.ScreenName.ToString() + ")";
+                contents.textBoxRetweet.Text = String.Format(Resource.Resource1.String_FormTimeLine_RetweetBy, rtl.User.Name.ToString(), rtl.User.ScreenName.ToString());
                 contents.textBoxRetweet.Tag = rtl.User.ScreenName.ToString();
                 contents.textBoxRetweet.Click += Contents_User_Click;
                 contents.textBoxRetweet.Cursor = Cursors.Hand;
@@ -1296,7 +1464,7 @@ namespace twclient
 
             if (obj == toolStripMenuItemRetweet)
             {
-                if (MessageBox.Show(this, "Retweetしますか？", "Retweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_RetweetMessage, Resource.Resource1.String_FormTimeLine_RetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.Retweet(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1305,7 +1473,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemUnRetweet)
             {
-                if (MessageBox.Show(this, "Retweetを取り消ししますか？", "Cancel Retweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelRetweetMessage, Resource.Resource1.String_FormTimeLine_CancelRetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.UnRetweet(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1314,7 +1482,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemLike)
             {
-                if (MessageBox.Show(this, "Favoriteしますか？", "Favorite", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_FavoriteMessage, Resource.Resource1.String_FormTimeLine_FavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.Like(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1323,7 +1491,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemUnLike)
             {
-                if (MessageBox.Show(this, "Favoriteを取り消ししますか？", "Cancel Favorite", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelFavoriteMessage, Resource.Resource1.String_FormTimeLine_CancelFavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.UnLike(tweetId);
                     twitter.GetTimeLine(tweetId);
@@ -1348,7 +1516,7 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemDel)
             {
-                if (MessageBox.Show(this, "Tweetを削除しますか？", "Delete Tweet", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_DeleteTweetMessage, Resource.Resource1.String_FormTimeLine_DeleteTweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     twitter.DeleteTweet(tweetId);
                     PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
@@ -1367,7 +1535,7 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Red;
                 panelControlMainEdit1.textBoxMsg2.Font = font2;
 
-                panelControlMainEdit1.textBoxMsg1.Text = "返信(@" + status.User.ScreenName + ")";
+                panelControlMainEdit1.textBoxMsg1.Text = String.Format(Resource.Resource1.String_FormTimeLine_Reply, status.User.ScreenName);
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Reply;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
@@ -1388,7 +1556,7 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Blue;
                 panelControlMainEdit1.textBoxMsg2.Font = font2;
 
-                panelControlMainEdit1.textBoxMsg1.Text = "引用Tweet";
+                panelControlMainEdit1.textBoxMsg1.Text = Resource.Resource1.String_FormTimeLine_Quote;
                 panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.RetweetWith;
                 panelControlMainEdit1.textBoxMsg2.Text = url;
                 panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
@@ -1676,6 +1844,7 @@ namespace twclient
             panelControlMainEdit1.Enabled = true;
 
             panelControlMainEdit1.textBoxTweet.Clear();
+            panelControlMainEdit1.textBoxTweet.Focus();
 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
@@ -1938,6 +2107,7 @@ namespace twclient
 
                     var childNode = panelControlMainTree1.treeView1.Nodes[i].Nodes.Add(tabName);
                     childNode.Tag = ty;
+                    childNode.Name = tabName;
                     if (!init) panelControlMainTree1.treeView1.SelectedNode = childNode;
 
                     return childTl;
@@ -2102,7 +2272,10 @@ namespace twclient
             }
             else
             {
-                panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(0);
+                if (panelTimeLine1.panelTimeLineList1.listView1.Items.Count != 0)
+                {
+                    panelTimeLine1.panelTimeLineList1.listView1.EnsureVisible(0);
+                }
             }
 
             var sel = panelTimeLine1.panelTimeLineList1.listView1.SelectedIndices;
