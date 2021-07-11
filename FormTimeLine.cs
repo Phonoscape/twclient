@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1212,12 +1214,13 @@ namespace twclient
             }
         }
 
-        async void InitWebView(panelTimeLineContents2 src)
+        async Task InitWebView(panelTimeLineContents2 src)
         {
-            await src.webView2_1.EnsureCoreWebView2Async(null);
+            var env = await CoreWebView2Environment.CreateAsync();
+            await src.webView2_1.EnsureCoreWebView2Async(env);
         }
 
-        private void MakeContents(CoreTweet.Status tl)
+        private async void MakeContents(CoreTweet.Status tl)
         {
             if (this.InvokeRequired)
             {
@@ -1244,7 +1247,7 @@ namespace twclient
             }
 
             panelTimeLineContents2 contents = new panelTimeLineContents2(tl.Id);
-            InitWebView(contents);
+            await InitWebView(contents);
 
             contents.textBoxUserId.Click += Contents_User_Click;
             contents.textBoxUserName.Click += Contents_User_Click;
@@ -1254,11 +1257,10 @@ namespace twclient
             int top = 0;
             foreach(var item in customListBox1.Items)
             {
-                top += ((panelTimeLineContents1)item).Height;
+                top += ((panelTimeLineContents2)item).Height;
             }
             contents.Top = top;
-            */
-
+*/
             Bitmap bitmap = MakeBitmapFromUrl(tl.User.ProfileImageUrlHttps);
 
             var userId = tl.User.ScreenName.ToString();
@@ -1327,6 +1329,9 @@ namespace twclient
             /* WebView2 */
             contents.webView2_1.Height = 0;
 
+            contents.webView2_1.NavigationCompleted += WebView2_1_NavigationCompleted;
+            contents.webView2_1.Validated += WebView2_1_Validated;
+
             //while (contents.webView2_1.CoreWebView2 == null) ;
 
             if (contents.webView2_1.CoreWebView2 != null)
@@ -1359,6 +1364,11 @@ namespace twclient
             //            listBoxTweetContents.Controls.SetChildIndex(contents, listBoxTweetContents.Items.Count - 1);
 
             //            listBoxTweetContents.Update();
+        }
+
+        private void WebView2_1_Validated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private Bitmap MakeBitmapFromUrl(string url)
@@ -1583,6 +1593,30 @@ namespace twclient
                 panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
                 panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
             }
+        }
+
+        // WebView2
+        private void WebView2_1_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            foreach (var i in controlListBox1.Items)
+            {
+                if (i.GetType().Equals(typeof(panelTimeLineContents2)))
+                {
+                    var hTable = ((panelTimeLineContents2)i).tableLayoutPanel1.Height;
+                    var hWeb = ((panelTimeLineContents2)i).webView2_1.PreferredSize.Height;
+                    //((panelTimeLineContents1)i).Height = h;
+                    i.Height = hTable + hWeb;
+
+                    Debug.WriteLine("DocumentCompleted: hSplit {0}", hTable);
+                    Debug.WriteLine("DocumentCompleted: hWeb {0}", hWeb);
+                }
+                else
+                {
+                    ((Panel)i).Height = controlListBox1.Height;
+                }
+            }
+            controlListBox1.Replace();
+            controlListBox1.Refresh();
         }
 
 
