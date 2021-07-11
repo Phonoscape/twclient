@@ -809,7 +809,7 @@ namespace twclient
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_AddUser_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_AddUser_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -854,7 +854,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_AddUser_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_AddUser_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -1042,7 +1042,13 @@ namespace twclient
             }
             else
             {
-                timeMsg = line.CreatedAt.LocalDateTime.ToString();
+                timeMsg = string.Format("{0:d04}/{1:d02}/{2:d02} {3:d02}:{4:d02}:{5:d02}",
+                            line.CreatedAt.LocalDateTime.Year,
+                            line.CreatedAt.LocalDateTime.Month,
+                            line.CreatedAt.LocalDateTime.Day,
+                            line.CreatedAt.LocalDateTime.Hour,
+                            line.CreatedAt.LocalDateTime.Minute,
+                            line.CreatedAt.LocalDateTime.Second);
             }
 
             lvi.SubItems.Add(timeMsg, color, bkColor, font);
