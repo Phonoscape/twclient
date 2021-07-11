@@ -811,7 +811,7 @@ namespace twclient
             switch (args.KeyCode)
             {
                 case Keys.Enter:
-                    PanelControlMainTree1_treeView1_AddUser_Tb_Enter();
+                    PanelControlMainTree1_TreeView1_AddUser_Tb_Enter();
                     break;
                 case Keys.Escape:
                     tb.Dispose();
@@ -856,7 +856,7 @@ namespace twclient
             tb.Dispose();
         }
 
-        private void PanelControlMainTree1_treeView1_AddUser_Tb_Enter()
+        private void PanelControlMainTree1_TreeView1_AddUser_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
@@ -1310,7 +1310,7 @@ namespace twclient
 
             List<string> eventHandlerName = new List<string>();
             var body = twitter.MakeHtmlBody(tl, eventHandlerName);
-            var html = "<html><body>" + cssStr + body + "</body></html>";
+            var html = "<html>" + cssStr + "<body>" + body + "</body></html>";
 
             /* webBrowser1 */
             /*
@@ -1330,7 +1330,6 @@ namespace twclient
             contents.webView2_1.Height = 0;
 
             contents.webView2_1.NavigationCompleted += WebView2_1_NavigationCompleted;
-            contents.webView2_1.Validated += WebView2_1_Validated;
 
             //while (contents.webView2_1.CoreWebView2 == null) ;
 
@@ -1364,11 +1363,6 @@ namespace twclient
             //            listBoxTweetContents.Controls.SetChildIndex(contents, listBoxTweetContents.Items.Count - 1);
 
             //            listBoxTweetContents.Update();
-        }
-
-        private void WebView2_1_Validated(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private Bitmap MakeBitmapFromUrl(string url)
@@ -1596,14 +1590,18 @@ namespace twclient
         }
 
         // WebView2
-        private void WebView2_1_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        private async void WebView2_1_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             foreach (var i in controlListBox1.Items)
             {
                 if (i.GetType().Equals(typeof(panelTimeLineContents2)))
                 {
+                    var h1 = await ((panelTimeLineContents2)i).webView2_1.ExecuteScriptAsync("document.body.scrollHeight");
+                    var h2 = await ((panelTimeLineContents2)i).webView2_1.ExecuteScriptAsync("document.body.style.paddingTop");
+                    var h3 = await ((panelTimeLineContents2)i).webView2_1.ExecuteScriptAsync("document.body.style.paddingBottom");
+
                     var hTable = ((panelTimeLineContents2)i).tableLayoutPanel1.Height;
-                    var hWeb = ((panelTimeLineContents2)i).webView2_1.PreferredSize.Height;
+                    var hWeb = (int)(float.Parse(h1) * DpiScale);
                     //((panelTimeLineContents1)i).Height = h;
                     i.Height = hTable + hWeb;
 
@@ -1618,7 +1616,6 @@ namespace twclient
             controlListBox1.Replace();
             controlListBox1.Refresh();
         }
-
 
         // WebBrowser
 

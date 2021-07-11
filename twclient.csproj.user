@@ -25,10 +25,10 @@
     <Compile Update="UserPanel\PanelTimeLine.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelTimeLineList.cs">
+    <Compile Update="UserPanel\PanelTimeLineContents2.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelTimeLineContents2.cs">
+    <Compile Update="UserPanel\PanelTimeLineList.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
