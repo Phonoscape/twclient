@@ -95,18 +95,18 @@ namespace twclient
             this.toolStripMenuAddUser,
             this.toolStripMenuDelUser});
             this.contextMenuUser.Name = "contextMenuUser";
-            this.contextMenuUser.Size = new System.Drawing.Size(175, 68);
+            this.contextMenuUser.Size = new System.Drawing.Size(135, 48);
             // 
             // toolStripMenuAddUser
             // 
             this.toolStripMenuAddUser.Name = "toolStripMenuAddUser";
-            this.toolStripMenuAddUser.Size = new System.Drawing.Size(174, 32);
+            this.toolStripMenuAddUser.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuAddUser.Text = "ユーザー追加";
             // 
             // toolStripMenuDelUser
             // 
             this.toolStripMenuDelUser.Name = "toolStripMenuDelUser";
-            this.toolStripMenuDelUser.Size = new System.Drawing.Size(174, 32);
+            this.toolStripMenuDelUser.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuDelUser.Text = "削除";
             // 
             // contextMenuSearch
@@ -119,35 +119,35 @@ namespace twclient
             this.toolStripSeparator4,
             this.toolStripMenuSetHash});
             this.contextMenuSearch.Name = "contextMenuSearch";
-            this.contextMenuSearch.Size = new System.Drawing.Size(240, 138);
+            this.contextMenuSearch.Size = new System.Drawing.Size(178, 98);
             // 
             // toolStripMenuAddSearch
             // 
             this.toolStripMenuAddSearch.Name = "toolStripMenuAddSearch";
-            this.toolStripMenuAddSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuAddSearch.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuAddSearch.Text = "追加";
             // 
             // toolStripMenuChangeSearch
             // 
             this.toolStripMenuChangeSearch.Name = "toolStripMenuChangeSearch";
-            this.toolStripMenuChangeSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuChangeSearch.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuChangeSearch.Text = "変更";
             // 
             // toolStripMenuDelSearch
             // 
             this.toolStripMenuDelSearch.Name = "toolStripMenuDelSearch";
-            this.toolStripMenuDelSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuDelSearch.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuDelSearch.Text = "削除";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(174, 6);
             // 
             // toolStripMenuSetHash
             // 
             this.toolStripMenuSetHash.Name = "toolStripMenuSetHash";
-            this.toolStripMenuSetHash.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuSetHash.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuSetHash.Text = "ハッシュタグとして設定";
             // 
             // contextMenuForListView
@@ -166,70 +166,70 @@ namespace twclient
             this.toolStripSeparator3,
             this.toolStripMenuItemOpen});
             this.contextMenuForListView.Name = "contextMenuForListView";
-            this.contextMenuForListView.Size = new System.Drawing.Size(209, 304);
+            this.contextMenuForListView.Size = new System.Drawing.Size(157, 214);
             // 
             // toolStripMenuItemRetweet
             // 
             this.toolStripMenuItemRetweet.Name = "toolStripMenuItemRetweet";
-            this.toolStripMenuItemRetweet.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemRetweet.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemRetweet.Text = "Retweet";
             // 
             // toolStripMenuItemUnRetweet
             // 
             this.toolStripMenuItemUnRetweet.Name = "toolStripMenuItemUnRetweet";
-            this.toolStripMenuItemUnRetweet.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUnRetweet.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemUnRetweet.Text = "Retweet取り消し";
             // 
             // toolStripMenuItemReteetWith
             // 
             this.toolStripMenuItemReteetWith.Name = "toolStripMenuItemReteetWith";
-            this.toolStripMenuItemReteetWith.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemReteetWith.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemReteetWith.Text = "引用Retweet";
             // 
             // toolStripMenuItemReply
             // 
             this.toolStripMenuItemReply.Name = "toolStripMenuItemReply";
-            this.toolStripMenuItemReply.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemReply.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemReply.Text = "返信";
             // 
             // toolStripMenuItemLike
             // 
             this.toolStripMenuItemLike.Name = "toolStripMenuItemLike";
-            this.toolStripMenuItemLike.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemLike.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemLike.Text = "Like";
             // 
             // toolStripMenuItemUnLike
             // 
             this.toolStripMenuItemUnLike.Name = "toolStripMenuItemUnLike";
-            this.toolStripMenuItemUnLike.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUnLike.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemUnLike.Text = "Like取り消し";
             // 
             // toolStripMenuItemDel
             // 
             this.toolStripMenuItemDel.Name = "toolStripMenuItemDel";
-            this.toolStripMenuItemDel.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemDel.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemDel.Text = "削除";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(153, 6);
             // 
             // toolStripMenuItemUser
             // 
             this.toolStripMenuItemUser.Name = "toolStripMenuItemUser";
-            this.toolStripMenuItemUser.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemUser.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemUser.Text = "ユーザー検索";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(153, 6);
             // 
             // toolStripMenuItemOpen
             // 
             this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
-            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(208, 32);
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(156, 22);
             this.toolStripMenuItemOpen.Text = "ブラウザで開く";
             // 
             // contextMenuForWebView
@@ -242,35 +242,35 @@ namespace twclient
             this.toolStripSeparator2,
             this.toolStripMenuWebViewCopy});
             this.contextMenuForWebView.Name = "contextMenuForWebView";
-            this.contextMenuForWebView.Size = new System.Drawing.Size(240, 138);
+            this.contextMenuForWebView.Size = new System.Drawing.Size(178, 98);
             // 
             // toolStripMenuWebViewOpen
             // 
             this.toolStripMenuWebViewOpen.Name = "toolStripMenuWebViewOpen";
-            this.toolStripMenuWebViewOpen.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewOpen.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuWebViewOpen.Text = "開く";
             // 
             // toolStripMenuWebViewSearch
             // 
             this.toolStripMenuWebViewSearch.Name = "toolStripMenuWebViewSearch";
-            this.toolStripMenuWebViewSearch.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewSearch.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuWebViewSearch.Text = "検索に追加";
             // 
             // toolStripMenuWebViewAddHash
             // 
             this.toolStripMenuWebViewAddHash.Name = "toolStripMenuWebViewAddHash";
-            this.toolStripMenuWebViewAddHash.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewAddHash.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuWebViewAddHash.Text = "ハッシュタグとして固定";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
             // 
             // toolStripMenuWebViewCopy
             // 
             this.toolStripMenuWebViewCopy.Name = "toolStripMenuWebViewCopy";
-            this.toolStripMenuWebViewCopy.Size = new System.Drawing.Size(239, 32);
+            this.toolStripMenuWebViewCopy.Size = new System.Drawing.Size(177, 22);
             this.toolStripMenuWebViewCopy.Text = "コピー";
             // 
             // statusStrip1
@@ -279,18 +279,19 @@ namespace twclient
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 810);
-            this.statusStrip1.Margin = new System.Windows.Forms.Padding(3);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 540);
+            this.statusStrip1.Margin = new System.Windows.Forms.Padding(2);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 9, 0);
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.statusStrip1.Size = new System.Drawing.Size(1326, 32);
+            this.statusStrip1.Size = new System.Drawing.Size(884, 21);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(181, 25);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 16);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // panel1
@@ -298,8 +299,9 @@ namespace twclient
             this.panel1.Controls.Add(this.splitContainer1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1326, 810);
+            this.panel1.Size = new System.Drawing.Size(884, 540);
             this.panel1.TabIndex = 5;
             // 
             // splitContainer1
@@ -307,7 +309,6 @@ namespace twclient
             this.splitContainer1.Cursor = System.Windows.Forms.Cursors.VSplit;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -319,9 +320,8 @@ namespace twclient
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Panel2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.splitContainer1.Size = new System.Drawing.Size(1326, 810);
-            this.splitContainer1.SplitterDistance = 824;
-            this.splitContainer1.SplitterWidth = 6;
+            this.splitContainer1.Size = new System.Drawing.Size(884, 540);
+            this.splitContainer1.SplitterDistance = 549;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -329,6 +329,7 @@ namespace twclient
             this.splitContainer2.Cursor = System.Windows.Forms.Cursors.HSplit;
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -339,8 +340,9 @@ namespace twclient
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panelControlMainEdit1);
-            this.splitContainer2.Size = new System.Drawing.Size(824, 810);
-            this.splitContainer2.SplitterDistance = 519;
+            this.splitContainer2.Size = new System.Drawing.Size(549, 540);
+            this.splitContainer2.SplitterDistance = 346;
+            this.splitContainer2.SplitterWidth = 3;
             this.splitContainer2.TabIndex = 0;
             // 
             // panelTimeLineList1
@@ -348,9 +350,8 @@ namespace twclient
             this.panelTimeLineList1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelTimeLineList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTimeLineList1.Location = new System.Drawing.Point(0, 0);
-            this.panelTimeLineList1.Margin = new System.Windows.Forms.Padding(4);
             this.panelTimeLineList1.Name = "panelTimeLineList1";
-            this.panelTimeLineList1.Size = new System.Drawing.Size(824, 519);
+            this.panelTimeLineList1.Size = new System.Drawing.Size(549, 346);
             this.panelTimeLineList1.TabIndex = 0;
             // 
             // panelControlMainEdit1
@@ -358,9 +359,8 @@ namespace twclient
             this.panelControlMainEdit1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelControlMainEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControlMainEdit1.Location = new System.Drawing.Point(0, 0);
-            this.panelControlMainEdit1.Margin = new System.Windows.Forms.Padding(4);
             this.panelControlMainEdit1.Name = "panelControlMainEdit1";
-            this.panelControlMainEdit1.Size = new System.Drawing.Size(824, 287);
+            this.panelControlMainEdit1.Size = new System.Drawing.Size(549, 191);
             this.panelControlMainEdit1.TabIndex = 0;
             // 
             // splitContainer3
@@ -368,6 +368,7 @@ namespace twclient
             this.splitContainer3.Cursor = System.Windows.Forms.Cursors.HSplit;
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -378,43 +379,42 @@ namespace twclient
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.panelControlMainTree1);
-            this.splitContainer3.Size = new System.Drawing.Size(496, 810);
-            this.splitContainer3.SplitterDistance = 528;
+            this.splitContainer3.Size = new System.Drawing.Size(331, 540);
+            this.splitContainer3.SplitterDistance = 352;
+            this.splitContainer3.SplitterWidth = 3;
             this.splitContainer3.TabIndex = 0;
             // 
             // controlListBox1
             // 
             this.controlListBox1.AutoScroll = true;
-            this.controlListBox1.BackColor = System.Drawing.SystemColors.Window;
             this.controlListBox1.Cursor = System.Windows.Forms.Cursors.Default;
             this.controlListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.controlListBox1.ItemH = ((System.Collections.Generic.List<int>)(resources.GetObject("controlListBox1.ItemH")));
             this.controlListBox1.Location = new System.Drawing.Point(0, 0);
             this.controlListBox1.Name = "controlListBox1";
-            this.controlListBox1.Size = new System.Drawing.Size(496, 528);
-            this.controlListBox1.TabIndex = 2;
-            this.controlListBox1.Text = "customListBox1";
+            this.controlListBox1.Size = new System.Drawing.Size(331, 352);
+            this.controlListBox1.TabIndex = 0;
             // 
             // panelControlMainTree1
             // 
             this.panelControlMainTree1.Cursor = System.Windows.Forms.Cursors.Default;
             this.panelControlMainTree1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControlMainTree1.Location = new System.Drawing.Point(0, 0);
-            this.panelControlMainTree1.Margin = new System.Windows.Forms.Padding(4);
             this.panelControlMainTree1.Name = "panelControlMainTree1";
-            this.panelControlMainTree1.Size = new System.Drawing.Size(496, 278);
+            this.panelControlMainTree1.Size = new System.Drawing.Size(331, 185);
             this.panelControlMainTree1.TabIndex = 0;
             // 
             // FormTimeLine
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1326, 842);
+            this.ClientSize = new System.Drawing.Size(884, 561);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.DoubleBuffered = true;
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(356, 232);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MinimumSize = new System.Drawing.Size(243, 168);
             this.Name = "FormTimeLine";
             this.Text = "FormMain";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTimeLine_FormClosing);
@@ -480,8 +480,8 @@ namespace twclient
         private System.Windows.Forms.SplitContainer splitContainer2;
         private UserPanel.PanelControlMainEdit panelControlMainEdit1;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private Class.ControlListBox controlListBox1;
         private UserPanel.PanelControlMainTree panelControlMainTree1;
         public UserPanel.PanelTimeLineList panelTimeLineList1;
+        private Class.ControlListBox controlListBox1;
     }
 }

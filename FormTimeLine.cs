@@ -75,7 +75,7 @@ namespace twclient
             panelControlMainEdit1.textBoxTweet.KeyPress += PanelControlMainEdit1_TextBoxTweet_KeyPress;
 
             //listBoxTweetContents.MeasureItem += ListBoxTweetContents_MeasureItem1;
-            controlListBox1.Resize += ControlListBox1_Resize;
+//            controlListBox1.Resize += ControlListBox1_Resize;
 
             splitContainer2.SplitterMoved += SplitContainer2_SplitterMoved;
 
@@ -1174,7 +1174,7 @@ namespace twclient
 
             foreach (var item in controlListBox1.Items)
             {
-                ((panelTimeLineContents1)item).Dispose();
+                ((panelTimeLineContents2)item).Dispose();
             }
 
             controlListBox1.Items.Clear();
@@ -1212,6 +1212,11 @@ namespace twclient
             }
         }
 
+        async void InitWebView(panelTimeLineContents2 src)
+        {
+            await src.webView2_1.EnsureCoreWebView2Async(null);
+        }
+
         private void MakeContents(CoreTweet.Status tl)
         {
             if (this.InvokeRequired)
@@ -1238,7 +1243,8 @@ namespace twclient
                 retweet = true;
             }
 
-            panelTimeLineContents1 contents = new panelTimeLineContents1(tl.Id);
+            panelTimeLineContents2 contents = new panelTimeLineContents2(tl.Id);
+            InitWebView(contents);
 
             contents.textBoxUserId.Click += Contents_User_Click;
             contents.textBoxUserName.Click += Contents_User_Click;
@@ -1304,6 +1310,8 @@ namespace twclient
             var body = twitter.MakeHtmlBody(tl, eventHandlerName);
             var html = "<html><body>" + cssStr + body + "</body></html>";
 
+            /* webBrowser1 */
+            /*
             contents.webBrowser1.Height = 0;
             contents.webBrowser1.DocumentText = html;
             contents.webBrowser1.DocumentCompleted += PanelTimeLineContents1_webBrowser_DocumentCompleted;
@@ -1314,6 +1322,17 @@ namespace twclient
 
             contents.webBrowser1.IsWebBrowserContextMenuEnabled = false;
             contents.webBrowser1.ContextMenuStrip = contextMenuForWebView;
+            */
+
+            /* WebView2 */
+            contents.webView2_1.Height = 0;
+
+            //while (contents.webView2_1.CoreWebView2 == null) ;
+
+            if (contents.webView2_1.CoreWebView2 != null)
+            {
+                contents.webView2_1.CoreWebView2.NavigateToString(html);
+            }
 
             foreach (var obj in contextMenuForWebView.Items)
             {
@@ -1601,18 +1620,18 @@ namespace twclient
                 contentUrl = clickedElement.GetAttribute("src");
                 SetStatusMenu(contentUrl);
 
-                panelTimeLineContents1 workDoc = null;
+                panelTimeLineContents2 workDoc = null;
 
                 if (contentUrl != beforeContentUrl)
                 {
                     foreach (var doc in controlListBox1.Items)
                     {
-                        if (((HtmlDocument)sender) == ((panelTimeLineContents1)doc).webBrowser1.Document)
+/*                        if (((HtmlDocument)sender) == ((panelTimeLineContents2)doc).webView2_1)
                         {
-                            workDoc = (panelTimeLineContents1)doc;
+                            workDoc = (panelTimeLineContents2)doc;
                             break;
                         }
-                    }
+*/                    }
 
                     if (workDoc != null)
                     {
@@ -1773,10 +1792,10 @@ namespace twclient
         {
             foreach (var i in controlListBox1.Items)
             {
-                if (i.GetType().Equals(typeof(panelTimeLineContents1)))
+                if (i.GetType().Equals(typeof(panelTimeLineContents2)))
                 {
-                    var hTable = ((panelTimeLineContents1)i).tableLayoutPanel1.Height;
-                    var hWeb = ((panelTimeLineContents1)i).webBrowser1.Document.Body.ScrollRectangle.Height;
+                    var hTable = ((panelTimeLineContents2)i).tableLayoutPanel1.Height;
+                    var hWeb = ((panelTimeLineContents2)i).webView2_1.Height;
                     //((panelTimeLineContents1)i).Height = h;
                     i.Height = hTable + hWeb;
 
@@ -1797,9 +1816,9 @@ namespace twclient
 
         private void ListBoxTweetContents_MeasureItem1(object sender, MeasureItemEventArgs e)
         {
-            if (controlListBox1.Items[e.Index].GetType().Equals(typeof(panelTimeLineContents1)))
+            if (controlListBox1.Items[e.Index].GetType().Equals(typeof(panelTimeLineContents2)))
             {
-                var h = ((panelTimeLineContents1)controlListBox1.Items[e.Index]).Height;
+                var h = ((panelTimeLineContents2)controlListBox1.Items[e.Index]).Height;
                 e.ItemHeight = h;
                 Debug.WriteLine("MeasureItem: {0}", h);
             }
