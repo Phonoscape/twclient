@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,11 +11,11 @@ using System.Windows.Forms;
 
 namespace twclient.UserPanel
 {
-    public partial class panelTimeLineContents1 : UserControl
+    public partial class panelTimeLineContents2 : UserControl
     {
         public long tweetId { get; set; }
 
-        public panelTimeLineContents1(long id)
+        public panelTimeLineContents2(long id)
         {
             InitializeComponent();
 

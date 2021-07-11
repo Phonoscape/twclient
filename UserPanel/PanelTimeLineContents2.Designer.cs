@@ -1,7 +1,7 @@
 ﻿
 namespace twclient.UserPanel
 {
-    partial class panelTimeLineContents1
+    partial class panelTimeLineContents2
     {
         /// <summary> 
         /// 必要なデザイナー変数です。
@@ -29,6 +29,7 @@ namespace twclient.UserPanel
         /// </summary>
         private void InitializeComponent()
         {
+            this.webView2_1 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -37,29 +38,40 @@ namespace twclient.UserPanel
             this.textBoxDateTime = new System.Windows.Forms.TextBox();
             this.textBoxRetweet = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            ((System.ComponentModel.ISupportInitialize)(this.webView2_1)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
+            // webView2_1
+            // 
+            this.webView2_1.CreationProperties = null;
+            this.webView2_1.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView2_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webView2_1.Location = new System.Drawing.Point(0, 64);
+            this.webView2_1.Name = "webView2_1";
+            this.webView2_1.Size = new System.Drawing.Size(391, 262);
+            this.webView2_1.TabIndex = 11;
+            this.webView2_1.ZoomFactor = 1D;
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.tableLayoutPanel1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(2, 2);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(548, 96);
-            this.panel1.TabIndex = 1;
+            this.panel1.Size = new System.Drawing.Size(391, 64);
+            this.panel1.TabIndex = 10;
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 2F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 0);
@@ -69,7 +81,7 @@ namespace twclient.UserPanel
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(548, 96);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(391, 64);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -81,7 +93,7 @@ namespace twclient.UserPanel
             this.tableLayoutPanel2.Controls.Add(this.textBoxDateTime, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.textBoxRetweet, 0, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(98, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(65, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 4;
@@ -89,7 +101,7 @@ namespace twclient.UserPanel
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(454, 96);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(326, 64);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // textBoxUserName
@@ -100,7 +112,7 @@ namespace twclient.UserPanel
             this.textBoxUserName.Location = new System.Drawing.Point(0, 0);
             this.textBoxUserName.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxUserName.Name = "textBoxUserName";
-            this.textBoxUserName.Size = new System.Drawing.Size(454, 24);
+            this.textBoxUserName.Size = new System.Drawing.Size(326, 16);
             this.textBoxUserName.TabIndex = 0;
             // 
             // textBoxUserId
@@ -108,30 +120,30 @@ namespace twclient.UserPanel
             this.textBoxUserId.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxUserId.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxUserId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxUserId.Location = new System.Drawing.Point(0, 24);
+            this.textBoxUserId.Location = new System.Drawing.Point(0, 16);
             this.textBoxUserId.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxUserId.Name = "textBoxUserId";
-            this.textBoxUserId.Size = new System.Drawing.Size(454, 24);
+            this.textBoxUserId.Size = new System.Drawing.Size(326, 16);
             this.textBoxUserId.TabIndex = 1;
             // 
             // textBoxDateTime
             // 
             this.textBoxDateTime.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDateTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDateTime.Location = new System.Drawing.Point(0, 48);
+            this.textBoxDateTime.Location = new System.Drawing.Point(0, 32);
             this.textBoxDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxDateTime.Name = "textBoxDateTime";
-            this.textBoxDateTime.Size = new System.Drawing.Size(454, 24);
+            this.textBoxDateTime.Size = new System.Drawing.Size(326, 16);
             this.textBoxDateTime.TabIndex = 2;
             // 
             // textBoxRetweet
             // 
             this.textBoxRetweet.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxRetweet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxRetweet.Location = new System.Drawing.Point(0, 72);
+            this.textBoxRetweet.Location = new System.Drawing.Point(0, 48);
             this.textBoxRetweet.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxRetweet.Name = "textBoxRetweet";
-            this.textBoxRetweet.Size = new System.Drawing.Size(454, 24);
+            this.textBoxRetweet.Size = new System.Drawing.Size(326, 16);
             this.textBoxRetweet.TabIndex = 3;
             // 
             // pictureBox1
@@ -142,34 +154,19 @@ namespace twclient.UserPanel
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(96, 96);
+            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // webBrowser1
+            // panelTimeLineContents2
             // 
-            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            this.webBrowser1.Location = new System.Drawing.Point(2, 98);
-            this.webBrowser1.Margin = new System.Windows.Forms.Padding(0);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(548, 394);
-            this.webBrowser1.TabIndex = 9;
-            // 
-            // panelTimeLineContents1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.webBrowser1);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.webView2_1);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "panelTimeLineContents1";
-            this.Padding = new System.Windows.Forms.Padding(2);
-            this.Size = new System.Drawing.Size(552, 494);
+            this.Name = "panelTimeLineContents2";
+            this.Size = new System.Drawing.Size(391, 326);
+            ((System.ComponentModel.ISupportInitialize)(this.webView2_1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -180,14 +177,15 @@ namespace twclient.UserPanel
         }
 
         #endregion
-        public System.Windows.Forms.WebBrowser webBrowser1;
-        public System.Windows.Forms.PictureBox pictureBox1;
+
+        public System.Windows.Forms.Panel panel1;
+        public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        public System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         public System.Windows.Forms.TextBox textBoxUserName;
         public System.Windows.Forms.TextBox textBoxUserId;
         public System.Windows.Forms.TextBox textBoxDateTime;
         public System.Windows.Forms.TextBox textBoxRetweet;
-        public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        public System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        public System.Windows.Forms.Panel panel1;
+        public System.Windows.Forms.PictureBox pictureBox1;
+        public Microsoft.Web.WebView2.WinForms.WebView2 webView2_1;
     }
 }
