@@ -221,6 +221,19 @@ namespace twclient
         {
             return newTimeline.Count();
         }
+
+        public bool SetStatusById(CoreTweet.Status status)
+        {
+            var st = timeline.Find(x => x.Id == status.Id);
+
+            if (st != null)
+            {
+                st = status;
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public class StatusComparer : IComparer<CoreTweet.Status>
