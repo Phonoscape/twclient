@@ -1022,6 +1022,7 @@ namespace twclient
             var txt = line.FullText.ToString();
             var decode = WebUtility.HtmlDecode(txt);
             txt = decode.Replace('\n', ' ');
+            txt = txt.Replace("&", "&&");
             lvi.SubItems.Add(txt, color, bkColor, font);
 
             var time = line.CreatedAt.LocalDateTime;
@@ -1250,6 +1251,10 @@ namespace twclient
             contents.textBoxUserName.Click += Contents_User_Click;
             contents.pictureBox1.Click += Contents_User_Click;
 
+            contents.buttonReply.Click += Contents_ButtonReply_Click;
+            contents.buttonRT.Click += Contents_ButtonRT_Click;
+            contents.buttonLike.Click += Contents_ButtonLike_Click;
+
             /*
             int top = 0;
             foreach(var item in customListBox1.Items)
@@ -1268,6 +1273,28 @@ namespace twclient
             contents.textBoxUserId.Text = "@" + userId;
             contents.textBoxUserId.Tag = userId;
             contents.textBoxDateTime.Text = tl.CreatedAt.LocalDateTime.ToString();
+
+            contents.buttonReply.Text = Resource.Resource1.String_Contents_Button_Reply;
+            contents.buttonReply.Tag = tl.Id;
+            if ((bool)!tl.IsRetweeted)
+            {
+                contents.buttonRT.Text = string.Format(Resource.Resource1.String_Contents_Button_Retweet,tl.RetweetCount.ToString());
+            }
+            else
+            {
+                contents.buttonRT.Text = string.Format(Resource.Resource1.String_Contents_Button_UnRetweet, tl.RetweetCount.ToString());
+            }
+            contents.buttonRT.Tag = tl.Id;
+
+            if ((bool)!tl.IsFavorited)
+            {
+                contents.buttonLike.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, tl.FavoriteCount.ToString());
+            }
+            else
+            {
+                contents.buttonLike.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, tl.FavoriteCount.ToString());
+            }
+            contents.buttonLike.Tag = tl.Id;
 
             contents.Tag = tl.Id;
 
@@ -1299,7 +1326,7 @@ namespace twclient
             //}
 
             contents.Width = controlListBox1.GetWidthWithoutScrollbar();
-            contents.Height = h * 4;
+            contents.Height = h * 4 + contents.panel2.Height;
             contents.pictureBox1.Image = bitmap;
             contents.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             contents.pictureBox1.Tag = userId;
@@ -1328,7 +1355,10 @@ namespace twclient
             }
 
             //            listBoxTweetContents.Controls.Add(contents);
-            controlListBox1.Add(contents);
+
+            //controlListBox1.Add(contents);
+            controlListBox1.Items.Insert(0, contents);
+
             contents.Parent = (Control)controlListBox1;
 
             //contents.Dock = DockStyle.Fill;
@@ -1472,9 +1502,7 @@ namespace twclient
             {
                 if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_RetweetMessage, Resource.Resource1.String_FormTimeLine_RetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    twitter.Retweet(tweetId);
-                    twitter.GetTimeLine(tweetId);
-                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+                    DoRetweet(tweetId);
                 }
             }
             else if (obj == toolStripMenuItemUnRetweet)
@@ -1490,9 +1518,7 @@ namespace twclient
             {
                 if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_FavoriteMessage, Resource.Resource1.String_FormTimeLine_FavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    twitter.Like(tweetId);
-                    twitter.GetTimeLine(tweetId);
-                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+                    DoLike(tweetId);
                 }
             }
             else if (obj == toolStripMenuItemUnLike)
@@ -1530,46 +1556,70 @@ namespace twclient
             }
             else if (obj == toolStripMenuItemReply)
             {
-                var status = twitter.GetTimeLineFromId(tweetId);
-                string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
-
-                var font1 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
-                var font2 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
-
-                panelControlMainEdit1.textBoxMsg1.ForeColor = Color.Red;
-                panelControlMainEdit1.textBoxMsg1.Font = font1;
-                panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Red;
-                panelControlMainEdit1.textBoxMsg2.Font = font2;
-
-                panelControlMainEdit1.textBoxMsg1.Text = String.Format(Resource.Resource1.String_FormTimeLine_Reply, status.User.ScreenName);
-                panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Reply;
-                panelControlMainEdit1.textBoxMsg2.Text = url;
-                panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
-
-                panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
-                panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
+                DoReply(tweetId);
             }
             else if (obj == toolStripMenuItemReteetWith)
             {
-                var status = twitter.GetTimeLineFromId(tweetId);
-                string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
-
-                var font1 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
-                var font2 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
-
-                panelControlMainEdit1.textBoxMsg1.ForeColor = Color.Blue;
-                panelControlMainEdit1.textBoxMsg1.Font = font1;
-                panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Blue;
-                panelControlMainEdit1.textBoxMsg2.Font = font2;
-
-                panelControlMainEdit1.textBoxMsg1.Text = Resource.Resource1.String_FormTimeLine_Quote;
-                panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.RetweetWith;
-                panelControlMainEdit1.textBoxMsg2.Text = url;
-                panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
-
-                panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
-                panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
+                DoRetweetWith(tweetId);
             }
+        }
+
+        private void DoRetweetWith(long tweetId)
+        {
+            var status = twitter.GetTimeLineFromId(tweetId);
+            string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
+
+            var font1 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
+            var font2 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
+
+            panelControlMainEdit1.textBoxMsg1.ForeColor = Color.Blue;
+            panelControlMainEdit1.textBoxMsg1.Font = font1;
+            panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Blue;
+            panelControlMainEdit1.textBoxMsg2.Font = font2;
+
+            panelControlMainEdit1.textBoxMsg1.Text = Resource.Resource1.String_FormTimeLine_Quote;
+            panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.RetweetWith;
+            panelControlMainEdit1.textBoxMsg2.Text = url;
+            panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
+
+            panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
+            panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
+        }
+
+        private void DoReply(long tweetId)
+        {
+            var status = twitter.GetTimeLineFromId(tweetId);
+            string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
+
+            var font1 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
+            var font2 = new Font(panelControlMainEdit1.textBoxMsg1.Font, FontStyle.Bold);
+
+            panelControlMainEdit1.textBoxMsg1.ForeColor = Color.Red;
+            panelControlMainEdit1.textBoxMsg1.Font = font1;
+            panelControlMainEdit1.textBoxMsg2.ForeColor = Color.Red;
+            panelControlMainEdit1.textBoxMsg2.Font = font2;
+
+            panelControlMainEdit1.textBoxMsg1.Text = String.Format(Resource.Resource1.String_FormTimeLine_Reply, status.User.ScreenName);
+            panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Reply;
+            panelControlMainEdit1.textBoxMsg2.Text = url;
+            panelControlMainEdit1.textBoxMsg2.Tag = tweetId.ToString();
+
+            panelControlMainEdit1.textBoxMsg2.Click += PanelControlMainEdit1_TextBoxMsg2_Click;
+            panelControlMainEdit1.textBoxMsg2.Cursor = Cursors.Hand;
+        }
+
+        private void DoLike(long tweetId)
+        {
+            twitter.Like(tweetId);
+            twitter.GetTimeLine(tweetId);
+            PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+        }
+
+        private void DoRetweet(long tweetId)
+        {
+            twitter.Retweet(tweetId);
+            twitter.GetTimeLine(tweetId);
+            PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
         }
 
 
@@ -1783,8 +1833,9 @@ namespace twclient
                 {
                     var hTable = ((panelTimeLineContents1)i).tableLayoutPanel1.Height;
                     var hWeb = ((panelTimeLineContents1)i).webBrowser1.Document.Body.ScrollRectangle.Height;
+                    var hfooter = ((panelTimeLineContents1)i).panel2.Height;
                     //((panelTimeLineContents1)i).Height = h;
-                    i.Height = hTable + hWeb;
+                    i.Height = hTable + hWeb + hfooter;
 
                     Debug.WriteLine("DocumentCompleted: hSplit {0}", hTable);
                     Debug.WriteLine("DocumentCompleted: hWeb {0}", hWeb);
@@ -1800,6 +1851,34 @@ namespace twclient
 
         }
 
+        private void Contents_ButtonLike_Click(object sender, EventArgs e)
+        {
+            var id = long.Parse(((Button)sender).Tag.ToString());
+            twitter.Like(id);
+        }
+
+        private void Contents_ButtonRT_Click(object sender, EventArgs e)
+        {
+            var id = long.Parse(((Button)sender).Tag.ToString());
+
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                DoRetweetWith(id);
+                panelControlMainEdit1.textBoxTweet.Focus();
+            }
+            else
+            {
+                DoRetweet(id);
+            }
+        }
+
+        private void Contents_ButtonReply_Click(object sender, EventArgs e)
+        {
+            var id = long.Parse(((Button)sender).Tag.ToString());
+
+            DoReply(id);
+            panelControlMainEdit1.textBoxTweet.Focus();
+        }
 
         private void ListBoxTweetContents_MeasureItem1(object sender, MeasureItemEventArgs e)
         {
