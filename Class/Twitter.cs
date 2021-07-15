@@ -25,7 +25,8 @@ namespace twclient
 
         private string[] splitWord = {"\n", " ", "　", "@", "＠", "#", "＃", "http://", "https://", "(", ")",
                                     "｛", "｝", "（", "）", "【", "】", "「", "」", "『", "』", "〈", "〉",
-                                    "《", "》", ":", "：","、","。","・","．","!","！","?","？", ",", "，" };
+                                    "《", "》", ":", "：","、","。","・","．","!","！","?","？", ",", "，",
+                                    };
 
         private string consumer_key = null;
         private string consumer_secret = null;
@@ -955,6 +956,16 @@ namespace twclient
             }
 
             if (status.Count == 0) return null;
+
+            var tl = SelectTimeLine();
+
+            if (tl != null)
+            {
+                foreach (var st in status)
+                {
+                    tl.SetStatusById(st);
+                }
+            }
 
             return status[0];
         }
