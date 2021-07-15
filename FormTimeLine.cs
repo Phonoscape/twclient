@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using twclient.UserPanel;
+using static twclient.UserPanel.PanelTimeLineList;
 
 namespace twclient
 {
@@ -26,7 +27,7 @@ namespace twclient
         const int MAXIMAGE = 4;
         private Bitmap[] tweetImage;
 
-        private bool treeNodeDrag = false;
+        private Hashtable userImage;
 
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
@@ -109,8 +110,6 @@ namespace twclient
             panelControlMainEdit1.pictureBox3.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
             panelControlMainEdit1.pictureBox4.MouseMove += PanelControlMainEdit1_PictureBox1_MouseMove;
 
-            tweetImage = new Bitmap[MAXIMAGE];
-
             //contextMenuUser.Click += ContextMenuUser_Click;
             foreach (ToolStripMenuItem obj in contextMenuUser.Items)
             {
@@ -129,6 +128,9 @@ namespace twclient
                 if (obj.GetType() == typeof(ToolStripMenuItem))
                     ((ToolStripMenuItem)obj).Click += ContextMenuForListView_Click;
             }
+
+            tweetImage = new Bitmap[MAXIMAGE];
+            userImage = new Hashtable();
         }
 
         // UI EventHandler
@@ -379,7 +381,7 @@ namespace twclient
             }
 
             panelTimeLineList1.listView1.SmallImageList = new ImageList();
-            panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
+            panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(32, 32);
 
             TimeLine tl;
             tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, Resource.Resource1.String_FormTimeLine_TimelineName_HOME, true);
@@ -582,7 +584,6 @@ namespace twclient
                 {
                     panelControlMainTree1.treeView1.SelectedNode = node;
                     DoDragDrop(node, DragDropEffects.Move);
-                    treeNodeDrag = true;
                 }
             }
         }
@@ -689,7 +690,6 @@ namespace twclient
                 {
                     ChangeSort(srcNode, dstNode);
                 }
-                treeNodeDrag = false;
 
                 panelControlMainTree1.treeView1.SelectedNode = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[index];
             }
@@ -1016,6 +1016,7 @@ namespace twclient
             bkColor = SystemColors.AppWorkspace;
 
             lvi.Text = line.Id.ToString();
+            lvi.SubItems.Add(line.User.ProfileImageUrlHttps, color, bkColor, font);
             lvi.SubItems.Add(line.User.Name, color, bkColor, font);
             lvi.SubItems.Add("@" + line.User.ScreenName, color, bkColor, font);
 
@@ -1106,7 +1107,28 @@ namespace twclient
                 e.Graphics.FillRectangle(br, new Rectangle(locate, size));
             }
 
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == (int)ListViewColumn.USERIMAGE)
+            {
+                var url = e.SubItem.Text;
+
+                Image img = null;
+                if (userImage[url] != null)
+                {
+                    img = (Image)userImage[url];
+                }
+                else
+                {
+                    Bitmap bitmap = MakeBitmapFromUrl(url);
+                    img = bitmap;
+                    userImage[url] = img;
+                }
+
+                if (img != null)
+                {
+                    e.Graphics.DrawImage(img, locate.X, locate.Y, size.Height, size.Height);
+                }
+            }
+            else if (e.ColumnIndex == (int)ListViewColumn.DATETIME)
             {
                 e.DrawText(TextFormatFlags.Right | TextFormatFlags.Bottom);
             }
@@ -1325,7 +1347,7 @@ namespace twclient
             //    contents.tableLayoutPanel1.RowStyles[i].Height = h;
             //}
 
-            contents.Width = controlListBox1.GetWidthWithoutScrollbar();
+            contents.Width = controlListBox1.GetWidthWithoutScrollbar() -1;
             contents.Height = h * 4 + contents.panel2.Height;
             contents.pictureBox1.Image = bitmap;
             contents.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -1509,9 +1531,7 @@ namespace twclient
             {
                 if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelRetweetMessage, Resource.Resource1.String_FormTimeLine_CancelRetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    twitter.UnRetweet(tweetId);
-                    twitter.GetTimeLine(tweetId);
-                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+                    DoUnRetweet(tweetId);
                 }
             }
             else if (obj == toolStripMenuItemLike)
@@ -1525,9 +1545,7 @@ namespace twclient
             {
                 if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_CancelFavoriteMessage, Resource.Resource1.String_FormTimeLine_CancelFavoriteTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    twitter.UnLike(tweetId);
-                    twitter.GetTimeLine(tweetId);
-                    PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+                    DoUnLike(tweetId);
                 }
             }
             else if (obj == toolStripMenuItemUser)
@@ -1615,9 +1633,23 @@ namespace twclient
             PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
         }
 
+        private void DoUnLike(long tweetId)
+        {
+            twitter.UnLike(tweetId);
+            twitter.GetTimeLine(tweetId);
+            PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+        }
+
         private void DoRetweet(long tweetId)
         {
             twitter.Retweet(tweetId);
+            twitter.GetTimeLine(tweetId);
+            PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
+        }
+
+        private void DoUnRetweet(long tweetId)
+        {
+            twitter.UnRetweet(tweetId);
             twitter.GetTimeLine(tweetId);
             PanelTimeLine1_panelTimeLineList1_ListView1_Refresh();
         }
@@ -1854,21 +1886,44 @@ namespace twclient
         private void Contents_ButtonLike_Click(object sender, EventArgs e)
         {
             var id = long.Parse(((Button)sender).Tag.ToString());
-            twitter.Like(id);
+            var st = twitter.GetTimeLineFromAPI(id);
+            var bt = (Button)sender;
+
+            if ((bool)st.IsFavorited)
+            {
+                DoUnLike(id);
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.RetweetCount.ToString());
+            }
+            else
+            {
+                DoLike(id);
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.RetweetCount.ToString());
+            }
         }
 
         private void Contents_ButtonRT_Click(object sender, EventArgs e)
         {
             var id = long.Parse(((Button)sender).Tag.ToString());
+            var st = twitter.GetTimeLineFromAPI(id);
+            var bt = (Button)sender;
 
-            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+            if ((bool)st.IsRetweeted)
             {
-                DoRetweetWith(id);
-                panelControlMainEdit1.textBoxTweet.Focus();
+                DoUnRetweet(id);
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Retweet, st.RetweetCount.ToString());
             }
             else
             {
-                DoRetweet(id);
+                if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                {
+                    DoRetweetWith(id);
+                    panelControlMainEdit1.textBoxTweet.Focus();
+                }
+                else
+                {
+                    DoRetweet(id);
+                    bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnRetweet, st.RetweetCount.ToString());
+                }
             }
         }
 

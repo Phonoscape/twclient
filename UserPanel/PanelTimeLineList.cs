@@ -15,6 +15,16 @@ namespace twclient.UserPanel
     {
         public BufferedListView listView1;
 
+        public enum ListViewColumn
+        {
+            TWEETID = 0,
+            USERIMAGE,
+            USERNAME,
+            USERID,
+            TWEET,
+            DATETIME
+        };
+
         public PanelTimeLineList()
         {
             InitializeComponent();
@@ -34,6 +44,7 @@ namespace twclient.UserPanel
             listView1.Font = font;
 
             listView1.Columns.Add("TweetID");
+            listView1.Columns.Add("IMG");
             listView1.Columns.Add("ユーザー名");
             listView1.Columns.Add("ID");
             listView1.Columns.Add("Tweet");
