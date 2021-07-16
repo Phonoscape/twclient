@@ -28,6 +28,8 @@ namespace twclient
         private Bitmap[] tweetImage;
 
         private Hashtable userImage;
+        private ArrayList imageGetWaitList;
+        private bool imageGetTask = false;
 
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
@@ -131,6 +133,7 @@ namespace twclient
 
             tweetImage = new Bitmap[MAXIMAGE];
             userImage = new Hashtable();
+            imageGetWaitList = new ArrayList();
         }
 
         // UI EventHandler
@@ -608,7 +611,7 @@ namespace twclient
 
                 TreeNode topNode = null;
                 TreeNode wn = node;
-                while(wn.IsVisible)
+                while (wn.IsVisible)
                 {
                     topNode = (TreeNode)wn.Clone();
                     wn = wn.PrevNode;
@@ -653,7 +656,7 @@ namespace twclient
                         }
                     }
                 }
-                
+
                 if (bottomNode != null)
                 {
                     if (node.Text == bottomNode.Text)
@@ -708,7 +711,7 @@ namespace twclient
                 parentNode.Nodes.Insert(dstIndex + 1, moveNode);
                 parentNode.Nodes.Remove(srcNode);
             }
-            else if(srcIndex > dstIndex)
+            else if (srcIndex > dstIndex)
             {
                 parentNode.Nodes.Insert(dstIndex, moveNode);
                 parentNode.Nodes.Remove(srcNode);
@@ -1101,6 +1104,8 @@ namespace twclient
             var index = e.ItemIndex;
             Brush br;
 
+            Image img = null;
+
             if (e.Item.Selected)
             {
                 br = SystemBrushes.ControlLight;
@@ -1111,16 +1116,9 @@ namespace twclient
             {
                 var url = e.SubItem.Text;
 
-                Image img = null;
                 if (userImage[url] != null)
                 {
                     img = (Image)userImage[url];
-                }
-                else
-                {
-                    Bitmap bitmap = MakeBitmapFromUrl(url);
-                    img = bitmap;
-                    userImage[url] = img;
                 }
 
                 if (img != null)
@@ -1300,7 +1298,7 @@ namespace twclient
             contents.buttonReply.Tag = tl.Id;
             if ((bool)!tl.IsRetweeted)
             {
-                contents.buttonRT.Text = string.Format(Resource.Resource1.String_Contents_Button_Retweet,tl.RetweetCount.ToString());
+                contents.buttonRT.Text = string.Format(Resource.Resource1.String_Contents_Button_Retweet, tl.RetweetCount.ToString());
             }
             else
             {
@@ -1347,7 +1345,7 @@ namespace twclient
             //    contents.tableLayoutPanel1.RowStyles[i].Height = h;
             //}
 
-            contents.Width = controlListBox1.GetWidthWithoutScrollbar() -1;
+            contents.Width = controlListBox1.GetWidthWithoutScrollbar() - 1;
             contents.Height = h * 4 + contents.panel2.Height;
             contents.pictureBox1.Image = bitmap;
             contents.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -1402,6 +1400,11 @@ namespace twclient
 
         private Bitmap MakeBitmapFromUrl(string url)
         {
+            if (userImage[url] != null)
+            {
+                return (Bitmap)userImage[url];
+            }
+
             WebClient webClient = new WebClient();
             Stream stream = null;
             try
@@ -1416,6 +1419,8 @@ namespace twclient
 
             Bitmap bitmap = new Bitmap(stream);
             stream.Close();
+
+            userImage[url] = bitmap;
 
             return bitmap;
         }
@@ -2066,7 +2071,7 @@ namespace twclient
         {
             for (int i = 0; i < MAXIMAGE; i++)
             {
-                if (tweetImage[i] != null )
+                if (tweetImage[i] != null)
                 {
                     tweetImage[i] = null;
                 }
@@ -2087,7 +2092,7 @@ namespace twclient
 
             if (e.Button == MouseButtons.Left)
             {
-                if (pb.Image == null )
+                if (pb.Image == null)
                 {
                     return;
                 }
@@ -2158,12 +2163,12 @@ namespace twclient
                         tmpBm = new Bitmap(dstPb.Image);
                         tmpBm_Tag = (string)dstPb.Tag;
                     }
-                    else 
+                    else
                     {
                         tmpBm = null;
                         tmpBm_Tag = "";
                     }
-                    
+
                     dstPb.Image = new Bitmap(srcPb.Image);
                     dstPb.Tag = srcPb.Tag;
                     srcPb.Image = tmpBm;
@@ -2391,6 +2396,22 @@ namespace twclient
 
             if (twitter.SelectTimeLine().GetNewTimeLine().Count == 0) return;
 
+            addDateTime = DateTime.Now.ToLocalTime();
+
+            foreach (var st in twitter.SelectTimeLine().GetNewTimeLine())
+            {
+                if (st.RetweetedStatus == null)
+                {
+                    //GetImageFromAPI(st.User.ProfileImageUrlHttps);
+                    AddListGetImageFromAPI(st.User.ProfileImageUrlHttps);
+                }
+                else
+                {
+                    //GetImageFromAPI(st.RetweetedStatus.User.ProfileImageUrlHttps);
+                    AddListGetImageFromAPI(st.RetweetedStatus.User.ProfileImageUrlHttps);
+                }
+            }
+
             var oldTop = panelTimeLineList1.listView1.TopItem;
             var oldTopIndex = 0;
 
@@ -2429,7 +2450,7 @@ namespace twclient
 
             panelTimeLineList1.listView1.EndUpdate();
 
-            addDateTime = DateTime.Now.ToLocalTime();
+            GetImageFromAPITask();
         }
 
         private void SetListViewItem(List<CoreTweet.Status> status)
@@ -2486,6 +2507,81 @@ namespace twclient
                 url = url.Replace("&", "^&");
                 Process.Start(new ProcessStartInfo("cmd", "/c start " + url) { CreateNoWindow = true });
             }
+        }
+
+
+        public void AddListGetImageFromAPI(string url)
+        {
+            if (userImage[url] == null)
+            {
+                imageGetWaitList.Add(url);
+            }    
+        }
+
+        public void GetImageFromAPI(string url)
+        {
+            Task.Run(() =>
+            {
+                Bitmap bitmap = MakeBitmapFromUrl((string)url);
+                Image img = bitmap;
+                userImage[url] = img;
+
+                ListViewUpdate(url);
+            });
+        }
+
+        private void ListViewUpdate(string url)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new Action<string>(ListViewUpdate),url);
+                return;
+            }
+
+            var tl = twitter.SelectTimeLine().GetTimeLine();
+            for (int i = 0; i < tl.Count; i++)
+            {
+                var tmpUrl = panelTimeLineList1.listView1.Items[i].SubItems[(int)ListViewColumn.USERIMAGE].Text;
+
+                if (tmpUrl == url)
+                {
+                    try
+                    {
+                        panelTimeLineList1.listView1.RedrawItems(i, i, false);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+        }
+
+        public void GetImageFromAPITask()
+        {
+            Task.Run(() =>
+            {
+                while (imageGetWaitList.Count != 0)
+                {
+                    ArrayList tmpList = new ArrayList(imageGetWaitList);
+                    imageGetWaitList.Clear();
+
+                    Image img = null;
+                    foreach (var url in tmpList)
+                    {
+                        System.Console.WriteLine("get: " + url);
+                        Bitmap bitmap = MakeBitmapFromUrl((string)url);
+                        if (bitmap == null) break;
+                        img = bitmap;
+                        userImage[url] = img;
+                    }
+
+                    foreach (var url in tmpList)
+                    {
+                        ListViewUpdate((string)url);
+                    }
+                }
+            });
         }
     }
 }

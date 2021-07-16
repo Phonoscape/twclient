@@ -285,9 +285,9 @@ namespace twclient
                         {
                             statuses = tokens.Statuses.HomeTimeline(since_id => maxId, count => ct, tweet_mode => TweetMode.Extended);
                         }
-                        else 
+                        else
                         {
-                            statuses = tokens.Statuses.HomeTimeline(since_id => (tweetId -1), max_id => tweetId, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Statuses.HomeTimeline(since_id => (tweetId - 1), max_id => tweetId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
@@ -431,7 +431,7 @@ namespace twclient
             return tl;
         }
 
-        private void OnUpdateTimer(object sender,System.EventArgs e)
+        private void OnUpdateTimer(object sender, System.EventArgs e)
         {
             updateTimer.Stop();
 
@@ -447,7 +447,7 @@ namespace twclient
                     parentForm.SetListViewNew();
                     parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Waiting);
                 }
-                else 
+                else
                 {
                     parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_NoUpdate);
                 }
@@ -460,514 +460,515 @@ namespace twclient
             updateTimer.Interval = tl.GetUpdateTime() * 1000;
             updateTimer.Start();
         }
+    
 
-        public String ExtendedEntiries(Status st)
+    public String ExtendedEntiries(Status st)
+    {
+        String text = st.Text.ToString();
+        var ent = st.Entities;
+
+        var hash = ent.HashTags;
+        var media = ent.Media;
+        var urls = ent.Urls;
+        var user = ent.UserMentions;
+
+        foreach (var u in urls)
         {
-            String text = st.Text.ToString();
-            var ent = st.Entities;
-
-            var hash = ent.HashTags;
-            var media = ent.Media;
-            var urls = ent.Urls;
-            var user = ent.UserMentions;
-
-            foreach (var u in urls)
-            {
-                text = text.Replace(u.Url, u.ExpandedUrl);
-            }
-
-            return text;
+            text = text.Replace(u.Url, u.ExpandedUrl);
         }
 
-        public String MakeHtmlBody(Status tl, List<string> eventHandlerName)
+        return text;
+    }
+
+    public String MakeHtmlBody(Status tl, List<string> eventHandlerName)
+    {
+        string text;
+        string body = "<div class=\"main\"><p>";
+
+        if (tl.RetweetedStatus != null)
         {
-            string text;
-            string body = "<div class=\"main\"><p>";
-
-            if (tl.RetweetedStatus != null)
-            {
-                tl = tl.RetweetedStatus;
-            }
-            text = tl.FullText;
-
-            int st = 0, ed = 0,ln = 0;
-
-            string tmp, hash = "", user = "",url = "";
-            List<string> img = new List<string>();
-            while ( st < text.Length )
-            {
-                var ret = IndexOfMulti(text.Substring(st), splitWord);
-                ed = ret[0];
-                ln = ret[1];
-
-                if (ed > 0)
-                {
-                    tmp = text.Substring(st, ed);
-                }
-                else 
-                {
-                    tmp = text.Substring(st, ln);
-                }
-                st += tmp.Length;
-
-                if (tmp == "#" || tmp == "＃")
-                {
-                    hash += tmp;
-                    continue;
-                }
-                else if (tmp == "@" || tmp == "＠")
-                {
-                    user += tmp;
-                    continue;
-                }
-                else if (tmp == "http://" || tmp == "https://")
-                {
-                    url += tmp;
-                    continue;
-                }
-
-                if (tmp == "\n")
-                {
-                    tmp = "<br>";
-                }
-
-                if (hash.Length != 0)
-                {
-                    hash += tmp;
-                    var hashlink = hash;
-
-                    foreach ( var h in tl.Entities.HashTags)
-                    {
-                        if ( h.Text == tmp )
-                        {
-                            hashlink = "<a href=\"" + hash + "\" alt=\"" + hash + "\">" + hash + "</a>";
-                            break;
-                        }
-                    }
-                    tmp = hashlink;
-                    hash = "";
-                }
-
-                if (user.Length != 0)
-                {
-                    user += tmp;
-                    var userlink = user;
-
-                    foreach (var u in tl.Entities.UserMentions)
-                    {
-                        if (u.ScreenName == tmp)
-                        {
-                            userlink = "<a href=\"" + u.Id.ToString() + "\" alt=\"" + u.Id.ToString() + "\">" + user + "</a>";
-                            break;
-                        }
-                    }
-
-                    tmp = userlink;
-                    user = "";
-                }
-
-                if (url.Length != 0)
-                {
-                    // URLリンク
-                    foreach (var h in tl.Entities.Urls)
-                    {
-                        if (h.Url == url + tmp)
-                        {
-                            tmp = "<a href=\"" + h.ExpandedUrl + "\" alt=\"" + h.ExpandedUrl + "\">" + h.DisplayUrl + "</a>";
-                            break;
-                        }
-                    }
-
-                    // メディアリンク
-                    if (tl.ExtendedEntities != null)
-                    {
-                        if (tl.ExtendedEntities.Media != null)
-                        {
-                            bool cont = false;
-
-                            foreach (var i in tl.ExtendedEntities.Media)
-                            {
-                                if (i.Url == url + tmp)
-                                {
-                                    if (i.VideoInfo != null)
-                                    {
-                                        img.Add("<a href=\"" + i.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
-                                    }
-                                    else
-                                    {
-                                        //img.Add("<a href=\"" + i.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
-                                        img.Add("<a href=\"" + i.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
-                                    }
-                                    cont = true;
-                                }
-                            }
-
-                            if (cont) continue;
-                        }
-                    }
-                        
-                   url = "";
-                }
-
-                body += tmp;
-                tmp = "";
-            }
-            body += "</p></div>\n";
-
-            if (img.Count > 0)
-            {
-                body += "<div class=\"image\">";
-                foreach (var i in img)
-                {
-                    body += i;
-                }
-                body += "</div>";
-            }
-
-            return body;
+            tl = tl.RetweetedStatus;
         }
+        text = tl.FullText;
 
-        private List<int> IndexOfMulti(string str, string[] splitChar)
+        int st = 0, ed = 0, ln = 0;
+
+        string tmp, hash = "", user = "", url = "";
+        List<string> img = new List<string>();
+        while (st < text.Length)
         {
-            int min = str.Length;
-            int ln = 0;
+            var ret = IndexOfMulti(text.Substring(st), splitWord);
+            ed = ret[0];
+            ln = ret[1];
 
-            foreach (var st in splitChar)
+            if (ed > 0)
             {
-                var pos = str.IndexOf(st,StringComparison.InvariantCulture);
-                if (pos == -1) continue;
-                if ( min > pos )
-                {
-                    min = pos;
-                    ln = st.Length;
-                }
-            }
-
-            List<int> ret = new List<int>();
-            ret.Add(min);
-            ret.Add(ln);
-
-            return ret;
-        }
-
-        // Send
-
-        public void Send(String tweetText, Bitmap[] imgs = null)
-        {
-            int count = 0;
-            foreach (var img in imgs)
-            {
-                if (img != null) count++;
-            }
-
-            if (tweetText.Length > 0 || count != 0)
-            {
-                if (count == 0)
-                {
-                    tokens.Statuses.UpdateAsync(status => tweetText);
-                }
-                else
-                {
-                    var mediaIds = UploadMedia(imgs);
-
-                    if (mediaIds.Count == count)
-                    {
-                        if (mediaIds.Count != 0)
-                        {
-                            tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
-                        }
-                        else
-                        {
-                            tokens.Statuses.UpdateAsync(status => tweetText);
-                        }
-                    }
-                }
-            }
-        }
-
-        private List<long> UploadMedia(Bitmap[] imgs = null)
-        {
-            //MediaUploadResult res = null;
-            bool first = true;
-            int index = 0;
-            List<long> mediaIds = new List<long>();
-
-            for (int i = 0; i < imgs.Length; i++)
-            {
-                Bitmap tmpBitmap;
-                var img = imgs[i];
-
-                if (img != null)
-                {
-                    MemoryStream sm = new MemoryStream();
-
-                    if (img.Tag == null)
-                    {
-                        var bmp = ImageSizeConvert(img);
-                        bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
-                    }
-                    else
-                    {
-                        var fileName = img.Tag.ToString();
-                        if (fileName.Length > 0)
-                        {
-                            tmpBitmap = (Bitmap)Image.FromFile(fileName);
-                            var bmp = ImageSizeConvert(img);
-                            bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
-                        }
-                    }
-
-                    string st = Convert.ToBase64String(sm.GetBuffer());
-                    var res = tokens.Media.Upload(media_data => st);
-                    sm.Dispose();
-
-                    mediaIds.Add(res.MediaId);
-                }
-            }
-
-            return mediaIds;
-        }
-
-        private Bitmap ImageSizeConvert(Bitmap src)
-        {
-            var w = src.Width;
-            var h = src.Height;
-
-            double per = w / 1280.0;
-
-            if (per > 1.0)
-            {
-                w = (int)(w / per);
-                h = (int)(h / per);
+                tmp = text.Substring(st, ed);
             }
             else
             {
-                return src;
+                tmp = text.Substring(st, ln);
+            }
+            st += tmp.Length;
 
+            if (tmp == "#" || tmp == "＃")
+            {
+                hash += tmp;
+                continue;
+            }
+            else if (tmp == "@" || tmp == "＠")
+            {
+                user += tmp;
+                continue;
+            }
+            else if (tmp == "http://" || tmp == "https://")
+            {
+                url += tmp;
+                continue;
             }
 
-            var dst = new Bitmap(w, h);
-            var g = Graphics.FromImage(dst);
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.DrawImage(src, 0, 0, w, h);
-
-            return dst;
-        }
-
-        internal void MoveTimeLineSubIndex(TimeLine.TimeLineType ty, int srcIndex, int dstIndex)
-        {
-            if (srcIndex > dstIndex)
+            if (tmp == "\n")
             {
-                ChangeSubIndex(ty, srcIndex, -1);
+                tmp = "<br>";
+            }
 
-                for (int i = srcIndex - 1; i >= dstIndex; i--)
+            if (hash.Length != 0)
+            {
+                hash += tmp;
+                var hashlink = hash;
+
+                foreach (var h in tl.Entities.HashTags)
                 {
-                    ChangeSubIndex(ty, i, i + 1);
+                    if (h.Text == tmp)
+                    {
+                        hashlink = "<a href=\"" + hash + "\" alt=\"" + hash + "\">" + hash + "</a>";
+                        break;
+                    }
+                }
+                tmp = hashlink;
+                hash = "";
+            }
+
+            if (user.Length != 0)
+            {
+                user += tmp;
+                var userlink = user;
+
+                foreach (var u in tl.Entities.UserMentions)
+                {
+                    if (u.ScreenName == tmp)
+                    {
+                        userlink = "<a href=\"" + u.Id.ToString() + "\" alt=\"" + u.Id.ToString() + "\">" + user + "</a>";
+                        break;
+                    }
                 }
 
-                ChangeSubIndex(ty, -1, dstIndex);
+                tmp = userlink;
+                user = "";
             }
-            else if (srcIndex < dstIndex)
-            {
-                ChangeSubIndex(ty, srcIndex, -1);
 
-                for (int i = srcIndex + 1; i <= dstIndex; i++)
+            if (url.Length != 0)
+            {
+                // URLリンク
+                foreach (var h in tl.Entities.Urls)
                 {
-                    ChangeSubIndex(ty, i, i - 1);
+                    if (h.Url == url + tmp)
+                    {
+                        tmp = "<a href=\"" + h.ExpandedUrl + "\" alt=\"" + h.ExpandedUrl + "\">" + h.DisplayUrl + "</a>";
+                        break;
+                    }
                 }
 
-                ChangeSubIndex(ty, -1, dstIndex);
-            }
-        }
-
-        public void Reply(String tweetText,long id)
-        {
-            if (tweetText.Length > 0)
-            {
-                tokens.Statuses.UpdateAsync(status => tweetText, in_reply_to_status_id => id);
-            }
-        }
-
-        public void RetweetWith(String tweetText)
-        {
-            if (tweetText.Length > 0)
-            {
-                tokens.Statuses.UpdateAsync(tweetText);
-            }
-        }
-
-        public bool ChangeSubIndex(TimeLine.TimeLineType ty, int src,int dst)
-        {
-            if (src == 0) return false;
-
-            foreach(var tl in timeLineList)
-            {
-                if ( tl.GetType() == ty && tl.GetSubIndex() == src )
+                // メディアリンク
+                if (tl.ExtendedEntities != null)
                 {
-                    tl.SetSubIndex(dst);
-                    return true;
+                    if (tl.ExtendedEntities.Media != null)
+                    {
+                        bool cont = false;
+
+                        foreach (var i in tl.ExtendedEntities.Media)
+                        {
+                            if (i.Url == url + tmp)
+                            {
+                                if (i.VideoInfo != null)
+                                {
+                                    img.Add("<a href=\"" + i.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                }
+                                else
+                                {
+                                    //img.Add("<a href=\"" + i.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                    img.Add("<a href=\"" + i.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                }
+                                cont = true;
+                            }
+                        }
+
+                        if (cont) continue;
+                    }
+                }
+
+                url = "";
+            }
+
+            body += tmp;
+            tmp = "";
+        }
+        body += "</p></div>\n";
+
+        if (img.Count > 0)
+        {
+            body += "<div class=\"image\">";
+            foreach (var i in img)
+            {
+                body += i;
+            }
+            body += "</div>";
+        }
+
+        return body;
+    }
+
+    private List<int> IndexOfMulti(string str, string[] splitChar)
+    {
+        int min = str.Length;
+        int ln = 0;
+
+        foreach (var st in splitChar)
+        {
+            var pos = str.IndexOf(st, StringComparison.InvariantCulture);
+            if (pos == -1) continue;
+            if (min > pos)
+            {
+                min = pos;
+                ln = st.Length;
+            }
+        }
+
+        List<int> ret = new List<int>();
+        ret.Add(min);
+        ret.Add(ln);
+
+        return ret;
+    }
+
+    // Send
+
+    public void Send(String tweetText, Bitmap[] imgs = null)
+    {
+        int count = 0;
+        foreach (var img in imgs)
+        {
+            if (img != null) count++;
+        }
+
+        if (tweetText.Length > 0 || count != 0)
+        {
+            if (count == 0)
+            {
+                tokens.Statuses.UpdateAsync(status => tweetText);
+            }
+            else
+            {
+                var mediaIds = UploadMedia(imgs);
+
+                if (mediaIds.Count == count)
+                {
+                    if (mediaIds.Count != 0)
+                    {
+                        tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
+                    }
+                    else
+                    {
+                        tokens.Statuses.UpdateAsync(status => tweetText);
+                    }
                 }
             }
-
-            return false;
-        }
-
-        public bool DelSubIndex(TimeLine.TimeLineType ty, int no)
-        {
-            if (no == 0) return false;
-
-            foreach (var tl in timeLineList)
-            {
-                if (tl.GetType() == ty && tl.GetSubIndex() == no)
-                {
-                    timeLineList.Remove(tl);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public long SearchUserId(string name)
-        {
-            if (name[0] == '@') name = name.Substring(1);
-
-            var id = tokens.Users.Lookup(screen_name => name);
-
-            return (long)id[0].Id;
-        }
-
-        public bool CheckRetweet(long tweetId)
-        {
-            try
-            {
-                var st = tokens.Statuses.Show(id => tweetId);
-
-                return (bool)st.IsRetweeted;
-            }
-            catch(CoreTweet.TwitterException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-            }
-            catch(System.Net.WebException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-            }
-
-            return false;
-        }
-
-        public void Retweet(long tweetId)
-        {
-            tokens.Statuses.RetweetAsync(id => tweetId);
-        }
-
-        public void UnRetweet(long tweetId)
-        {
-            tokens.Statuses.UnretweetAsync(id => tweetId);
-        }
-
-        public bool CheckLike(long tweetId)
-        {
-            try
-            {
-                var st = tokens.Favorites.List(since_id => (tweetId - 1), max_id => tweetId);
-
-                if (st.Count > 0)
-                {
-                    return true;
-                }
-            }
-            catch(CoreTweet.TwitterException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return false;
-            }
-            catch(System.Net.WebException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return false;
-            }
-
-            return false;
-        }
-
-        public bool CheckSelfTweet(long tweetId)
-        {
-            try
-            {
-                var userId = GetTokenUser();
-                var st = tokens.Statuses.UserTimeline(user_id => userId, since_id => (tweetId - 1), max_id => tweetId );
-
-                if (st.Count > 0)
-                {
-                    return true;
-                }
-            }
-            catch (CoreTweet.TwitterException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return false;
-            }
-            catch (System.Net.WebException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return false;
-            }
-
-            return false;
-        }
-
-        public void Like(long tweetId)
-        {
-            tokens.Favorites.CreateAsync(id => tweetId);
-        }
-
-        public void UnLike(long tweetId)
-        {
-            tokens.Favorites.DestroyAsync(id => tweetId);
-        }
-
-        public void DeleteTweet(long tweetId)
-        {
-            tokens.Statuses.Destroy(id => tweetId);
-            var tl = SelectTimeLine();
-            var st = tl.GetTweetFromId(tweetId);
-            tl.GetTimeLine().Remove(st);
-        }
-
-        public CoreTweet.Status GetTimeLineFromAPI(long? quotedStatusId)
-        {
-            CoreTweet.Core.ListedResponse<CoreTweet.Status> status;
-
-            try
-            {
-                status = tokens.Statuses.Lookup(id => quotedStatusId, tweet_mode => TweetMode.Extended);
-            }
-            catch (CoreTweet.TwitterException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return null;
-            }
-            catch (System.Net.WebException e)
-            {
-                parentForm.SetStatusMenu(e.Message);
-                return null;
-            }
-
-            if (status.Count == 0) return null;
-
-            var tl = SelectTimeLine();
-
-            if (tl != null)
-            {
-                foreach (var st in status)
-                {
-                    tl.SetStatusById(st);
-                }
-            }
-
-            return status[0];
         }
     }
+
+    private List<long> UploadMedia(Bitmap[] imgs = null)
+    {
+        //MediaUploadResult res = null;
+        bool first = true;
+        int index = 0;
+        List<long> mediaIds = new List<long>();
+
+        for (int i = 0; i < imgs.Length; i++)
+        {
+            Bitmap tmpBitmap;
+            var img = imgs[i];
+
+            if (img != null)
+            {
+                MemoryStream sm = new MemoryStream();
+
+                if (img.Tag == null)
+                {
+                    var bmp = ImageSizeConvert(img);
+                    bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
+                }
+                else
+                {
+                    var fileName = img.Tag.ToString();
+                    if (fileName.Length > 0)
+                    {
+                        tmpBitmap = (Bitmap)Image.FromFile(fileName);
+                        var bmp = ImageSizeConvert(img);
+                        bmp.Save(sm, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                }
+
+                string st = Convert.ToBase64String(sm.GetBuffer());
+                var res = tokens.Media.Upload(media_data => st);
+                sm.Dispose();
+
+                mediaIds.Add(res.MediaId);
+            }
+        }
+
+        return mediaIds;
+    }
+
+    private Bitmap ImageSizeConvert(Bitmap src)
+    {
+        var w = src.Width;
+        var h = src.Height;
+
+        double per = w / 1280.0;
+
+        if (per > 1.0)
+        {
+            w = (int)(w / per);
+            h = (int)(h / per);
+        }
+        else
+        {
+            return src;
+
+        }
+
+        var dst = new Bitmap(w, h);
+        var g = Graphics.FromImage(dst);
+        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        g.DrawImage(src, 0, 0, w, h);
+
+        return dst;
+    }
+
+    internal void MoveTimeLineSubIndex(TimeLine.TimeLineType ty, int srcIndex, int dstIndex)
+    {
+        if (srcIndex > dstIndex)
+        {
+            ChangeSubIndex(ty, srcIndex, -1);
+
+            for (int i = srcIndex - 1; i >= dstIndex; i--)
+            {
+                ChangeSubIndex(ty, i, i + 1);
+            }
+
+            ChangeSubIndex(ty, -1, dstIndex);
+        }
+        else if (srcIndex < dstIndex)
+        {
+            ChangeSubIndex(ty, srcIndex, -1);
+
+            for (int i = srcIndex + 1; i <= dstIndex; i++)
+            {
+                ChangeSubIndex(ty, i, i - 1);
+            }
+
+            ChangeSubIndex(ty, -1, dstIndex);
+        }
+    }
+
+    public void Reply(String tweetText, long id)
+    {
+        if (tweetText.Length > 0)
+        {
+            tokens.Statuses.UpdateAsync(status => tweetText, in_reply_to_status_id => id);
+        }
+    }
+
+    public void RetweetWith(String tweetText)
+    {
+        if (tweetText.Length > 0)
+        {
+            tokens.Statuses.UpdateAsync(tweetText);
+        }
+    }
+
+    public bool ChangeSubIndex(TimeLine.TimeLineType ty, int src, int dst)
+    {
+        if (src == 0) return false;
+
+        foreach (var tl in timeLineList)
+        {
+            if (tl.GetType() == ty && tl.GetSubIndex() == src)
+            {
+                tl.SetSubIndex(dst);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool DelSubIndex(TimeLine.TimeLineType ty, int no)
+    {
+        if (no == 0) return false;
+
+        foreach (var tl in timeLineList)
+        {
+            if (tl.GetType() == ty && tl.GetSubIndex() == no)
+            {
+                timeLineList.Remove(tl);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public long SearchUserId(string name)
+    {
+        if (name[0] == '@') name = name.Substring(1);
+
+        var id = tokens.Users.Lookup(screen_name => name);
+
+        return (long)id[0].Id;
+    }
+
+    public bool CheckRetweet(long tweetId)
+    {
+        try
+        {
+            var st = tokens.Statuses.Show(id => tweetId);
+
+            return (bool)st.IsRetweeted;
+        }
+        catch (CoreTweet.TwitterException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+        }
+        catch (System.Net.WebException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+        }
+
+        return false;
+    }
+
+    public void Retweet(long tweetId)
+    {
+        tokens.Statuses.RetweetAsync(id => tweetId);
+    }
+
+    public void UnRetweet(long tweetId)
+    {
+        tokens.Statuses.UnretweetAsync(id => tweetId);
+    }
+
+    public bool CheckLike(long tweetId)
+    {
+        try
+        {
+            var st = tokens.Favorites.List(since_id => (tweetId - 1), max_id => tweetId);
+
+            if (st.Count > 0)
+            {
+                return true;
+            }
+        }
+        catch (CoreTweet.TwitterException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return false;
+        }
+        catch (System.Net.WebException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return false;
+        }
+
+        return false;
+    }
+
+    public bool CheckSelfTweet(long tweetId)
+    {
+        try
+        {
+            var userId = GetTokenUser();
+            var st = tokens.Statuses.UserTimeline(user_id => userId, since_id => (tweetId - 1), max_id => tweetId);
+
+            if (st.Count > 0)
+            {
+                return true;
+            }
+        }
+        catch (CoreTweet.TwitterException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return false;
+        }
+        catch (System.Net.WebException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return false;
+        }
+
+        return false;
+    }
+
+    public void Like(long tweetId)
+    {
+        tokens.Favorites.CreateAsync(id => tweetId);
+    }
+
+    public void UnLike(long tweetId)
+    {
+        tokens.Favorites.DestroyAsync(id => tweetId);
+    }
+
+    public void DeleteTweet(long tweetId)
+    {
+        tokens.Statuses.Destroy(id => tweetId);
+        var tl = SelectTimeLine();
+        var st = tl.GetTweetFromId(tweetId);
+        tl.GetTimeLine().Remove(st);
+    }
+
+    public CoreTweet.Status GetTimeLineFromAPI(long? quotedStatusId)
+    {
+        CoreTweet.Core.ListedResponse<CoreTweet.Status> status;
+
+        try
+        {
+            status = tokens.Statuses.Lookup(id => quotedStatusId, tweet_mode => TweetMode.Extended);
+        }
+        catch (CoreTweet.TwitterException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return null;
+        }
+        catch (System.Net.WebException e)
+        {
+            parentForm.SetStatusMenu(e.Message);
+            return null;
+        }
+
+        if (status.Count == 0) return null;
+
+        var tl = SelectTimeLine();
+
+        if (tl != null)
+        {
+            foreach (var st in status)
+            {
+                tl.SetStatusById(st);
+            }
+        }
+
+        return status[0];
+    }
+}
 }
