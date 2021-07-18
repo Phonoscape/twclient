@@ -228,7 +228,8 @@ namespace twclient
 
             if (st != null)
             {
-                st = status;
+                var index = timeline.IndexOf(st);
+                timeline[index] = status;
                 return true;
             }
 

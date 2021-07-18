@@ -384,7 +384,7 @@ namespace twclient
             }
 
             panelTimeLineList1.listView1.SmallImageList = new ImageList();
-            panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(32, 32);
+            panelTimeLineList1.listView1.SmallImageList.ImageSize = new Size(24, 24);
 
             TimeLine tl;
             tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, Resource.Resource1.String_FormTimeLine_TimelineName_HOME, true);
