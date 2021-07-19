@@ -31,6 +31,7 @@ namespace twclient
         private ArrayList imageGetWaitList;
         private bool imageGetTask = false;
 
+        const int MAX_CONTENTS_LEVEL = 50;
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
 
         public FormTimeLine()
@@ -1152,7 +1153,7 @@ namespace twclient
             ListView1_Click();
         }
 
-        private void ListView1_Click(long tweetId = 0)
+        private void ListView1_Click(long tweetId = 0, int max = 0)
         {
             ListView lv = panelTimeLineList1.listView1;
             bool sameTweet = false;
@@ -1205,12 +1206,12 @@ namespace twclient
             }
 
             controlListBox1.Items.Clear();
-            TweetDraw(tl);
+            TweetDraw(tl, false, max);
         }
 
-        private async void TweetDraw(CoreTweet.Status tl, bool retFlag = false, int level = 0)
+        private async void TweetDraw(CoreTweet.Status tl, bool retFlag = false, int level = MAX_CONTENTS_LEVEL)
         {
-            if (level > 100) return;
+            if (level < 0) return;
 
             //makeContents(tl);
             if (!retFlag) await Task.Run(() => MakeContents(tl));
@@ -1221,7 +1222,7 @@ namespace twclient
 
             if (ret != null)
             {
-                TweetDraw(ret, true, level + 1);
+                TweetDraw(ret, true, level - 1);
             }
 
             if (inRep != null)
@@ -1229,13 +1230,13 @@ namespace twclient
                 var inRepSt = twitter.GetTimeLineFromAPI((long)inRep);
                 if (inRepSt != null)
                 {
-                    TweetDraw(inRepSt, false, level + 1);
+                    TweetDraw(inRepSt, false, level - 1);
                 }
             }
 
             if (qt != null)
             {
-                TweetDraw(qt, false, level + 1);
+                TweetDraw(qt, false, level - 1);
             }
         }
 
@@ -1274,6 +1275,7 @@ namespace twclient
             contents.buttonReply.Click += Contents_ButtonReply_Click;
             contents.buttonRT.Click += Contents_ButtonRT_Click;
             contents.buttonLike.Click += Contents_ButtonLike_Click;
+            contents.buttonTrace.Click += Contents_ButtonTrace_Click;
 
             /*
             int top = 0;
@@ -1315,6 +1317,16 @@ namespace twclient
                 contents.buttonLike.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, tl.FavoriteCount.ToString());
             }
             contents.buttonLike.Tag = tl.Id;
+
+            if (tl.RetweetedStatus != null || tl.QuotedStatus != null || tl.InReplyToStatusId != null)
+            {
+                contents.buttonTrace.Enabled = true;
+                contents.buttonTrace.Tag = rtl.Id;
+            }
+            else 
+            {
+                contents.buttonTrace.Enabled = false;
+            }
 
             contents.Tag = tl.Id;
 
@@ -1377,7 +1389,7 @@ namespace twclient
             //            listBoxTweetContents.Controls.Add(contents);
 
             //controlListBox1.Add(contents);
-            controlListBox1.Items.Insert(0, contents);
+            controlListBox1.Insert(0, contents);
 
             contents.Parent = (Control)controlListBox1;
 
@@ -1525,7 +1537,11 @@ namespace twclient
 
             var tweetId = twitter.SelectTimeLine().GetTimeLine()[index].Id;
 
-            if (obj == toolStripMenuItemRetweet)
+            if (obj == toolStripMenuItemOpenTrace)
+            {
+                ListView1_Click(0, MAX_CONTENTS_LEVEL);
+            }
+            else if (obj == toolStripMenuItemRetweet)
             {
                 if (MessageBox.Show(this, Resource.Resource1.String_FormTimeLine_RetweetMessage, Resource.Resource1.String_FormTimeLine_RetweetTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -1864,13 +1880,15 @@ namespace twclient
 
         private void PanelTimeLineContents1_webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+/*
             foreach (var i in controlListBox1.Items)
             {
                 if (i.GetType().Equals(typeof(panelTimeLineContents1)))
                 {
-                    var hTable = ((panelTimeLineContents1)i).tableLayoutPanel1.Height;
-                    var hWeb = ((panelTimeLineContents1)i).webBrowser1.Document.Body.ScrollRectangle.Height;
-                    var hfooter = ((panelTimeLineContents1)i).panel2.Height;
+                    var ct = (panelTimeLineContents1)i;
+                    var hTable = ct.tableLayoutPanel1.Height;
+                    var hWeb = ct.webBrowser1.Document.Body.ScrollRectangle.Height;
+                    var hfooter = ct.panel2.Height;
                     //((panelTimeLineContents1)i).Height = h;
                     i.Height = hTable + hWeb + hfooter;
 
@@ -1882,35 +1900,36 @@ namespace twclient
                     ((Panel)i).Height = controlListBox1.Height;
                 }
             }
+
             controlListBox1.Replace();
             controlListBox1.Refresh();
+*/
+            var web = (WebBrowser)sender;
+            panelTimeLineContents1 ct = (panelTimeLineContents1)web.Parent.Parent;
+            var hTable = ct.tableLayoutPanel1.Height;
+            var hWeb = ct.webBrowser1.Document.Body.ScrollRectangle.Height;
+            var hfooter = ct.panel2.Height;
+            //((panelTimeLineContents1)i).Height = h;
+            ct.Height = hTable + hWeb + hfooter;
 
-
+            Debug.WriteLine("DocumentCompleted: hSplit {0}", hTable);
+            Debug.WriteLine("DocumentCompleted: hWeb {0}", hWeb);
         }
 
-        private void Contents_ButtonLike_Click(object sender, EventArgs e)
+        private void Contents_ButtonReply_Click(object sender, EventArgs e)
         {
-            var id = long.Parse(((Button)sender).Tag.ToString());
-            var st = twitter.GetTimeLineFromAPI(id);
             var bt = (Button)sender;
+            var id = long.Parse(bt.Tag.ToString());
 
-            if ((bool)st.IsFavorited)
-            {
-                DoUnLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.RetweetCount.ToString());
-            }
-            else
-            {
-                DoLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.RetweetCount.ToString());
-            }
+            DoReply(id);
+            panelControlMainEdit1.textBoxTweet.Focus();
         }
 
         private void Contents_ButtonRT_Click(object sender, EventArgs e)
         {
-            var id = long.Parse(((Button)sender).Tag.ToString());
-            var st = twitter.GetTimeLineFromAPI(id);
             var bt = (Button)sender;
+            var id = long.Parse(bt.Tag.ToString());
+            var st = twitter.GetTimeLineFromAPI(id);
 
             if ((bool)st.IsRetweeted)
             {
@@ -1931,13 +1950,31 @@ namespace twclient
                 }
             }
         }
-
-        private void Contents_ButtonReply_Click(object sender, EventArgs e)
+        private void Contents_ButtonLike_Click(object sender, EventArgs e)
         {
-            var id = long.Parse(((Button)sender).Tag.ToString());
+            var bt = (Button)sender;
+            var id = long.Parse(bt.Tag.ToString());
+            var st = twitter.GetTimeLineFromAPI(id);
 
-            DoReply(id);
-            panelControlMainEdit1.textBoxTweet.Focus();
+            if ((bool)st.IsFavorited)
+            {
+                DoUnLike(id);
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.RetweetCount.ToString());
+            }
+            else
+            {
+                DoLike(id);
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.RetweetCount.ToString());
+            }
+        }
+
+        private void Contents_ButtonTrace_Click(object sender, EventArgs e)
+        {
+            var bt = (Button)sender;
+            var id = long.Parse(bt.Tag.ToString());
+            var st = twitter.GetTimeLineFromAPI(id);
+
+            ListView1_Click(id, MAX_CONTENTS_LEVEL);
         }
 
         private void ListBoxTweetContents_MeasureItem1(object sender, MeasureItemEventArgs e)
