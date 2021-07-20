@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace twclient.UserPanel
 {
@@ -15,6 +7,7 @@ namespace twclient.UserPanel
         public WebBrowser webBrowser1;
 
         public long tweetId { get; set; }
+        public CoreTweet.Status status { get; set; }
 
         public panelTimeLineContents1(long id)
         {

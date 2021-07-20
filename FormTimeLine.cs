@@ -29,7 +29,8 @@ namespace twclient
 
         private Hashtable userImage;
         private ArrayList imageGetWaitList;
-        private bool imageGetTask = false;
+
+        private FormPopupPicture formPic = null;
 
         const int MAX_CONTENTS_LEVEL = 50;
         static readonly float DpiScale = ((new System.Windows.Forms.Form()).CreateGraphics().DpiX) / 96;
@@ -1289,8 +1290,9 @@ namespace twclient
 
             Bitmap bitmap = MakeBitmapFromUrl(tl.User.ProfileImageUrlHttps);
 
-            var userId = tl.User.ScreenName.ToString();
+            contents.status = tl;
 
+            var userId = tl.User.ScreenName.ToString();
             contents.textBoxUserName.Text = tl.User.Name.ToString();
             contents.textBoxUserName.Tag = userId;
             contents.textBoxUserId.Text = "@" + userId;
@@ -1471,6 +1473,9 @@ namespace twclient
         private string contentUrl = "";
         private string contentAlt = "";
         private string contentTxt = "";
+        
+        private string webInId = "";
+        private string webInUser = "";
 
         private void PanelTimeLineContents1_webBrowser_Document_ContextMenuShowing(object sender, HtmlElementEventArgs e)
         {
@@ -1583,8 +1588,7 @@ namespace twclient
             else if (obj == toolStripMenuItemOpen)
             {
                 var status = twitter.GetTimeLineFromId(tweetId);
-                string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
-                OpenUrl(url);
+                twitter.OpenUrl(status.User.ScreenName, tweetId.ToString());
             }
             else if (obj == toolStripMenuItemDel)
             {
@@ -1680,7 +1684,7 @@ namespace twclient
         // WebBrowser
 
         private string beforeContentUrl = "";
-        private ToolTip contentToolTip = null;
+        //private ToolTip contentToolTip = null;
 
         private void PanelTimeLineContents1_webBrowser_Document_MouseMove(object sender, HtmlElementEventArgs e)
         {
@@ -1703,12 +1707,17 @@ namespace twclient
                     beforeContentUrl = "";
                 }
 
-                contentToolTip?.Dispose();
-                contentToolTip = null;
+                //contentToolTip?.Dispose();
+                //contentToolTip = null;
+
+                formPic?.Dispose();
+                formPic = null;
             }
             else if (contentTagName == "img")
             {
                 contentUrl = clickedElement.GetAttribute("src");
+                webInId = clickedElement.GetAttribute("id");
+                webInUser = clickedElement.GetAttribute("user");
                 SetStatusMenu(contentUrl);
 
                 panelTimeLineContents1 workDoc = null;
@@ -1726,6 +1735,7 @@ namespace twclient
 
                     if (workDoc != null)
                     {
+                        /*
                         contentToolTip?.Dispose();
                         contentToolTip = new ToolTip();
                         contentToolTip.OwnerDraw = true;
@@ -1735,16 +1745,41 @@ namespace twclient
                         contentToolTip.Tag = bmp;
                         Debug.WriteLine("BMP Size x:{0} y:{1}", bmp.Size.Width, bmp.Size.Height);
 
-                        //contentToolTip.ShowAlways = true;
-                        //contentToolTip.SetToolTip(this, contentUrl);
-
-                        //var pos = new Point((int)(Cursor.Position.X / DpiScale), (int)(Cursor.Position.Y / DpiScale));
-                        //var pos = Cursor.Position;
                         var pos = this.PointToClient(Control.MousePosition);
 
                         Debug.WriteLine("Pos x:{0} y:{1}", pos.X, pos.Y);
 
                         contentToolTip.Show(contentUrl, this, pos, 3000);
+                        */
+
+                        var pos = this.PointToClient(Control.MousePosition);
+
+                        if (formPic != null)
+                        {
+                            formPic.Dispose();
+                        }
+                        formPic = new FormPopupPicture();
+                        Bitmap bmp = MakeBitmapFromUrl(contentUrl);
+
+                        var dsktop = Screen.FromControl(this).Bounds;
+                        var dskw = dsktop.Width;
+                        var dskh = dsktop.Height;
+
+                        var mx = Control.MousePosition.X;
+                        var my = Control.MousePosition.Y;
+                        var bw = bmp.Width;
+                        var bh = bmp.Height;
+
+                        var dw = dskw - bw;
+                        var dh = dskh - bh;
+
+                        var x = mx < dw ? mx : dw;
+                        var y = my < dh ? my : dh;
+
+                        formPic.Location = new Point(x, y);
+                        formPic.SetBitmap(bmp, webInId, webInUser, contentUrl);
+                        formPic.FormClosed += FormPic_FormClosed;
+                        formPic.Show();
                     }
                 }
 
@@ -1755,9 +1790,18 @@ namespace twclient
                 SetStatusMenu("");
                 beforeContentUrl = "";
 
-                contentToolTip?.Dispose();
-                contentToolTip = null;
+                //contentToolTip?.Dispose();
+                //contentToolTip = null;
+
+                formPic?.Dispose();
+                formPic = null;
             }
+        }
+
+        private void FormPic_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            formPic?.Dispose();
+            formPic = null;
         }
 
         private void PanelTimeLineContents1_webBrowser_Document_ContentToolTip_Popup(object sender, PopupEventArgs e)
@@ -1803,13 +1847,13 @@ namespace twclient
                 }
                 else
                 {
-                    OpenUrl(contentUrl);
+                    twitter.OpenUrl(contentUrl);
                 }
             }
             else if (contentTagName == "img")
             {
                 contentUrl = clickedElement.GetAttribute("src");
-                OpenUrl(contentUrl);
+                twitter.OpenUrl(contentUrl);
             }
 
             e.ReturnValue = false;
@@ -1828,14 +1872,14 @@ namespace twclient
                 }
                 else if (contentTagName == "img")
                 {
-                    OpenUrl(contentUrl);
+                    twitter.OpenUrl(contentUrl);
                 }
                 else
                 {
                     var tweetId = (long)((Control)sender).Tag;
                     var status = twitter.GetTimeLineFromId(tweetId);
-                    string url = "https://twitter.com/" + status.User.ScreenName + "/status/" + tweetId.ToString();
-                    OpenUrl(url);
+
+                    twitter.OpenUrl(status.User.ScreenName, tweetId.ToString());
                 }
             }
             else if (obj == toolStripMenuWebViewAddHash)
@@ -2533,20 +2577,6 @@ namespace twclient
 
             panelTimeLineList1.listView1.VirtualListSize = twitter.SelectTimeLine().GetTimeLine().Count;
         }
-
-        public void OpenUrl(string url)
-        {
-            try
-            {
-                Process.Start(url);
-            }
-            catch
-            {
-                url = url.Replace("&", "^&");
-                Process.Start(new ProcessStartInfo("cmd", "/c start " + url) { CreateNoWindow = true });
-            }
-        }
-
 
         public void AddListGetImageFromAPI(string url)
         {
