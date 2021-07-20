@@ -78,6 +78,8 @@ namespace twclient.Class
                 Items[i].Top = GetTop(i);
                 Console.WriteLine("Size: {0} / {1}", i, Items[i].Top);
             }
+
+            this.Update();
         }
 
         public int GetTop(int id)

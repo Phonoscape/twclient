@@ -1183,7 +1183,8 @@ namespace twclient
                 return;
             }
 
-            var tl = twitter.GetTimeLineFromId(tweetId);
+            //var tl = twitter.GetTimeLineFromId(tweetId);
+            var tl = twitter.GetTimeLineFromAPI(tweetId);
 
             toolStripMenuItemRetweet.Enabled = (bool)!tl.IsRetweeted;
             toolStripMenuItemUnRetweet.Enabled = (bool)tl.IsRetweeted;
