@@ -13,15 +13,11 @@ namespace twclient.Class
     public class ControlListBox : Panel
     {
         private List<Control> items;
-        private List<int> itemH;
-
         public List<Control> Items { get => items; set => items = value; }
-        public List<int> ItemH { get => itemH; set => itemH = value; }
 
         public ControlListBox()
         {
             items = new List<Control>();
-            itemH = new List<int>();
 
             AutoScroll = true;
             Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -42,7 +38,6 @@ namespace twclient.Class
             AutoScroll = true;
 
             Items.Add(cl);
-            ItemH.Add(cl.Height);
             var id = Items.Count;
             var top = GetTop(id);
 
@@ -51,7 +46,40 @@ namespace twclient.Class
             
             cl.Location = new Point(0,top);
 
+            cl.SizeChanged += Cl_SizeChanged;
+
             return Items.Count();
+        }
+
+        public int Insert(int index, Control cl)
+        {
+            AutoScroll = true;
+
+            Items.Insert(index, cl);
+
+            var top = GetTop(index);
+
+            //cl.Parent = panelControlListBox;
+            cl.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+            cl.Location = new Point(0, top);
+
+            cl.SizeChanged += Cl_SizeChanged;
+
+            return Items.Count();
+        }
+
+        private void Cl_SizeChanged(object sender, EventArgs e)
+        {
+            var index = Items.IndexOf((Control)sender);
+
+            for (int i = index; i < items.Count; i++)
+            {
+                Items[i].Top = GetTop(i);
+                Console.WriteLine("Size: {0} / {1}", i, Items[i].Top);
+            }
+
+            this.Update();
         }
 
         public int GetTop(int id)
@@ -74,7 +102,6 @@ namespace twclient.Class
         public void Clear()
         {
             Items.Clear();
-            ItemH.Clear();
 
             //AutoScroll = false;
             VerticalScroll.Enabled = false;
@@ -86,7 +113,6 @@ namespace twclient.Class
         public void Remove(int id)
         {
             Items.RemoveAt(id);
-            ItemH.RemoveAt(id);
         }
 
         public void Replace()

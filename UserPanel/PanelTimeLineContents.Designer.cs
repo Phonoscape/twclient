@@ -37,11 +37,19 @@ namespace twclient.UserPanel
             this.textBoxDateTime = new System.Windows.Forms.TextBox();
             this.textBoxRetweet = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.panelWeb = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonReply = new System.Windows.Forms.Button();
+            this.buttonRT = new System.Windows.Forms.Button();
+            this.buttonTrace = new System.Windows.Forms.Button();
+            this.buttonLike = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -146,17 +154,85 @@ namespace twclient.UserPanel
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // webBrowser1
+            // panelWeb
             // 
-            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            this.webBrowser1.Location = new System.Drawing.Point(2, 98);
-            this.webBrowser1.Margin = new System.Windows.Forms.Padding(0);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(548, 394);
-            this.webBrowser1.TabIndex = 9;
+            this.panelWeb.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelWeb.Location = new System.Drawing.Point(2, 98);
+            this.panelWeb.Name = "panelWeb";
+            this.panelWeb.Size = new System.Drawing.Size(548, 330);
+            this.panelWeb.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.tableLayoutPanel3);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(2, 428);
+            this.panel2.Margin = new System.Windows.Forms.Padding(1);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(548, 64);
+            this.panel2.TabIndex = 3;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.buttonLike, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.buttonTrace, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.buttonReply, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.buttonRT, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(548, 64);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // buttonReply
+            // 
+            this.buttonReply.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonReply.Location = new System.Drawing.Point(0, 0);
+            this.buttonReply.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonReply.Name = "buttonReply";
+            this.buttonReply.Size = new System.Drawing.Size(274, 32);
+            this.buttonReply.TabIndex = 0;
+            this.buttonReply.Text = "button1";
+            this.buttonReply.UseVisualStyleBackColor = true;
+            // 
+            // buttonRT
+            // 
+            this.buttonRT.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonRT.Location = new System.Drawing.Point(274, 0);
+            this.buttonRT.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonRT.Name = "buttonRT";
+            this.buttonRT.Size = new System.Drawing.Size(274, 32);
+            this.buttonRT.TabIndex = 1;
+            this.buttonRT.Text = "button2";
+            this.buttonRT.UseVisualStyleBackColor = true;
+            // 
+            // buttonTrace
+            // 
+            this.buttonTrace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonTrace.Location = new System.Drawing.Point(274, 32);
+            this.buttonTrace.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonTrace.Name = "buttonTrace";
+            this.buttonTrace.Size = new System.Drawing.Size(274, 32);
+            this.buttonTrace.TabIndex = 3;
+            this.buttonTrace.Text = "Trace";
+            this.buttonTrace.UseVisualStyleBackColor = true;
+            // 
+            // buttonLike
+            // 
+            this.buttonLike.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonLike.Location = new System.Drawing.Point(0, 32);
+            this.buttonLike.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonLike.Name = "buttonLike";
+            this.buttonLike.Size = new System.Drawing.Size(274, 32);
+            this.buttonLike.TabIndex = 4;
+            this.buttonLike.Text = "button3";
+            this.buttonLike.UseVisualStyleBackColor = true;
             // 
             // panelTimeLineContents1
             // 
@@ -164,7 +240,8 @@ namespace twclient.UserPanel
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.webBrowser1);
+            this.Controls.Add(this.panelWeb);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "panelTimeLineContents1";
@@ -175,12 +252,13 @@ namespace twclient.UserPanel
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        public System.Windows.Forms.WebBrowser webBrowser1;
         public System.Windows.Forms.PictureBox pictureBox1;
         public System.Windows.Forms.TextBox textBoxUserName;
         public System.Windows.Forms.TextBox textBoxUserId;
@@ -189,5 +267,12 @@ namespace twclient.UserPanel
         public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         public System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         public System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelWeb;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        public System.Windows.Forms.Panel panel2;
+        public System.Windows.Forms.Button buttonReply;
+        public System.Windows.Forms.Button buttonRT;
+        public System.Windows.Forms.Button buttonLike;
+        public System.Windows.Forms.Button buttonTrace;
     }
 }

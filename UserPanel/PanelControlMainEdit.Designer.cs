@@ -168,13 +168,12 @@ namespace twclient.UserPanel
             this.tableLayoutPanelInfo.Controls.Add(this.textBoxMsg1, 0, 0);
             this.tableLayoutPanelInfo.Controls.Add(this.textBoxMsg2, 0, 1);
             this.tableLayoutPanelInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelInfo.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanelInfo.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanelInfo.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanelInfo.Name = "tableLayoutPanelInfo";
             this.tableLayoutPanelInfo.RowCount = 2;
             this.tableLayoutPanelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanelInfo.Size = new System.Drawing.Size(391, 64);
+            this.tableLayoutPanelInfo.Size = new System.Drawing.Size(385, 58);
             this.tableLayoutPanelInfo.TabIndex = 1;
             // 
             // textBoxMsg1
@@ -186,7 +185,7 @@ namespace twclient.UserPanel
             this.textBoxMsg1.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxMsg1.Name = "textBoxMsg1";
             this.textBoxMsg1.ReadOnly = true;
-            this.textBoxMsg1.Size = new System.Drawing.Size(391, 24);
+            this.textBoxMsg1.Size = new System.Drawing.Size(385, 24);
             this.textBoxMsg1.TabIndex = 0;
             this.textBoxMsg1.WordWrap = false;
             // 
@@ -195,11 +194,11 @@ namespace twclient.UserPanel
             this.textBoxMsg2.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxMsg2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxMsg2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxMsg2.Location = new System.Drawing.Point(0, 32);
+            this.textBoxMsg2.Location = new System.Drawing.Point(0, 29);
             this.textBoxMsg2.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxMsg2.Name = "textBoxMsg2";
             this.textBoxMsg2.ReadOnly = true;
-            this.textBoxMsg2.Size = new System.Drawing.Size(391, 24);
+            this.textBoxMsg2.Size = new System.Drawing.Size(385, 24);
             this.textBoxMsg2.TabIndex = 1;
             this.textBoxMsg2.WordWrap = false;
             // 

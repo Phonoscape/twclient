@@ -96,7 +96,8 @@ namespace twclient
                     getCount = 100;
                     break;
             }
-            updateTime = 60 / ( apiLimit / 15 );
+
+            SetUpdateTime(60 / ( apiLimit / 15 ));
         }
 
         public new TimeLineType GetType() { return timeLineType; }
@@ -114,7 +115,7 @@ namespace twclient
         public void SetUserId(long value) { userId = value; }
         public long GetUserId() { return userId; }
         public long GetMaxId() { return maxId; }
-        public void SetUpdateTime(int value) { updateTime = value; }
+//        public void SetUpdateTime(int value) { updateTime = value; }
         public int GetUpdateTime() { return updateTime; }
         public void SetGetCount(int value) { getCount = value; }
         public int GetGetCount() { return getCount; }
@@ -123,6 +124,12 @@ namespace twclient
         public int GetSubIndex() { return subIndex; }
         public void SetListId(long value) { listId = value; }
         public long GetListId() { return listId; }
+
+        public void SetUpdateTime(int sec)
+        {
+            updateTime = sec > 60 / (apiLimit / 15) ? sec : 60 / (apiLimit / 15);
+            updateTime = updateTime < 8 ? 8 : updateTime;
+        }
 
         public List<string> saveParam()
         {
@@ -213,6 +220,20 @@ namespace twclient
         public int GetNewTimeLineCount()
         {
             return newTimeline.Count();
+        }
+
+        public bool SetStatusById(CoreTweet.Status status)
+        {
+            var st = timeline.Find(x => x.Id == status.Id);
+
+            if (st != null)
+            {
+                var index = timeline.IndexOf(st);
+                timeline[index] = status;
+                return true;
+            }
+
+            return false;
         }
     }
 

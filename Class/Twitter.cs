@@ -1,15 +1,11 @@
 ﻿using CoreTweet;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Forms;
 using static CoreTweet.OAuth;
 
 namespace twclient
@@ -25,7 +21,8 @@ namespace twclient
 
         private string[] splitWord = {"\n", " ", "　", "@", "＠", "#", "＃", "http://", "https://", "(", ")",
                                     "｛", "｝", "（", "）", "【", "】", "「", "」", "『", "』", "〈", "〉",
-                                    "《", "》", ":", "：","、","。","・","．","!","！","?","？", ",", "，" };
+                                    "《", "》", ":", "：","、","。","・","．","!","！","?","？", ",", "，",
+                                    };
 
         private string consumer_key = null;
         private string consumer_secret = null;
@@ -79,7 +76,7 @@ namespace twclient
         {
             OAuthSession session = OAuth.Authorize(consumer_key, consumer_secret);
 
-            parentForm.OpenUrl(session.AuthorizeUri.AbsoluteUri);
+            OpenUrl(session.AuthorizeUri.AbsoluteUri);
 
             DialogPinIn dlgPin = new DialogPinIn(parentForm);
             dlgPin.ShowDialog();
@@ -284,9 +281,9 @@ namespace twclient
                         {
                             statuses = tokens.Statuses.HomeTimeline(since_id => maxId, count => ct, tweet_mode => TweetMode.Extended);
                         }
-                        else 
+                        else
                         {
-                            statuses = tokens.Statuses.HomeTimeline(since_id => (tweetId -1), max_id => tweetId, tweet_mode => TweetMode.Extended);
+                            statuses = tokens.Statuses.HomeTimeline(since_id => (tweetId - 1), max_id => tweetId, tweet_mode => TweetMode.Extended);
                         }
                         tl.AddTimeLine(statuses.ToList<Status>());
                         break;
@@ -430,7 +427,7 @@ namespace twclient
             return tl;
         }
 
-        private void OnUpdateTimer(object sender,System.EventArgs e)
+        private void OnUpdateTimer(object sender, System.EventArgs e)
         {
             updateTimer.Stop();
 
@@ -446,7 +443,7 @@ namespace twclient
                     parentForm.SetListViewNew();
                     parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Waiting);
                 }
-                else 
+                else
                 {
                     parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_NoUpdate);
                 }
@@ -459,6 +456,7 @@ namespace twclient
             updateTimer.Interval = tl.GetUpdateTime() * 1000;
             updateTimer.Start();
         }
+    
 
         public String ExtendedEntiries(Status st)
         {
@@ -489,11 +487,11 @@ namespace twclient
             }
             text = tl.FullText;
 
-            int st = 0, ed = 0,ln = 0;
+            int st = 0, ed = 0, ln = 0;
 
-            string tmp, hash = "", user = "",url = "";
+            string tmp, hash = "", user = "", url = "";
             List<string> img = new List<string>();
-            while ( st < text.Length )
+            while (st < text.Length)
             {
                 var ret = IndexOfMulti(text.Substring(st), splitWord);
                 ed = ret[0];
@@ -503,7 +501,7 @@ namespace twclient
                 {
                     tmp = text.Substring(st, ed);
                 }
-                else 
+                else
                 {
                     tmp = text.Substring(st, ln);
                 }
@@ -535,9 +533,9 @@ namespace twclient
                     hash += tmp;
                     var hashlink = hash;
 
-                    foreach ( var h in tl.Entities.HashTags)
+                    foreach (var h in tl.Entities.HashTags)
                     {
-                        if ( h.Text == tmp )
+                        if (h.Text == tmp)
                         {
                             hashlink = "<a href=\"" + hash + "\" alt=\"" + hash + "\">" + hash + "</a>";
                             break;
@@ -590,12 +588,12 @@ namespace twclient
                                 {
                                     if (i.VideoInfo != null)
                                     {
-                                        img.Add("<a href=\"" + i.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                        img.Add("<a href=\"" + i.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
                                     }
                                     else
                                     {
                                         //img.Add("<a href=\"" + i.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
-                                        img.Add("<a href=\"" + i.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\"></a>");
+                                        img.Add("<a href=\"" + i.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + i.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
                                     }
                                     cont = true;
                                 }
@@ -604,8 +602,8 @@ namespace twclient
                             if (cont) continue;
                         }
                     }
-                        
-                   url = "";
+
+                    url = "";
                 }
 
                 body += tmp;
@@ -633,9 +631,9 @@ namespace twclient
 
             foreach (var st in splitChar)
             {
-                var pos = str.IndexOf(st,StringComparison.InvariantCulture);
+                var pos = str.IndexOf(st, StringComparison.InvariantCulture);
                 if (pos == -1) continue;
-                if ( min > pos )
+                if (min > pos)
                 {
                     min = pos;
                     ln = st.Length;
@@ -687,8 +685,6 @@ namespace twclient
         private List<long> UploadMedia(Bitmap[] imgs = null)
         {
             //MediaUploadResult res = null;
-            bool first = true;
-            int index = 0;
             List<long> mediaIds = new List<long>();
 
             for (int i = 0; i < imgs.Length; i++)
@@ -779,7 +775,7 @@ namespace twclient
             }
         }
 
-        public void Reply(String tweetText,long id)
+        public void Reply(String tweetText, long id)
         {
             if (tweetText.Length > 0)
             {
@@ -795,13 +791,13 @@ namespace twclient
             }
         }
 
-        public bool ChangeSubIndex(TimeLine.TimeLineType ty, int src,int dst)
+        public bool ChangeSubIndex(TimeLine.TimeLineType ty, int src, int dst)
         {
             if (src == 0) return false;
 
-            foreach(var tl in timeLineList)
+            foreach (var tl in timeLineList)
             {
-                if ( tl.GetType() == ty && tl.GetSubIndex() == src )
+                if (tl.GetType() == ty && tl.GetSubIndex() == src)
                 {
                     tl.SetSubIndex(dst);
                     return true;
@@ -844,11 +840,11 @@ namespace twclient
 
                 return (bool)st.IsRetweeted;
             }
-            catch(CoreTweet.TwitterException e)
+            catch (CoreTweet.TwitterException e)
             {
                 parentForm.SetStatusMenu(e.Message);
             }
-            catch(System.Net.WebException e)
+            catch (System.Net.WebException e)
             {
                 parentForm.SetStatusMenu(e.Message);
             }
@@ -877,12 +873,12 @@ namespace twclient
                     return true;
                 }
             }
-            catch(CoreTweet.TwitterException e)
+            catch (CoreTweet.TwitterException e)
             {
                 parentForm.SetStatusMenu(e.Message);
                 return false;
             }
-            catch(System.Net.WebException e)
+            catch (System.Net.WebException e)
             {
                 parentForm.SetStatusMenu(e.Message);
                 return false;
@@ -896,7 +892,7 @@ namespace twclient
             try
             {
                 var userId = GetTokenUser();
-                var st = tokens.Statuses.UserTimeline(user_id => userId, since_id => (tweetId - 1), max_id => tweetId );
+                var st = tokens.Statuses.UserTimeline(user_id => userId, since_id => (tweetId - 1), max_id => tweetId);
 
                 if (st.Count > 0)
                 {
@@ -956,7 +952,36 @@ namespace twclient
 
             if (status.Count == 0) return null;
 
+            var tl = SelectTimeLine();
+
+            if (tl != null)
+            {
+                foreach (var st in status)
+                {
+                    tl.SetStatusById(st);
+                }
+            }
+
             return status[0];
+        }
+
+        public void OpenUrl(string user, string id)
+        {
+            string url = "https://twitter.com/" + user + "/status/" + id;
+            OpenUrl(url);
+        }
+
+        public void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", "/c start " + url) { CreateNoWindow = true });
+            }
         }
     }
 }

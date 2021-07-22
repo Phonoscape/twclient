@@ -61,6 +61,51 @@ namespace twclient.Resource {
         }
         
         /// <summary>
+        ///   Fav / {0} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Contents_Button_Fav {
+            get {
+                return ResourceManager.GetString("String_Contents_Button_Fav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reply に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Contents_Button_Reply {
+            get {
+                return ResourceManager.GetString("String_Contents_Button_Reply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Retweet / {0} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Contents_Button_Retweet {
+            get {
+                return ResourceManager.GetString("String_Contents_Button_Retweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   UnFav / {0} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Contents_Button_UnFav {
+            get {
+                return ResourceManager.GetString("String_Contents_Button_UnFav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   UnRetweet / {0} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Contents_Button_UnRetweet {
+            get {
+                return ResourceManager.GetString("String_Contents_Button_UnRetweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Favoriteを取り消ししますか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_FormTimeLine_CancelFavoriteMessage {

@@ -13,6 +13,9 @@
     <Compile Update="FormControl.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FormPopupPicture.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FormTimeLine.cs">
       <SubType>Form</SubType>
     </Compile>
