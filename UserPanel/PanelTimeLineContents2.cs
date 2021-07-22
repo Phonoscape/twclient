@@ -2,14 +2,14 @@
 
 namespace twclient.UserPanel
 {
-    public partial class panelTimeLineContents1 : UserControl
+    public partial class panelTimeLineContents2 : UserControl
     {
         public WebBrowser webBrowser1;
 
         public long tweetId { get; set; }
         public CoreTweet.Status status { get; set; }
 
-        public panelTimeLineContents1(long id)
+        public panelTimeLineContents2(long id)
         {
             InitializeComponent();
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -80,7 +82,7 @@ namespace twclient
             panelControlMainEdit1.textBoxTweet.KeyPress += PanelControlMainEdit1_TextBoxTweet_KeyPress;
 
             //listBoxTweetContents.MeasureItem += ListBoxTweetContents_MeasureItem1;
-            controlListBox1.Resize += ControlListBox1_Resize;
+//            controlListBox1.Resize += ControlListBox1_Resize;
 
             splitContainer2.SplitterMoved += SplitContainer2_SplitterMoved;
 
@@ -1204,7 +1206,7 @@ namespace twclient
 
             foreach (var item in controlListBox1.Items)
             {
-                ((panelTimeLineContents1)item).Dispose();
+                ((panelTimeLineContents2)item).Dispose();
             }
 
             controlListBox1.Items.Clear();
@@ -1242,7 +1244,13 @@ namespace twclient
             }
         }
 
-        private void MakeContents(CoreTweet.Status tl)
+        async Task InitWebView(panelTimeLineContents2 src)
+        {
+            var env = await CoreWebView2Environment.CreateAsync();
+            await src.webView2_1.EnsureCoreWebView2Async(env);
+        }
+
+        private async void MakeContents(CoreTweet.Status tl)
         {
             if (this.InvokeRequired)
             {
@@ -1268,7 +1276,8 @@ namespace twclient
                 retweet = true;
             }
 
-            panelTimeLineContents1 contents = new panelTimeLineContents1(tl.Id);
+            panelTimeLineContents2 contents = new panelTimeLineContents2(tl.Id);
+            await InitWebView(contents);
 
             contents.textBoxUserId.Click += Contents_User_Click;
             contents.textBoxUserName.Click += Contents_User_Click;
@@ -1283,11 +1292,10 @@ namespace twclient
             int top = 0;
             foreach(var item in customListBox1.Items)
             {
-                top += ((panelTimeLineContents1)item).Height;
+                top += ((panelTimeLineContents2)item).Height;
             }
             contents.Top = top;
-            */
-
+*/
             Bitmap bitmap = MakeBitmapFromUrl(tl.User.ProfileImageUrlHttps);
 
             contents.status = tl;
@@ -1372,6 +1380,8 @@ namespace twclient
             var body = twitter.MakeHtmlBody(tl, eventHandlerName);
             var html = "<html><body>" + cssStr + body + "</body></html>";
 
+            /* webBrowser1 */
+            /*
             contents.webBrowser1.Height = 0;
             contents.webBrowser1.DocumentText = html;
             contents.webBrowser1.DocumentCompleted += PanelTimeLineContents1_webBrowser_DocumentCompleted;
@@ -1382,6 +1392,20 @@ namespace twclient
 
             contents.webBrowser1.IsWebBrowserContextMenuEnabled = false;
             contents.webBrowser1.ContextMenuStrip = contextMenuForWebView;
+            */
+
+            /* WebView2 */
+            contents.webView2_1.Height = 0;
+
+            contents.webView2_1.NavigationCompleted += WebView2_1_NavigationCompleted;
+            contents.webView2_1.Validated += WebView2_1_Validated;
+
+            //while (contents.webView2_1.CoreWebView2 == null) ;
+
+            if (contents.webView2_1.CoreWebView2 != null)
+            {
+                contents.webView2_1.CoreWebView2.NavigateToString(html);
+            }
 
             foreach (var obj in contextMenuForWebView.Items)
             {
@@ -1411,6 +1435,11 @@ namespace twclient
             //            listBoxTweetContents.Controls.SetChildIndex(contents, listBoxTweetContents.Items.Count - 1);
 
             //            listBoxTweetContents.Update();
+        }
+
+        private void WebView2_1_Validated(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private Bitmap MakeBitmapFromUrl(string url)
@@ -1720,18 +1749,18 @@ namespace twclient
                 webInUser = clickedElement.GetAttribute("user");
                 SetStatusMenu(contentUrl);
 
-                panelTimeLineContents1 workDoc = null;
+                panelTimeLineContents2 workDoc = null;
 
                 if (contentUrl != beforeContentUrl)
                 {
                     foreach (var doc in controlListBox1.Items)
                     {
-                        if (((HtmlDocument)sender) == ((panelTimeLineContents1)doc).webBrowser1.Document)
+/*                        if (((HtmlDocument)sender) == ((panelTimeLineContents2)doc).webView2_1)
                         {
-                            workDoc = (panelTimeLineContents1)doc;
+                            workDoc = (panelTimeLineContents2)doc;
                             break;
                         }
-                    }
+*/                    }
 
                     if (workDoc != null)
                     {
@@ -1928,7 +1957,7 @@ namespace twclient
 /*
             foreach (var i in controlListBox1.Items)
             {
-                if (i.GetType().Equals(typeof(panelTimeLineContents1)))
+                if (i.GetType().Equals(typeof(panelTimeLineContents2)))
                 {
                     var ct = (panelTimeLineContents1)i;
                     var hTable = ct.tableLayoutPanel1.Height;
@@ -2024,9 +2053,9 @@ namespace twclient
 
         private void ListBoxTweetContents_MeasureItem1(object sender, MeasureItemEventArgs e)
         {
-            if (controlListBox1.Items[e.Index].GetType().Equals(typeof(panelTimeLineContents1)))
+            if (controlListBox1.Items[e.Index].GetType().Equals(typeof(panelTimeLineContents2)))
             {
-                var h = ((panelTimeLineContents1)controlListBox1.Items[e.Index]).Height;
+                var h = ((panelTimeLineContents2)controlListBox1.Items[e.Index]).Height;
                 e.ItemHeight = h;
                 Debug.WriteLine("MeasureItem: {0}", h);
             }

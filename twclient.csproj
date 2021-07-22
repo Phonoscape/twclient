@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="CoreTweet" Version="1.0.0.483" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.864.35" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
   </ItemGroup>
 
@@ -34,6 +35,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Update="Resource\Resource1.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -60,6 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Resource\css.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

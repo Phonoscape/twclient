@@ -19,9 +19,6 @@
     <Compile Update="FormTimeLine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelControlMain.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="UserPanel\PanelControlMainEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -34,10 +31,10 @@
     <Compile Update="UserPanel\PanelTimeLine.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelTimeLineContents.cs">
+    <Compile Update="UserPanel\PanelTimeLineList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelTimeLineList.cs">
+    <Compile Update="UserPanel\PanelTimeLineContents2.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>

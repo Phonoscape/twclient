@@ -2,9 +2,9 @@
 
 namespace twclient.UserPanel
 {
-    public partial class PanelTimeLine : UserControl
+    public partial class PanelControlMainEdit2 : UserControl
     {
-        public PanelTimeLine()
+        public PanelControlMainEdit2()
         {
             InitializeComponent();
         }
