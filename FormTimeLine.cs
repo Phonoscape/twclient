@@ -1761,7 +1761,7 @@ namespace twclient
                         formPic = new FormPopupPicture();
                         Bitmap bmp = MakeBitmapFromUrl(contentUrl);
 
-                        var dsktop = Screen.FromControl(this).Bounds;
+                        var dsktop = Screen.FromControl(this).WorkingArea;
                         var dskw = dsktop.Width;
                         var dskh = dsktop.Height;
 
