@@ -1187,6 +1187,8 @@ namespace twclient
             //var tl = twitter.GetTimeLineFromId(tweetId);
             var tl = twitter.GetTimeLineFromAPI(tweetId);
 
+            if (tl == null) return;
+
             toolStripMenuItemRetweet.Enabled = (bool)!tl.IsRetweeted;
             toolStripMenuItemUnRetweet.Enabled = (bool)tl.IsRetweeted;
             toolStripMenuItemReply.Enabled = true;
