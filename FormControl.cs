@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace twclient.UserPanel
+namespace twclient
 {
-    public partial class PanelControlMainEdit : UserControl
+    public partial class FormControl : Form
     {
-        public PanelControlMainEdit()
+        public FormControl()
         {
             InitializeComponent();
+        }
+
+        private void FormControl_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

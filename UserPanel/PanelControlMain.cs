@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace twclient.UserPanel
 {
-    public partial class PanelControlMainEdit : UserControl
+    public partial class PanelControlMain : UserControl
     {
-        public PanelControlMainEdit()
+        public PanelControlMain()
         {
             InitializeComponent();
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
