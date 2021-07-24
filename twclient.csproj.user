@@ -25,9 +25,6 @@
     <Compile Update="UserPanel\PanelControlMainEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UserPanel\PanelControlMainEdit2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="UserPanel\PanelControlMainTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
