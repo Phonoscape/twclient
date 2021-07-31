@@ -322,6 +322,15 @@ namespace twclient.Resource {
         }
         
         /// <summary>
+        ///   ユーザーが見つかりませんでした。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Twitter_NotFoundUser {
+            get {
+                return ResourceManager.GetString("String_Twitter_NotFoundUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   更新なし に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Twitter_NoUpdate {

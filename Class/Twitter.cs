@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using static CoreTweet.OAuth;
 
 namespace twclient
@@ -825,9 +826,26 @@ namespace twclient
 
         public long SearchUserId(string name)
         {
+            CoreTweet.Core.ListedResponse<CoreTweet.User> id;
+            
             if (name[0] == '@') name = name.Substring(1);
 
-            var id = tokens.Users.Lookup(screen_name => name);
+            try
+            {
+                id = tokens.Users.Lookup(screen_name => name);
+            }
+            catch(CoreTweet.TwitterException e)
+            {
+                if (e.Status == System.Net.HttpStatusCode.NotFound)
+                {
+                    var msg = Resource.Resource1.String_Twitter_NotFoundUser;
+                    parentForm.SetStatusMenu(msg);
+                    MessageBox.Show(msg);
+                    return 0;
+                }
+
+                return 0;
+            }
 
             return (long)id[0].Id;
         }

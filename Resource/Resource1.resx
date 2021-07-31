@@ -204,6 +204,9 @@
   <data name="String_Twitter_NameResolutionFailure" xml:space="preserve">
     <value>名前解決ができません。</value>
   </data>
+  <data name="String_Twitter_NotFoundUser" xml:space="preserve">
+    <value>ユーザーが見つかりませんでした。</value>
+  </data>
   <data name="String_Twitter_NoUpdate" xml:space="preserve">
     <value>更新なし</value>
   </data>
