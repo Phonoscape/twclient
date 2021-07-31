@@ -1464,7 +1464,7 @@ namespace twclient
         private string ReadCss()
         {
             string exeFile = Application.StartupPath;
-            var cssFileName = exeFile + "\\css.ini";
+            var cssFileName = exeFile + "\\Resource\\css.ini";
 
             string cssStr;
 
