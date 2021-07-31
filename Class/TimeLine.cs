@@ -149,7 +149,7 @@ namespace twclient
             return param;
         }
 
-        public void loadParam(List<string> val)
+        public void loadParam(int c, List<string> val)
         {
             tabName = val[0];
             searchNo = int.Parse(val[1]);
@@ -158,7 +158,7 @@ namespace twclient
             hashTagAddFlag = (val[4] == "true" ? true : false);
             userId = long.Parse(val[5]);
             getCount = int.Parse(val[6]);
-            subIndex = int.Parse(val[7]);
+            subIndex = c;
             updateTime = int.Parse(val[8]);
             apiLimit = int.Parse(val[9]);
         }

@@ -88,7 +88,7 @@ namespace twclient.UserPanel
             // comboBoxHash
             // 
             this.comboBoxHash.FormattingEnabled = true;
-            this.comboBoxHash.Location = new System.Drawing.Point(166, 9);
+            this.comboBoxHash.Location = new System.Drawing.Point(167, 6);
             this.comboBoxHash.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxHash.Name = "comboBoxHash";
             this.comboBoxHash.Size = new System.Drawing.Size(301, 33);
@@ -107,7 +107,7 @@ namespace twclient.UserPanel
             // checkBoxHash
             // 
             this.checkBoxHash.AutoSize = true;
-            this.checkBoxHash.Location = new System.Drawing.Point(4, 14);
+            this.checkBoxHash.Location = new System.Drawing.Point(5, 10);
             this.checkBoxHash.Margin = new System.Windows.Forms.Padding(4);
             this.checkBoxHash.Name = "checkBoxHash";
             this.checkBoxHash.Size = new System.Drawing.Size(154, 29);

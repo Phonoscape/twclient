@@ -596,6 +596,10 @@ namespace twclient
         private void PanelControlMainTree1_TreeView1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
+
+            var tv = (TreeView)sender;
+            var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+            node.BackColor = SystemColors.ControlLight;
         }
 
         private void PanelControlMainTree1_TreeView1_DragOver(object sender, DragEventArgs e)
@@ -610,6 +614,8 @@ namespace twclient
                 {
                     return;
                 }
+
+                node.BackColor = SystemColors.Control;
 
                 TreeNode topNode = null;
                 TreeNode wn = node;
@@ -864,25 +870,27 @@ namespace twclient
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
             //node.Text = text;
-
-            if (text[0] != '@') text = "@" + text;
-
-            int index;
-
-            if (panelControlMainTree1.treeView1.SelectedNode.Parent != null)
+            if (text.Length != 0)
             {
-                index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
-            }
-            else
-            {
-                index = panelControlMainTree1.treeView1.SelectedNode.Index;
-            }
+                if (text[0] != '@') text = "@" + text;
 
-            var id = twitter.SearchUserId(text);
-            if (id != 0)
-            {
-                var tl = AddTimeLine((TimeLine.TimeLineType)index, text);
-                tl.SetUserId(id);
+                int index;
+
+                if (panelControlMainTree1.treeView1.SelectedNode.Parent != null)
+                {
+                    index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
+                }
+                else
+                {
+                    index = panelControlMainTree1.treeView1.SelectedNode.Index;
+                }
+
+                var id = twitter.SearchUserId(text);
+                if (id != 0)
+                {
+                    var tl = AddTimeLine((TimeLine.TimeLineType)index, text);
+                    tl.SetUserId(id);
+                }
             }
             tb.Dispose();
         }
@@ -894,34 +902,38 @@ namespace twclient
             //node.Text = text;
 
             int index;
-
-            if (panelControlMainTree1.treeView1.SelectedNode.Parent != null)
+            if (text.Length != 0)
             {
-                index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
-            }
-            else
-            {
-                index = panelControlMainTree1.treeView1.SelectedNode.Index;
-            }
+                if (panelControlMainTree1.treeView1.SelectedNode.Parent != null)
+                {
+                    index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
+                }
+                else
+                {
+                    index = panelControlMainTree1.treeView1.SelectedNode.Index;
+                }
 
-            var tl = AddTimeLine((TimeLine.TimeLineType)index, text);
-            tl.SetSearchStr(text);
-
+                var tl = AddTimeLine((TimeLine.TimeLineType)index, text);
+                tl.SetSearchStr(text);
+            }
             tb.Dispose();
         }
         private void PanelControlMainTree1_TreeView1_ChangeSearch_Tb_Enter()
         {
             TreeNode node = panelControlMainTree1.treeView1.SelectedNode;
             var text = tb.Text;
-            node.Text = text;
 
-            int index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
-            int subIndex = panelControlMainTree1.treeView1.SelectedNode.Index + 1;
+            if (text.Length != 0)
+            {
+                node.Text = text;
 
-            var tl = twitter.SelectTimeLine((TimeLine.TimeLineType)index, subIndex);
-            tl.SetSearchStr(text);
-            tl.SetTabName(text);
+                int index = panelControlMainTree1.treeView1.SelectedNode.Parent.Index;
+                int subIndex = panelControlMainTree1.treeView1.SelectedNode.Index + 1;
 
+                var tl = twitter.SelectTimeLine((TimeLine.TimeLineType)index, subIndex);
+                tl.SetSearchStr(text);
+                tl.SetTabName(text);
+            }
             tb.Dispose();
         }
 
@@ -1202,7 +1214,7 @@ namespace twclient
                 toolStripMenuItemDel.Enabled = true;
             }
 
-            if (sameTweet) return;
+            if (sameTweet && max == 0) return;
 
             foreach (var item in controlListBox1.Items)
             {
@@ -2387,10 +2399,12 @@ namespace twclient
             ListSettings ls = new ListSettings(ListSettings.USER_FILE);
             List<List<string>> users = ls.Read();
 
+            int c = 0;
             foreach (var user in users)
             {
+                c++;
                 var tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_USER, user[0], true);
-                tl.loadParam(user);
+                tl.loadParam(c,user);
             }
         }
 
@@ -2429,10 +2443,12 @@ namespace twclient
             ListSettings ls = new ListSettings(ListSettings.SEARCH_FILE);
             List<List<string>> searches = ls.Read();
 
+            int c = 0;
             foreach (var search in searches)
             {
+                c++;
                 var tl = AddTimeLine(TimeLine.TimeLineType.TIMELINE_SEARCH, search[0], true);
-                tl.loadParam(search);
+                tl.loadParam(c,search);
             }
         }
 
