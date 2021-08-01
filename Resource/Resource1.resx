@@ -198,6 +198,9 @@
   <data name="String_FormTimeLine_TimelineName_USER" xml:space="preserve">
     <value>USER</value>
   </data>
+  <data name="String_Twitter_Consumer_Error" xml:space="preserve">
+    <value>Consumer Key,Secretの設定がありません。</value>
+  </data>
   <data name="String_Twitter_InternalError1" xml:space="preserve">
     <value>内部エラー（Timeline取得）</value>
   </data>

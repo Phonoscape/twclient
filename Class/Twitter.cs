@@ -75,6 +75,12 @@ namespace twclient
 
         private bool InitialAccess()
         {
+            if (consumer_key.Length == 0 || consumer_secret.Length == 0)
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_Consumer_Error);
+                return false;
+            }
+
             OAuthSession session = OAuth.Authorize(consumer_key, consumer_secret);
 
             OpenUrl(session.AuthorizeUri.AbsoluteUri);
@@ -116,6 +122,10 @@ namespace twclient
                     settings.SetValue(Settings.PARAM_TOKEN, tokens.AccessToken);
                     settings.SetValue(Settings.PARAM_TOKEN_SECRET, tokens.AccessTokenSecret);
                     settings.Flash();
+                }
+                else
+                {
+                    Application.Exit();
                 }
             }
 

@@ -17,6 +17,7 @@ namespace twclient
     public partial class FormTimeLine : Form
     {
         private Twitter twitter;
+        private bool initialized = false;
 
         private TreeNode oldNode;
 
@@ -421,6 +422,8 @@ namespace twclient
             }
 
             panelControlMainTree1.treeView1.ExpandAll();
+
+            initialized = true;
         }
 
         public int PixcelCalc(int v)
@@ -438,38 +441,41 @@ namespace twclient
 
         private void FormTimeLine_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings settings = new Settings();
-            settings.Open();
-
-            if (this.WindowState == FormWindowState.Normal)
+            if (initialized)
             {
-                settings.SetValueInt(Settings.PARAM_MAINFORM_X, this.Location.X);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_Y, this.Location.Y);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_W, this.Size.Width);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_H, this.Size.Height);
+                Settings settings = new Settings();
+                settings.Open();
+
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_X, this.Location.X);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_Y, this.Location.Y);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_W, this.Size.Width);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_H, this.Size.Height);
+                }
+                else
+                {
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_X, this.RestoreBounds.Location.X);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_Y, this.RestoreBounds.Location.Y);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_W, this.RestoreBounds.Size.Width);
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_H, this.RestoreBounds.Size.Height);
+                }
+
+                settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_UPDOWN, this.splitContainer1.SplitterDistance);
+                settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_UP_LEFTRIGHT, this.splitContainer2.SplitterDistance);
+                settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_DOWN_LEFTRIGHT, this.splitContainer3.SplitterDistance);
+
+                for (int i = 0; i < this.panelTimeLineList1.listView1.Columns.Count; i++)
+                {
+                    settings.SetValueInt(Settings.PARAM_MAINFORM_TWEETLINE_ITEM_W + string.Format("{0:D2}", i),
+                        this.panelTimeLineList1.listView1.Columns[i].Width);
+                }
+
+                settings.Flash();
+
+                SaveUser();
+                SaveSearch();
             }
-            else
-            {
-                settings.SetValueInt(Settings.PARAM_MAINFORM_X, this.RestoreBounds.Location.X);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_Y, this.RestoreBounds.Location.Y);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_W, this.RestoreBounds.Size.Width);
-                settings.SetValueInt(Settings.PARAM_MAINFORM_H, this.RestoreBounds.Size.Height);
-            }
-
-            settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_UPDOWN, this.splitContainer1.SplitterDistance);
-            settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_UP_LEFTRIGHT, this.splitContainer2.SplitterDistance);
-            settings.SetValueInt(Settings.PARAM_MAINFORM_SPLIT_DOWN_LEFTRIGHT, this.splitContainer3.SplitterDistance);
-
-            for (int i = 0; i < this.panelTimeLineList1.listView1.Columns.Count; i++)
-            {
-                settings.SetValueInt(Settings.PARAM_MAINFORM_TWEETLINE_ITEM_W + string.Format("{0:D2}", i),
-                    this.panelTimeLineList1.listView1.Columns[i].Width);
-            }
-
-            settings.Flash();
-
-            SaveUser();
-            SaveSearch();
         }
 
 

@@ -304,6 +304,15 @@ namespace twclient.Resource {
         }
         
         /// <summary>
+        ///   Consumer Key,Secretの設定がありません。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string String_Twitter_Consumer_Error {
+            get {
+                return ResourceManager.GetString("String_Twitter_Consumer_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   内部エラー（Timeline取得） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string String_Twitter_InternalError1 {
