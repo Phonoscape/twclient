@@ -578,6 +578,8 @@ namespace twclient
             panelControlMainEdit1.checkBoxHash.Checked = tl.GetHashAddTag();
         }
 
+        private TreeNode dragOverNode = null;
+
         private void PanelControlMainTree1_TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = (TreeNode)e.Item;
@@ -600,10 +602,20 @@ namespace twclient
             var tv = (TreeView)sender;
             var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
             node.BackColor = SystemColors.ControlLight;
+
+            if (dragOverNode != null)
+            {
+                dragOverNode.BackColor = SystemColors.Window;
+                dragOverNode = null;
+            }
+
+            dragOverNode = node;
         }
 
         private void PanelControlMainTree1_TreeView1_DragOver(object sender, DragEventArgs e)
         {
+            Debug.WriteLine("drag");
+
             var tv = (TreeView)sender;
 
             if (e.Data.GetDataPresent(typeof(TreeNode)))
@@ -682,6 +694,12 @@ namespace twclient
                         }
                     }
                 }
+
+                if (dragOverNode != null && dragOverNode != node)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                    dragOverNode = node;
+                }
             }
         }
 
@@ -703,6 +721,12 @@ namespace twclient
                 }
 
                 panelControlMainTree1.treeView1.SelectedNode = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[index];
+
+                if (dragOverNode != null)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                }
+                dragOverNode = null;
             }
         }
 
