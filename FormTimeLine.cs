@@ -2658,8 +2658,10 @@ namespace twclient
                 return;
             }
 
-            var tl = twitter.SelectTimeLine().GetTimeLine();
-            for (int i = 0; i < tl.Count; i++)
+            var start = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.TopItem);
+            var end = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.BottomItem());
+
+            for (int i = start; i <= end; i++)
             {
                 var tmpUrl = panelTimeLineList1.listView1.Items[i].SubItems[(int)ListViewColumn.USERIMAGE].Text;
 
