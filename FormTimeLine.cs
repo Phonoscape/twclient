@@ -350,7 +350,11 @@ namespace twclient
             settings.Open();
 
             twitter = new Twitter(this);
-            twitter.Start();
+            if (!twitter.Start())
+            {
+                this.Close();
+                return;
+            }
             //twitter.startTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, 0);
 
             cacheLvi = new Hashtable();
