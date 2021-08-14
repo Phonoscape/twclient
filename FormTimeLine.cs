@@ -2696,12 +2696,14 @@ namespace twclient
                         if (bitmap == null) break;
                         img = bitmap;
                         userImage[url] = img;
-                    }
 
-                    foreach (var url in tmpList)
-                    {
                         ListViewUpdate((string)url);
                     }
+                    
+                    //foreach (var url in tmpList)
+                    //{
+                    //    ListViewUpdate((string)url);
+                    //}
                 }
             });
         }
