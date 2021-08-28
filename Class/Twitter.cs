@@ -75,6 +75,12 @@ namespace twclient
 
         private bool InitialAccess()
         {
+            if (consumer_key == null || consumer_secret == null)
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_Consumer_Error);
+                return false;
+            }
+
             if (consumer_key.Length == 0 || consumer_secret.Length == 0)
             {
                 MessageBox.Show(Resource.Resource1.String_Twitter_Consumer_Error);
@@ -93,7 +99,7 @@ namespace twclient
             return (tokens != null);
         }
 
-        public void Start()
+        public bool Start()
         {
             Settings settings = new Settings();
             settings.Open();
@@ -126,11 +132,14 @@ namespace twclient
                 else
                 {
                     Application.Exit();
+                    return false;
                 }
             }
 
             timeLineList = new List<TimeLine>();
             account = tokens.Account.VerifyCredentials();
+
+            return true;
         }
 
         public void GetRecent()

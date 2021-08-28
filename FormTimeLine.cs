@@ -350,7 +350,11 @@ namespace twclient
             settings.Open();
 
             twitter = new Twitter(this);
-            twitter.Start();
+            if (!twitter.Start())
+            {
+                this.Close();
+                return;
+            }
             //twitter.startTimeLine(TimeLine.TimeLineType.TIMELINE_HOME, 0);
 
             cacheLvi = new Hashtable();
@@ -584,6 +588,8 @@ namespace twclient
             panelControlMainEdit1.checkBoxHash.Checked = tl.GetHashAddTag();
         }
 
+        private TreeNode dragOverNode = null;
+
         private void PanelControlMainTree1_TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = (TreeNode)e.Item;
@@ -605,11 +611,25 @@ namespace twclient
 
             var tv = (TreeView)sender;
             var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
-            node.BackColor = SystemColors.ControlLight;
+
+            if (node != null)
+            {
+                node.BackColor = SystemColors.ControlLight;
+
+                if (dragOverNode != null)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                    dragOverNode = null;
+                }
+            }
+
+            dragOverNode = node;
         }
 
         private void PanelControlMainTree1_TreeView1_DragOver(object sender, DragEventArgs e)
         {
+            Debug.WriteLine("drag");
+
             var tv = (TreeView)sender;
 
             if (e.Data.GetDataPresent(typeof(TreeNode)))
@@ -688,6 +708,12 @@ namespace twclient
                         }
                     }
                 }
+
+                if (dragOverNode != null && dragOverNode != node)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                    dragOverNode = node;
+                }
             }
         }
 
@@ -709,6 +735,12 @@ namespace twclient
                 }
 
                 panelControlMainTree1.treeView1.SelectedNode = panelControlMainTree1.treeView1.Nodes[(int)ty].Nodes[index];
+
+                if (dragOverNode != null)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                }
+                dragOverNode = null;
             }
         }
 
@@ -1017,6 +1049,8 @@ namespace twclient
                 return;
             }
 
+            lv.BeginUpdate();
+
             ListViewItem lvi = new ListViewItem();
             lvi.UseItemStyleForSubItems = false;
             var status = twitter.SelectTimeLine().GetTimeLine()[e.ItemIndex];
@@ -1092,6 +1126,8 @@ namespace twclient
 
             e.Item = lvi;
             cacheLvi.Add(e.ItemIndex, lvi);
+
+            lv.EndUpdate();
 
             System.Console.WriteLine("RetrieveVirtualItem: {0}", e.ItemIndex);
         }
@@ -2024,12 +2060,12 @@ namespace twclient
             if ((bool)st.IsFavorited)
             {
                 DoUnLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.RetweetCount.ToString());
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.FavoriteCount.ToString());
             }
             else
             {
                 DoLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.RetweetCount.ToString());
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.FavoriteCount.ToString());
             }
         }
 
@@ -2630,8 +2666,10 @@ namespace twclient
                 return;
             }
 
-            var tl = twitter.SelectTimeLine().GetTimeLine();
-            for (int i = 0; i < tl.Count; i++)
+            var start = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.TopItem);
+            var end = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.BottomItem());
+
+            for (int i = start; i <= end; i++)
             {
                 var tmpUrl = panelTimeLineList1.listView1.Items[i].SubItems[(int)ListViewColumn.USERIMAGE].Text;
 
@@ -2666,12 +2704,14 @@ namespace twclient
                         if (bitmap == null) break;
                         img = bitmap;
                         userImage[url] = img;
-                    }
 
-                    foreach (var url in tmpList)
-                    {
                         ListViewUpdate((string)url);
                     }
+                    
+                    //foreach (var url in tmpList)
+                    //{
+                    //    ListViewUpdate((string)url);
+                    //}
                 }
             });
         }
