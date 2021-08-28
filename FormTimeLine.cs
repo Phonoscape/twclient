@@ -611,12 +611,16 @@ namespace twclient
 
             var tv = (TreeView)sender;
             var node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
-            node.BackColor = SystemColors.ControlLight;
 
-            if (dragOverNode != null)
+            if (node != null)
             {
-                dragOverNode.BackColor = SystemColors.Window;
-                dragOverNode = null;
+                node.BackColor = SystemColors.ControlLight;
+
+                if (dragOverNode != null)
+                {
+                    dragOverNode.BackColor = SystemColors.Window;
+                    dragOverNode = null;
+                }
             }
 
             dragOverNode = node;
@@ -1045,6 +1049,8 @@ namespace twclient
                 return;
             }
 
+            lv.BeginUpdate();
+
             ListViewItem lvi = new ListViewItem();
             lvi.UseItemStyleForSubItems = false;
             var status = twitter.SelectTimeLine().GetTimeLine()[e.ItemIndex];
@@ -1120,6 +1126,8 @@ namespace twclient
 
             e.Item = lvi;
             cacheLvi.Add(e.ItemIndex, lvi);
+
+            lv.EndUpdate();
 
             System.Console.WriteLine("RetrieveVirtualItem: {0}", e.ItemIndex);
         }
@@ -2052,12 +2060,12 @@ namespace twclient
             if ((bool)st.IsFavorited)
             {
                 DoUnLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.RetweetCount.ToString());
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_Fav, st.FavoriteCount.ToString());
             }
             else
             {
                 DoLike(id);
-                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.RetweetCount.ToString());
+                bt.Text = string.Format(Resource.Resource1.String_Contents_Button_UnFav, st.FavoriteCount.ToString());
             }
         }
 
