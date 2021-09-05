@@ -128,7 +128,7 @@ namespace twclient
         public void SetUpdateTime(int sec)
         {
             updateTime = sec > 60 / (apiLimit / 15) ? sec : 60 / (apiLimit / 15);
-            updateTime = updateTime < 8 ? 8 : updateTime;
+            updateTime = updateTime < 10 ? 10 : updateTime;
         }
 
         public List<string> saveParam()
@@ -159,7 +159,7 @@ namespace twclient
             userId = long.Parse(val[5]);
             getCount = int.Parse(val[6]);
             subIndex = c;
-            updateTime = int.Parse(val[8]);
+            SetUpdateTime(int.Parse(val[8]));
             apiLimit = int.Parse(val[9]);
         }
 
