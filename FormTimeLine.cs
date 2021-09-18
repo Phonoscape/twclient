@@ -414,7 +414,7 @@ namespace twclient
             Hashtable keys = new Hashtable();
             foreach (var lst in lists)
             {
-                keys.Add(lst.Name, lst);
+                keys.Add(lst.Name + "%" + lst.Uri, lst);
             }
             ArrayList sort = new ArrayList(keys.Keys);
             sort.Sort();
