@@ -2362,7 +2362,7 @@ namespace twclient
                 return;
             }
 
-            if (statusStrip1.Items[0].Text == msg) return;
+            //if (statusStrip1.Items[0].Text == msg) return;
 
             statusStrip1.Items[0].Text = msg;
         }
@@ -2669,19 +2669,22 @@ namespace twclient
             var start = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.TopItem);
             var end = panelTimeLineList1.listView1.Items.IndexOf(panelTimeLineList1.listView1.BottomItem());
 
-            for (int i = start; i <= end; i++)
+            if (start != -1)
             {
-                var tmpUrl = panelTimeLineList1.listView1.Items[i].SubItems[(int)ListViewColumn.USERIMAGE].Text;
-
-                if (tmpUrl == url)
+                for (int i = start; i <= end; i++)
                 {
-                    try
-                    {
-                        panelTimeLineList1.listView1.RedrawItems(i, i, false);
-                    }
-                    catch
-                    {
+                    var tmpUrl = panelTimeLineList1.listView1.Items[i].SubItems[(int)ListViewColumn.USERIMAGE].Text;
 
+                    if (tmpUrl == url)
+                    {
+                        try
+                        {
+                            panelTimeLineList1.listView1.RedrawItems(i, i, false);
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }
