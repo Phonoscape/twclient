@@ -155,7 +155,7 @@ namespace twclient
 
         private void PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged(object sender, EventArgs e)
         {
-            System.Console.WriteLine("PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged");
+            Debug.WriteLine("PanelControlMainEdit1_ComboBoxHash_SelectedIndexChanged");
 
             if (changeComboBoxHash)
             {
@@ -174,7 +174,7 @@ namespace twclient
 
         private void PanelControlMainEdit1_ComboBoxHash_Leave(object sender, EventArgs e)
         {
-            System.Console.WriteLine("PanelControlMainEdit1_ComboBoxHash_Leave");
+            Debug.WriteLine("PanelControlMainEdit1_ComboBoxHash_Leave");
 
             //twitter.SetHashTag(panelControlMainEdit1.comboBoxHash.Text);
             SetComboBox(panelControlMainEdit1.comboBoxHash.Text);
@@ -195,7 +195,7 @@ namespace twclient
 
         private void SetComboBox(string txt)
         {
-            System.Console.WriteLine("SetComboBox");
+            Debug.WriteLine("SetComboBox");
 
             foreach (var item in panelControlMainEdit1.comboBoxHash.Items)
             {
@@ -1045,7 +1045,7 @@ namespace twclient
             {
                 e.Item = (ListViewItem)cacheLvi[e.ItemIndex];
 
-                System.Console.WriteLine("RetrieveVirtualItem Cache: {0}", e.ItemIndex);
+//                Debug.WriteLine("RetrieveVirtualItem Cache: {0}", e.ItemIndex);
                 return;
             }
 
@@ -1129,7 +1129,7 @@ namespace twclient
 
             lv.EndUpdate();
 
-            System.Console.WriteLine("RetrieveVirtualItem: {0}", e.ItemIndex);
+            Debug.WriteLine("RetrieveVirtualItem: {0}", e.ItemIndex);
         }
 
         private void PanelTimeLine1_panelTimeLineList1_ListView1_SearchForVirtualItem(object sender, SearchForVirtualItemEventArgs e)
@@ -1162,6 +1162,8 @@ namespace twclient
 
             Image img = null;
 
+//            lv.BeginUpdate();
+
             if (e.Item.Selected)
             {
                 br = SystemBrushes.ControlLight;
@@ -1190,6 +1192,8 @@ namespace twclient
             {
                 e.DrawText(TextFormatFlags.Left | TextFormatFlags.Bottom);
             }
+
+//            lv.EndUpdate();
         }
 
         private void PanelTimeLine1_panelTimeLineList1_ListView1_Refresh()
@@ -2662,7 +2666,14 @@ namespace twclient
         {
             if (this.InvokeRequired)
             {
-                Invoke(new Action<string>(ListViewUpdate),url);
+                try
+                {
+                    Invoke(new Action<string>(ListViewUpdate), url);
+                }
+                catch
+                {
+
+                }
                 return;
             }
 
@@ -2702,7 +2713,7 @@ namespace twclient
                     Image img = null;
                     foreach (var url in tmpList)
                     {
-                        System.Console.WriteLine("get: " + url);
+                        Debug.WriteLine("get: " + url);
                         Bitmap bitmap = MakeBitmapFromUrl((string)url);
                         if (bitmap == null) break;
                         img = bitmap;
