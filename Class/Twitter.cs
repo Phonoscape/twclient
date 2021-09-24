@@ -136,8 +136,24 @@ namespace twclient
                 }
             }
 
+            try
+            {
+                account = tokens.Account.VerifyCredentials();
+            }
+            catch(System.Net.WebException e)
+            {
+                MessageBox.Show(e.Message);
+
+                Application.Exit();
+                return false;
+            }
+            catch
+            {
+                Application.Exit();
+                return false;
+            }
+
             timeLineList = new List<TimeLine>();
-            account = tokens.Account.VerifyCredentials();
 
             return true;
         }
@@ -404,6 +420,7 @@ namespace twclient
             catch
             {
                 res = false;
+                parentForm.SetStatusMenu("Error");
             }
 
             return res;
@@ -467,10 +484,6 @@ namespace twclient
                 {
                     parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_NoUpdate);
                 }
-            }
-            else
-            {
-                parentForm.SetStatusMenu(Resource.Resource1.String_Twitter_Waiting);
             }
 
             updateTimer.Interval = tl.GetUpdateTime() * 1000;
