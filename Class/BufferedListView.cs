@@ -15,6 +15,8 @@ namespace twclient.Class
             this.Font = new System.Drawing.Font("Meiryou UI", 10);
         }
 
+        protected override bool DoubleBuffered { get { return true; } set { } }
+
         public ListViewItem BottomItem()
         {
             if (this.TopItem != null)
