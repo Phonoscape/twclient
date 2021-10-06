@@ -1030,7 +1030,7 @@ namespace twclient
                 }
             }
 
-            hash.Trim(' ');
+            hash = hash.Trim(' ');
             SetComboBox(hash);
         }
 
