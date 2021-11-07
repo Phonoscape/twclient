@@ -509,14 +509,21 @@ namespace twclient
             return text;
         }
 
-        public String MakeHtmlBody(Status tl, List<string> eventHandlerName)
-        {
+        public String MakeHtmlBody(Status tlSrc, List<string> eventHandlerName)
+        {   
+            return MakeHtmlBody(tlSrc);
+
             string text;
             string body = "<div class=\"main\"><p>";
 
-            if (tl.RetweetedStatus != null)
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
             {
-                tl = tl.RetweetedStatus;
+                tl = tlSrc.RetweetedStatus;
+            }
+            else 
+            {
+                tl = tlSrc;
             }
             text = tl.FullText;
 
@@ -657,6 +664,246 @@ namespace twclient
             return body;
         }
 
+        public String MakeHtmlBody(Status tlSrc)
+        {
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
+            {
+                tl = tlSrc.RetweetedStatus;
+            }
+            else
+            {
+                tl = tlSrc;
+            }
+
+            var text = "<div class=\"main\">" + tl.FullText + "</div>";
+
+            text = ReplaceBR(text);
+            text = ReplaceHash(tlSrc, text);
+            text = ReplaceUser(tlSrc, text);
+            text = ReplaceUrl(tlSrc, text);
+            text = ReplaceMedia(tlSrc, text);
+
+            return text;
+        }
+
+        private string ReplaceBR(string textSrc)
+        {
+            while(true)
+            {
+                var pos = textSrc.IndexOf("\n");
+
+                if (pos < 0)
+                {
+                    break;
+                }
+
+                textSrc = textSrc.Substring(0, pos) + "<br>" + textSrc.Substring(pos + 1);
+            }
+
+            return textSrc;
+        }
+
+        private string ReplaceHash(Status tlSrc,string textSrc)
+        {
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
+            {
+                tl = tlSrc.RetweetedStatus;
+            }
+            else
+            {
+                tl = tlSrc;
+            }
+
+            string tmpText = "";
+            string text = textSrc;
+
+            var tmpList = tl.Entities.HashTags;
+
+            // replace
+            foreach (var tmp in tmpList)
+            {
+                while (true)
+                {
+                    var checkStr = "#" + tmp.Text;
+                    var res = text.IndexOf(checkStr);
+
+                    if (res < 0)
+                    {
+                        tmpText += text;
+                        break;
+                    }
+
+                    tmpText += text.Substring(0, res);
+                    var linkText = text.Substring(res, checkStr.Length);
+                    var hashlink = "<a href=\"" + tmp.Text + "\" alt=\"" + tmp.Text + "\">" + linkText + "</a>";
+                    tmpText += hashlink;
+                    text = text.Remove(0, res + checkStr.Length);
+
+                    tmpText += text;
+                    break;
+                }
+                text = tmpText;
+                tmpText = "";
+            }
+
+            return text;
+        }
+
+        private string ReplaceUser(Status tlSrc, string textSrc)
+        {
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
+            {
+                tl = tlSrc.RetweetedStatus;
+            }
+            else
+            {
+                tl = tlSrc;
+            }
+
+            string tmpText = "";
+            string text = textSrc;
+
+            var tmpList = tl.Entities.UserMentions;
+
+            // replace
+            foreach (var tmp in tmpList)
+            {
+                while (true)
+                {
+                    var checkStr = "@" + tmp.ScreenName;
+                    var res = text.IndexOf(checkStr);
+
+                    if (res < 0)
+                    {
+                        tmpText += text;
+                        break;
+                    }
+
+                    tmpText += text.Substring(0, res);
+                    var userText = text.Substring(res, checkStr.Length);
+                    var hashlink = "<a href=\"" + tmp.Id.ToString() + "\" alt=\"" + tmp.Id.ToString() + "\">" + userText + "</a>";
+                    tmpText += hashlink;
+                    text = text.Remove(0, res + checkStr.Length);
+
+                    tmpText += text;
+                    break;
+                }
+                text = tmpText;
+                tmpText = "";
+            }
+
+            return text;
+        }
+
+        private string ReplaceUrl(Status tlSrc, string textSrc)
+        {
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
+            {
+                tl = tlSrc.RetweetedStatus;
+            }
+            else
+            {
+                tl = tlSrc;
+            }
+
+            string tmpText = "";
+            string text = textSrc;
+
+            var tmpList = tl.Entities.Urls;
+
+            // replace
+            foreach (var tmp in tmpList)
+            {
+                while (true)
+                {
+                    var checkStr = tmp.Url;
+                    var res = text.IndexOf(checkStr);
+
+                    if (res < 0)
+                    {
+                        tmpText += text;
+                        break;
+                    }
+
+                    tmpText += text.Substring(0, res);
+                    var userText = text.Substring(res, checkStr.Length);
+                    var hashlink = "<a href=\"" + tmp.ExpandedUrl + "\" alt=\"" + tmp.ExpandedUrl + "\">" + tmp.DisplayUrl + "</a>";
+                    tmpText += hashlink;
+                    text = text.Remove(0, res + checkStr.Length);
+                }
+                text = tmpText;
+                tmpText = "";
+            }
+
+            return text;
+        }
+
+        private string ReplaceMedia(Status tlSrc, string textSrc)
+        {
+            Status tl;
+            if (tlSrc.RetweetedStatus != null)
+            {
+                tl = tlSrc.RetweetedStatus;
+            }
+            else
+            {
+                tl = tlSrc;
+            }
+
+            string tmpText = "";
+            string text = textSrc;
+            List<string> img = new List<string>();
+
+            var tmpList = tl.ExtendedEntities?.Media;
+            if (tmpList == null) return textSrc;
+
+            // replace
+            foreach (var tmp in tmpList)
+            {
+                while (true)
+                {
+                    var checkStr = tmp.Url;
+                    var res = text.IndexOf(checkStr);
+
+                    if (res < 0)
+                    {
+                        tmpText += text;
+                        break;
+                    }
+
+                    tmpText += text.Substring(0, res);
+                    var userText = text.Substring(res, checkStr.Length);
+                    if (tmp.VideoInfo != null)
+                    {
+                        img.Add("<a href=\"" + tmp.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
+                    }
+                    else
+                    {
+                        img.Add("<a href=\"" + tmp.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
+                    }
+                    text = text.Remove(0, res + checkStr.Length);
+                }
+                text = tmpText;
+                tmpText = "";
+            }
+
+            if (img.Count > 0)
+            {
+                text += "<div class=\"image\">";
+                foreach (var i in img)
+                {
+                    text += i;
+                }
+                text += "</div>";
+            }
+
+            return text;
+        }
+
         private List<int> IndexOfMulti(string str, string[] splitChar)
         {
             int min = str.Length;
@@ -694,7 +941,7 @@ namespace twclient
             {
                 if (count == 0)
                 {
-                    tokens.Statuses.UpdateAsync(status => tweetText);
+                    var res = tokens.Statuses.UpdateAsync(status => tweetText);
                 }
                 else
                 {
@@ -704,11 +951,11 @@ namespace twclient
                     {
                         if (mediaIds.Count != 0)
                         {
-                            tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
+                            var res = tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
                         }
                         else
                         {
-                            tokens.Statuses.UpdateAsync(status => tweetText);
+                            var res = tokens.Statuses.UpdateAsync(status => tweetText);
                         }
                     }
                 }
