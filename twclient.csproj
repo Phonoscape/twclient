@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="CoreTweet" Version="1.0.0.483" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
+    <PackageReference Include="Unofficial.Microsoft.mshtml" Version="7.0.3300" />
   </ItemGroup>
 
   <ItemGroup>
