@@ -40,10 +40,10 @@ namespace twclient.UserPanel
             this.panelWeb = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonLike = new System.Windows.Forms.Button();
+            this.buttonTrace = new System.Windows.Forms.Button();
             this.buttonReply = new System.Windows.Forms.Button();
             this.buttonRT = new System.Windows.Forms.Button();
-            this.buttonTrace = new System.Windows.Forms.Button();
-            this.buttonLike = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -190,6 +190,28 @@ namespace twclient.UserPanel
             this.tableLayoutPanel3.Size = new System.Drawing.Size(548, 64);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
+            // buttonLike
+            // 
+            this.buttonLike.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonLike.Location = new System.Drawing.Point(0, 32);
+            this.buttonLike.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonLike.Name = "buttonLike";
+            this.buttonLike.Size = new System.Drawing.Size(274, 32);
+            this.buttonLike.TabIndex = 4;
+            this.buttonLike.Text = "button3";
+            this.buttonLike.UseVisualStyleBackColor = true;
+            // 
+            // buttonTrace
+            // 
+            this.buttonTrace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonTrace.Location = new System.Drawing.Point(274, 32);
+            this.buttonTrace.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonTrace.Name = "buttonTrace";
+            this.buttonTrace.Size = new System.Drawing.Size(274, 32);
+            this.buttonTrace.TabIndex = 3;
+            this.buttonTrace.Text = "View thread";
+            this.buttonTrace.UseVisualStyleBackColor = true;
+            // 
             // buttonReply
             // 
             this.buttonReply.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -211,28 +233,6 @@ namespace twclient.UserPanel
             this.buttonRT.TabIndex = 1;
             this.buttonRT.Text = "button2";
             this.buttonRT.UseVisualStyleBackColor = true;
-            // 
-            // buttonTrace
-            // 
-            this.buttonTrace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonTrace.Location = new System.Drawing.Point(274, 32);
-            this.buttonTrace.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonTrace.Name = "buttonTrace";
-            this.buttonTrace.Size = new System.Drawing.Size(274, 32);
-            this.buttonTrace.TabIndex = 3;
-            this.buttonTrace.Text = "Trace";
-            this.buttonTrace.UseVisualStyleBackColor = true;
-            // 
-            // buttonLike
-            // 
-            this.buttonLike.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonLike.Location = new System.Drawing.Point(0, 32);
-            this.buttonLike.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonLike.Name = "buttonLike";
-            this.buttonLike.Size = new System.Drawing.Size(274, 32);
-            this.buttonLike.TabIndex = 4;
-            this.buttonLike.Text = "button3";
-            this.buttonLike.UseVisualStyleBackColor = true;
             // 
             // panelTimeLineContents1
             // 
