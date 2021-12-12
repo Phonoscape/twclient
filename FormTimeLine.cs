@@ -1840,6 +1840,7 @@ namespace twclient
                         formPic.SetBitmap(bmp, webInId, webInUser, contentUrl);
                         formPic.FormClosed += FormPic_FormClosed;
                         formPic.Show();
+                        formPic.Activate();
                     }
                 }
 
@@ -1913,7 +1914,8 @@ namespace twclient
             else if (contentTagName == "img")
             {
                 contentUrl = clickedElement.GetAttribute("src");
-                twitter.OpenUrl(contentUrl);
+                contentAlt = clickedElement.GetAttribute("alt");
+                twitter.OpenUrl(contentAlt);
             }
 
             e.ReturnValue = false;

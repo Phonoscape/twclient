@@ -67,5 +67,10 @@ namespace twclient
 
             Close();
         }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

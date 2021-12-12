@@ -48,6 +48,7 @@ namespace twclient
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
             // 
             // contextMenuStripOpenBrowser
             // 
@@ -61,14 +62,14 @@ namespace twclient
             // toolStripMenuItemOpenBrowser
             // 
             this.toolStripMenuItemOpenBrowser.Name = "toolStripMenuItemOpenBrowser";
-            this.toolStripMenuItemOpenBrowser.Size = new System.Drawing.Size(240, 32);
+            this.toolStripMenuItemOpenBrowser.Size = new System.Drawing.Size(230, 32);
             this.toolStripMenuItemOpenBrowser.Text = "ブラウザで開く";
             this.toolStripMenuItemOpenBrowser.Click += new System.EventHandler(this.toolStripMenuItemOpenBrowser_Click);
             // 
             // ToolStripMenuItemOpenBrowserImage
             // 
             this.ToolStripMenuItemOpenBrowserImage.Name = "ToolStripMenuItemOpenBrowserImage";
-            this.ToolStripMenuItemOpenBrowserImage.Size = new System.Drawing.Size(240, 32);
+            this.ToolStripMenuItemOpenBrowserImage.Size = new System.Drawing.Size(230, 32);
             this.ToolStripMenuItemOpenBrowserImage.Text = "画像をブラウザで開く";
             this.ToolStripMenuItemOpenBrowserImage.Click += new System.EventHandler(this.ToolStripMenuItemOpenBrowserImage_Click);
             // 
