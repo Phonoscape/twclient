@@ -876,30 +876,25 @@ namespace twclient
                     }
 
                     tmpText += text.Substring(0, res);
-                    var userText = text.Substring(res, checkStr.Length);
-                    if (tmp.VideoInfo != null)
-                    {
-                        img.Add("<a href=\"" + tmp.VideoInfo.Variants[0].Url + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
-                    }
-                    else
-                    {
-                        img.Add("<a href=\"" + tmp.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\"></a>");
-                    }
                     text = text.Remove(0, res + checkStr.Length);
                 }
                 text = tmpText;
                 tmpText = "";
             }
 
-            if (img.Count > 0)
+            text += "<div class=\"image\">";
+            foreach (var tmp in tmpList)
             {
-                text += "<div class=\"image\">";
-                foreach (var i in img)
+                if (tmp.Type == "video")
                 {
-                    text += i;
+                    text += "<a href=\"" + tmp.ExpandedUrl + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\" alt=\"" + tmp.ExpandedUrl + "\"></a>";
                 }
-                text += "</div>";
+                else
+                {
+                    text += "<a href=\"" + tmp.MediaUrlHttps + "\"><img style=\"width: 48%;\" src=\"" + tmp.MediaUrlHttps + "\" id=\"" + tl.Id + "\" user=\"" + tl.User.ScreenName + "\" alt=\"" + tmp.MediaUrlHttps + "\"></a>";
+                }
             }
+            text += "</div>";
 
             return text;
         }
