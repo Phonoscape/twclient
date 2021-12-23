@@ -213,6 +213,9 @@
   <data name="String_Twitter_NoUpdate" xml:space="preserve">
     <value>更新なし</value>
   </data>
+  <data name="String_Twitter_SendError" xml:space="preserve">
+    <value>送信に失敗しました。</value>
+  </data>
   <data name="String_Twitter_Timeout" xml:space="preserve">
     <value>応答が一定時間ありませんでした。</value>
   </data>

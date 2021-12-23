@@ -932,11 +932,13 @@ namespace twclient
                 if (img != null) count++;
             }
 
+            System.Threading.Tasks.Task<StatusResponse> res = null;
+
             if (tweetText.Length > 0 || count != 0)
             {
                 if (count == 0)
                 {
-                    var res = tokens.Statuses.UpdateAsync(status => tweetText);
+                    res = tokens.Statuses.UpdateAsync(status => tweetText);
                 }
                 else
                 {
@@ -946,13 +948,29 @@ namespace twclient
                     {
                         if (mediaIds.Count != 0)
                         {
-                            var res = tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
+                            res = tokens.Statuses.UpdateAsync(status => tweetText, media_ids => mediaIds);
                         }
                         else
                         {
-                            var res = tokens.Statuses.UpdateAsync(status => tweetText);
+                            res = tokens.Statuses.UpdateAsync(status => tweetText);
                         }
                     }
+                }
+
+                System.Threading.Tasks.Task.WaitAll(res);
+
+                if (res.Result.Id != 0)
+                {
+                    //Status st = res.Result;
+                    //var tmpList = new List<Status>();
+                    //tmpList.Add(st);
+                    //SelectTimeLine().AddTimeLine(tmpList);
+                    //parentForm.SetListViewNew();
+                    parentForm.Send_OK();
+                }
+                else
+                {
+                    MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
                 }
             }
         }
@@ -1054,7 +1072,18 @@ namespace twclient
         {
             if (tweetText.Length > 0)
             {
-                tokens.Statuses.UpdateAsync(status => tweetText, in_reply_to_status_id => id);
+                var res = tokens.Statuses.UpdateAsync(status => tweetText, in_reply_to_status_id => id);
+
+                System.Threading.Tasks.Task.WaitAll(res);
+
+                if (res.Result.Id != 0)
+                {
+                    parentForm.Send_OK();
+                }
+                else
+                {
+                    MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+                }
             }
         }
 
@@ -1062,7 +1091,18 @@ namespace twclient
         {
             if (tweetText.Length > 0)
             {
-                tokens.Statuses.UpdateAsync(tweetText);
+                var res = tokens.Statuses.UpdateAsync(tweetText);
+
+                System.Threading.Tasks.Task.WaitAll(res);
+
+                if (res.Result.Id != 0)
+                {
+                    parentForm.Send_OK();
+                }
+                else
+                {
+                    MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+                }
             }
         }
 
@@ -1146,12 +1186,34 @@ namespace twclient
 
         public void Retweet(long tweetId)
         {
-            tokens.Statuses.RetweetAsync(id => tweetId);
+            var res = tokens.Statuses.RetweetAsync(id => tweetId);
+
+            System.Threading.Tasks.Task.WaitAll(res);
+
+            if (res.Result.Id != 0)
+            {
+                parentForm.Send_OK();
+            }
+            else
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+            }
         }
 
         public void UnRetweet(long tweetId)
         {
-            tokens.Statuses.UnretweetAsync(id => tweetId);
+            var res = tokens.Statuses.UnretweetAsync(id => tweetId);
+
+            System.Threading.Tasks.Task.WaitAll(res);
+
+            if (res.Result.Id != 0)
+            {
+                parentForm.Send_OK();
+            }
+            else
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+            }
         }
 
         public bool CheckLike(long tweetId)
@@ -1207,12 +1269,34 @@ namespace twclient
 
         public void Like(long tweetId)
         {
-            tokens.Favorites.CreateAsync(id => tweetId);
+            var res = tokens.Favorites.CreateAsync(id => tweetId);
+
+            System.Threading.Tasks.Task.WaitAll(res);
+
+            if (res.Result.Id != 0)
+            {
+                parentForm.Send_OK();
+            }
+            else
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+            }
         }
 
         public void UnLike(long tweetId)
         {
-            tokens.Favorites.DestroyAsync(id => tweetId);
+            var res = tokens.Favorites.DestroyAsync(id => tweetId);
+
+            System.Threading.Tasks.Task.WaitAll(res);
+
+            if (res.Result.Id != 0)
+            {
+                parentForm.Send_OK();
+            }
+            else
+            {
+                MessageBox.Show(Resource.Resource1.String_Twitter_SendError);
+            }
         }
 
         public void DeleteTweet(long tweetId)
