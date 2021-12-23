@@ -1348,7 +1348,9 @@ namespace twclient
             contents.Top = top;
             */
 
-            Bitmap bitmap = MakeBitmapFromUrl(tl.User.ProfileImageUrlHttps);
+            var imgUrl = tl.User.ProfileImageUrlHttps;
+            imgUrl = imgUrl.Replace("normal", "bigger");
+            Bitmap bitmap = MakeBitmapFromUrl(imgUrl);
 
             contents.status = tl;
 
@@ -2175,8 +2177,10 @@ namespace twclient
                 txt += " " + panelControlMainEdit1.textBoxMsg2.Text;
                 twitter.Send(txt, tweetImage);
             }
+        }
 
-
+        public void Send_OK()
+        { 
             panelControlMainEdit1.textBoxMsg1.Tag = Twitter.TweetType.Normal;
 
             panelControlMainEdit1.textBoxMsg1.Clear();
